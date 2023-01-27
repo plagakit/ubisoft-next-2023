@@ -176,30 +176,33 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="external\App\app.h" />
-    <ClInclude Include="external\App\AppSettings.h" />
-    <ClInclude Include="external\App\main.h" />
-    <ClInclude Include="external\App\SimpleController.h" />
-    <ClInclude Include="external\App\SimpleSound.h" />
-    <ClInclude Include="external\App\SimpleSprite.h" />
-    <ClInclude Include="external\App\TextureLoader.h" />
+    <ClInclude Include="include\App\app.h" />
+    <ClInclude Include="include\App\AppSettings.h" />
+    <ClInclude Include="include\App\main.h" />
+    <ClInclude Include="include\App\SimpleController.h" />
+    <ClInclude Include="include\App\SimpleSound.h" />
+    <ClInclude Include="include\App\SimpleSprite.h" />
+    <ClInclude Include="include\App\TextureLoader.h" />
     <ClInclude Include="include\stdafx.h" />
     <ClInclude Include="include\targetver.h" />
+    <ClInclude Include="src\Components\Transform.h" />
+    <ClInclude Include="src\Vector2\Vector2.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="external\App\app.cpp" />
-    <ClCompile Include="external\App\main.cpp" />
-    <ClCompile Include="external\App\SimpleController.cpp" />
-    <ClCompile Include="external\App\SimpleSound.cpp" />
-    <ClCompile Include="external\App\SimpleSprite.cpp" />
-    <ClCompile Include="external\App\TextureLoader.cpp" />
-    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="include\App\app.cpp" />
+    <ClCompile Include="include\App\main.cpp" />
+    <ClCompile Include="include\App\SimpleController.cpp" />
+    <ClCompile Include="include\App\SimpleSound.cpp" />
+    <ClCompile Include="include\App\SimpleSprite.cpp" />
+    <ClCompile Include="include\App\TextureLoader.cpp" />
+    <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="include\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="src\Vector2\Vector2.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
