@@ -1,15 +1,22 @@
-#include "stdafx.h"
+#include <stdafx.h>
 
 #include <windows.h> 
 #include <math.h>  
 
 #include <App\app.h>
+#include "Scene/Scene.h"
 
+Scene* current_scene;
 
-void Init() {}
+void Init() 
+{
+	current_scene = new Scene;
+}
 
 void Update(float deltaTime)
 {
+	current_scene->Update(deltaTime);
+
 	/*
 	if (App::GetController().GetLeftThumbStickX() > 0.5f)
 	if (App::GetController().GetLeftThumbStickX() < -0.5f)
@@ -26,7 +33,10 @@ void Update(float deltaTime)
 
 void Render()
 {	
-	App::Print(100, 100, "Sample Text");
+	
+	current_scene->Render();
+	
+	/*App::Print(100, 100, "Sample Text");
 
 	static float a = 0.0f;
 	float r = 1.0f;
@@ -43,9 +53,10 @@ void Render()
 		g = (float)i / 20.0f;
 		b = (float)i / 20.0f;
 		App::DrawLine(sx, sy, ex, ey,r,g,b);
-	}
+	}*/
 }
 
 void Shutdown()
 {	
+	delete current_scene;
 }

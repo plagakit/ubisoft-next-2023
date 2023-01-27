@@ -1,6 +1,7 @@
 #pragma once
 
-#include <Vector2/Vector2.h>
+#include <stdafx.h>
+#include <Scene/Vector2/Vector2.h>
 
 struct Transform {
 
