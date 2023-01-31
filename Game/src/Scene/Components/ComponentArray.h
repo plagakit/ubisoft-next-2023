@@ -8,7 +8,7 @@ class ComponentArray {
 public:
 	ComponentArray();
 
-	T GetComponent(Entity id);
+	T GetComponent(Entity id) const;
 	void AddComponent(Entity id, T component);
 	void RemoveComponent(Entity id);
 	

@@ -201,7 +201,6 @@
     <ClCompile Include="include\App\SimpleSound.cpp" />
     <ClCompile Include="include\App\SimpleSprite.cpp" />
     <ClCompile Include="include\App\TextureLoader.cpp" />
-    <ClCompile Include="src\Scene\Components\ComponentArray.cpp" />
     <ClCompile Include="src\Scene\Components\Sprite\Sprite.cpp" />
     <ClCompile Include="src\Scene\Components\Transform\Transform.cpp" />
     <ClCompile Include="src\Game.cpp" />

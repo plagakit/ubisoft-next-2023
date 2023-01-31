@@ -3,41 +3,26 @@
 #include "Scene.h"
 
 
-Transform Scene::GetTransform(int id) const 
+Transform Scene::GetTransform(Entity id) const
 {
-	return transforms[id];
+	return transforms.GetComponent(id);
 }
-
-void Scene::SetTransform(int id, Transform transform)
-{
-	transforms[id] = transform;
-}
-
-Sprite Scene::GetSprite(int id) const
-{
-	return sprites[id];
-}
-
-void Scene::SetSprite(int id, Sprite sprite)
-{
-	sprites[id] = sprite;
-}
-
 
 int Scene::CreateEntity()
 {
 	entities++;
 
-	transforms.push_back(Transform());
-	sprites.push_back(Sprite());
+	transforms.AddComponent(entities, Transform());
+	sprites.AddComponent(entities, Sprite());
 
 	return entities;
 }
 
-void Scene::DeleteEntity(int id)
+void Scene::DeleteEntity(Entity id)
 {
-	
-
+	entities--;
+	transforms.RemoveComponent(id);
+	sprites.RemoveComponent(id);
 }
 
 
@@ -50,9 +35,7 @@ void Scene::Init()
 
 void Scene::Update(float deltaTime)
 {
-	for (int i = 0; i < transforms.size()) {
 
-	}
 }
 
 void Scene::Render()

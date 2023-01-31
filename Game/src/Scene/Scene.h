@@ -2,6 +2,7 @@
 
 #include <stdafx.h>
 
+#include "Components/ComponentArray.h"
 #include "Components/Transform/Transform.h"
 #include "Components/Sprite/Sprite.h"
 
@@ -17,20 +18,20 @@ public:
 	void Update(float deltaTime);
 	void Render();
 	
-	Transform GetTransform(int id) const;
-	void SetTransform(int id, Transform transform);
+	Transform GetTransform(Entity id) const;
+	//void SetTransform(Entity id, Transform transform);
 
-	Sprite GetSprite(int id) const;
-	void SetSprite(int id, Sprite sprite);
+	//Sprite GetSprite(Entity id) const;
+	//void SetSprite(Entity id, Sprite sprite);
 
 	int CreateEntity();
-	void DeleteEntity(int id);
+	void DeleteEntity(Entity id);
 
 private:
 	int entities;
 
-	std::vector<Sprite> sprites;
-	std::vector<Transform> transforms;
+	ComponentArray<Sprite> sprites;
+	ComponentArray<Transform> transforms;
 
 	RenderSystem render_system;
 

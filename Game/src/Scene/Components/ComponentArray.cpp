@@ -8,7 +8,7 @@ ComponentArray<T>::ComponentArray<T>()
 {}
 
 template<typename T>
-T ComponentArray<T>::GetComponent(Entity id) 
+T ComponentArray<T>::GetComponent(Entity id) const
 {
 	// TODO: add assert
 	return components[entity_map.find(id)];
@@ -35,4 +35,9 @@ void ComponentArray<T>::RemoveComponent(Entity id)
 
 	components.erase(active_entities);
 	entity_map.erase(active_entities);
+}
+
+void TempFunction()
+{
+	ComponentArray<int> temp_object;
 }
