@@ -10,6 +10,7 @@ Scene* current_scene;
 void Init() 
 {
 	current_scene = new Scene;
+	current_scene->Init();
 }
 
 void Update(float deltaTime)

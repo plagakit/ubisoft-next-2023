@@ -14,6 +14,7 @@ const Entity MAX_ENTITIES = 1000;
 class Scene {
 
 public:
+	Scene();
 	void Init();
 	void Update(float deltaTime);
 	void Render();
@@ -21,7 +22,7 @@ public:
 	Transform GetTransform(Entity id);
 	//void SetTransform(Entity id, Transform transform);
 
-	//Sprite GetSprite(Entity id) const;
+	Sprite GetSprite(Entity id);
 	//void SetSprite(Entity id, Sprite sprite);
 
 	int CreateEntity();

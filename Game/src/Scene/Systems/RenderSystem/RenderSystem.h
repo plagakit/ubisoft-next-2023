@@ -2,11 +2,16 @@
 
 #include <stdafx.h>
 
+//#include "Scene/Scene.h"
 class Scene;
 
 class RenderSystem {
 
 public:
-	void DrawText(float x, float y);
+	RenderSystem(Scene* scene);
+	void Render(Entity id);
+
+private:
+	Scene* scene;
 
 };
