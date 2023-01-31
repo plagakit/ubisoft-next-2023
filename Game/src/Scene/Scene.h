@@ -3,14 +3,12 @@
 #include <stdafx.h>
 
 #include "Components/Transform/Transform.h"
+#include "Components/Sprite/Sprite.h"
 
+#include "Systems/RenderSystem/RenderSystem.h"
 
-using ComponentType = std::uint8_t;
 using Entity = std::uint32_t;
-
-const ComponentType MAX_COMPONENT_TYPES = 32;
-const int MAX_ENTITIES = 100;
-
+const Entity MAX_ENTITIES = 1000;
 
 class Scene {
 
@@ -22,8 +20,18 @@ public:
 	Transform GetTransform(int id) const;
 	void SetTransform(int id, Transform transform);
 
+	Sprite GetSprite(int id) const;
+	void SetSprite(int id, Sprite sprite);
+
+	int CreateEntity();
+	void DeleteEntity(int id);
+
 private:
-	Entity entities[MAX_ENTITIES];
-	Transform transforms[MAX_ENTITIES];
+	int entities;
+
+	std::vector<Sprite> sprites;
+	std::vector<Transform> transforms;
+
+	RenderSystem render_system;
 
 };

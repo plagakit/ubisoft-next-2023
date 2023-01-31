@@ -3,7 +3,6 @@
 #include <windows.h> 
 #include <math.h>  
 
-#include <App\app.h>
 #include "Scene/Scene.h"
 
 Scene* current_scene;
