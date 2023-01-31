@@ -3,7 +3,7 @@
 #include "Scene.h"
 
 
-Transform Scene::GetTransform(Entity id) const
+Transform Scene::GetTransform(Entity id)
 {
 	return transforms.GetComponent(id);
 }
@@ -12,8 +12,8 @@ int Scene::CreateEntity()
 {
 	entities++;
 
-	transforms.AddComponent(entities, Transform());
-	sprites.AddComponent(entities, Sprite());
+	//transforms.AddComponent(entities, Transform());
+	//sprites.AddComponent(entities, Sprite());
 
 	return entities;
 }
@@ -21,8 +21,8 @@ int Scene::CreateEntity()
 void Scene::DeleteEntity(Entity id)
 {
 	entities--;
-	transforms.RemoveComponent(id);
-	sprites.RemoveComponent(id);
+	//transforms.RemoveComponent(id);
+	//sprites.RemoveComponent(id);
 }
 
 

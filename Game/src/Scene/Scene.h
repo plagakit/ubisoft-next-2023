@@ -18,7 +18,7 @@ public:
 	void Update(float deltaTime);
 	void Render();
 	
-	Transform GetTransform(Entity id) const;
+	Transform GetTransform(Entity id);
 	//void SetTransform(Entity id, Transform transform);
 
 	//Sprite GetSprite(Entity id) const;
