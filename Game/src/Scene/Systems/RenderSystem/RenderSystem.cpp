@@ -7,8 +7,8 @@ RenderSystem::RenderSystem(Scene* s) : scene(s) {}
 
 void RenderSystem::Render(Entity id) 
 {	
-	Transform tf = scene->GetTransform(id);
-	Sprite sp = scene->GetSprite(id);
+	Transform& tf = scene->GetTransform(id);
+	Sprite& sp = scene->GetSprite(id);
 
 	float sx = tf.position.x - sp.width / 2.0f;
 	float sy = tf.position.y - sp.height / 2.0f;

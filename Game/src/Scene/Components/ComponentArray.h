@@ -11,16 +11,16 @@ class ComponentArray {
 public:
 	ComponentArray();
 
-	T GetComponent(Entity id);
+	T& GetComponent(Entity id);
 	int GetSize() const;
 
 	void AddComponent(Entity id, T component);
 	void RemoveComponent(Entity id);
 
-	std::unordered_map<Entity, int> entity_map;
 	
 private:
 	std::vector<T> components;
+	std::unordered_map<Entity, int> entity_map;
 	
 	int active_entities;
 
@@ -33,7 +33,7 @@ ComponentArray<T>::ComponentArray()
 {}
 
 template<typename T>
-T ComponentArray<T>::GetComponent(Entity id)
+T& ComponentArray<T>::GetComponent(Entity id)
 {
 	// TODO: add assert
 	std::cout << "TEST" << std::endl;

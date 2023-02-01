@@ -7,10 +7,17 @@
 #include "Components/Sprite/Sprite.h"
 
 #include "Systems/RenderSystem/RenderSystem.h"
+#include "Systems/PhysicsSystem/PhysicsSystem.h"
 
 using Entity = std::uint32_t;
 const Entity MAX_ENTITIES = 1000;
 
+/* Because the game is only one scene, there are no entity managers,
+* component managers, or system managers. If the scope of the game was bigger,
+* there would definitely be managers of these types that involve templates and
+* stuff like that, but just because the game is small and there's one scene
+* I'm shoving every ECS-related thing into this class.
+*/
 class Scene {
 
 public:
@@ -18,11 +25,11 @@ public:
 	void Init();
 	void Update(float deltaTime);
 	void Render();
-	
-	Transform GetTransform(Entity id);
+
+	Transform& GetTransform(Entity id);
 	//void SetTransform(Entity id, Transform transform);
 
-	Sprite GetSprite(Entity id);
+	Sprite& GetSprite(Entity id);
 	//void SetSprite(Entity id, Sprite sprite);
 
 	int CreateEntity();
@@ -35,5 +42,6 @@ private:
 	ComponentArray<Transform> transforms;
 
 	RenderSystem render_system;
+	PhysicsSystem physics_system;
 
 };
