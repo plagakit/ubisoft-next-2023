@@ -19,7 +19,7 @@ Sprite::Sprite(const char* filename, unsigned int frame_)
     width = data.tex_width * (1.0f / data.cols);
     height = data.tex_height * (1.0f / data.rows);
     
-    CalculateUVsAndPoints(data.tex_width, data.tex_height, data.rows, data.cols);
+    CalculateUVsAndPoints(data);
 }
 
 Sprite::Sprite(const char* filename, unsigned int nrows, unsigned int ncols, unsigned int frame_)
@@ -31,10 +31,10 @@ Sprite::Sprite(const char* filename, unsigned int nrows, unsigned int ncols, uns
         
         textureID = data.textureID;
         frame = frame_;
-        width = data.tex_width * (1.0f / ncols);
-        height = data.tex_height * (1.0f / nrows);
+        width = data.tex_width / ncols;
+        height = data.tex_height / nrows;
         
-        CalculateUVsAndPoints(data.tex_width, data.tex_height, nrows, ncols);
+        CalculateUVsAndPoints(data);
         return;
     }
     
@@ -57,20 +57,24 @@ Sprite::Sprite(const char* filename, unsigned int nrows, unsigned int ncols, uns
 
     master_list[filename] = SpriteSheetData(texture, tex_width, tex_height, nrows, ncols);
     textureID = texture;
+    frame = frame_;
+    width = tex_width / ncols;
+    height = tex_height / nrows;
 
-    CalculateUVsAndPoints(tex_width, tex_height, nrows, ncols);
+    CalculateUVsAndPoints(master_list[filename]);
 }
 
-void Sprite::CalculateUVsAndPoints(unsigned int tex_width, unsigned int tex_height, unsigned int nrows, unsigned int ncols)
+void Sprite::CalculateUVsAndPoints(SpriteSheetData& data)
 {
+    
     // Calculate UVs (copied from SimpleSprite.cpp and modified)
-    float u = 1.0f / ncols;
-    float v = 1.0f / nrows;
-    int row = frame / ncols;
-    int column = frame % ncols;
+    float u = 1.0f / data.cols;
+    float v = 1.0f / data.rows;
+    int row = frame / data.cols;
+    int column = frame % data.cols;
 
-    width = tex_width * u;
-    height = tex_height * v;
+    width = data.tex_width * u;
+    height = data.tex_height * v;
     uvcoords[0] = u * column;
     uvcoords[1] = v * (float)(row + 1);
 

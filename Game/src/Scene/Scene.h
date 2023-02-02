@@ -21,7 +21,10 @@ const Entity MAX_ENTITIES = 1000;
 class Scene {
 
 public:
+	float m_deltaTime = 0;
+
 	Scene();
+
 	void Init();
 	void Update(float deltaTime);
 	void Render();
@@ -36,8 +39,6 @@ public:
 	void DeleteEntity(Entity id);
 
 private:
-	float m_deltaTime;
-
 	int m_entities;
 
 	ComponentArray<Sprite> m_sprites;

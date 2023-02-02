@@ -10,7 +10,7 @@ class PhysicsSystem {
 
 public:
 	PhysicsSystem(Scene* scene);
-	void UpdatePosition(Entity id, float deltaTime);
+	void UpdatePosition(Entity id);
 
 private:
 	Scene* scene;

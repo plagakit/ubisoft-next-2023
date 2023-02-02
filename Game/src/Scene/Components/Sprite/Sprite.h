@@ -31,8 +31,6 @@ struct Sprite {
 	Sprite(const char* filename, unsigned int frame = 0);
 	Sprite(const char* filename, unsigned int rows, unsigned int cols, unsigned int frame = 0);
 
-	void CalculateUVsAndPoints(unsigned int tex_width, unsigned int tex_height, unsigned int nrows, unsigned int ncols);
-	
-	// Texture width, height, rows & cols not stored in Sprite to save space in Component Array
+	void CalculateUVsAndPoints(SpriteSheetData& data);
 	static std::unordered_map<const char*, SpriteSheetData> master_list;
 };
