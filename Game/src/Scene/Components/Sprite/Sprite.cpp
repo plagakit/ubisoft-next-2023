@@ -1,7 +1,6 @@
 #include <stdafx.h>
-#include <App/TextureLoader.h>
-#include "../glut/include/GL/freeglut_ext.h"
 
+#include <App/TextureLoader.h>
 #include "Sprite.h"
 
 std::unordered_map<const char*, SpriteSheetData> Sprite::master_list;
@@ -28,7 +27,7 @@ Sprite::Sprite(const char* filename, unsigned int nrows, unsigned int ncols, uns
     // If the texture is already in the master list, dont load it again
     if (master_list.find(filename) != master_list.end())
     {
-        SpriteSheetData &data = master_list[filename];
+        SpriteSheetData& data = master_list[filename];
         
         textureID = data.textureID;
         frame = frame_;

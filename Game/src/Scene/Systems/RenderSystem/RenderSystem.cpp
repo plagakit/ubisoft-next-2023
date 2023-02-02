@@ -28,17 +28,17 @@ void RenderSystem::Render(Entity id)
     glTranslatef(x, y, 0.0f);
     glScalef(scalex, scaley, 1.0f);
     glRotatef(tf.rotation * 180 / PI, 0.0f, 0.0f, 1.0f);
-    glColor3f(sp.r, sp.g, sp.b);
+    glColor3f(1.0f, 1.0f, 1.0f);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, m_texture);
+    glBindTexture(GL_TEXTURE_2D, sp.textureID);
 
     glBegin(GL_QUADS);
     for (unsigned int i = 0; i < 8; i += 2)
     {
-        glTexCoord2f(m_uvcoords[i], m_uvcoords[i + 1]);
-        glVertex2f(m_points[i], m_points[i + 1]);
+        glTexCoord2f(sp.uvcoords[i], sp.uvcoords[i + 1]);
+        glVertex2f(sp.points[i], sp.points[i + 1]);
     }
     glEnd();
     glPopMatrix();

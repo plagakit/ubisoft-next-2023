@@ -47,7 +47,7 @@ void Scene::Init()
 		tf.velocity = Vector2(cosf(rand()) * 0.05f, sinf(rand()) * 0.05f);
 		transforms.AddComponent(ent, tf);
 
-		Sprite s = Sprite(60, 60, rand() % 2 == 0, rand() % 2 == 0, rand() % 2 == 0);
+		Sprite s = Sprite(".\\res\\Test.bmp", 8, 4);
 		sprites.AddComponent(ent, s);
 	}
 
