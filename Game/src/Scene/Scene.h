@@ -37,6 +37,7 @@ public:
 
 private:
 	int entities;
+	float dt;
 
 	ComponentArray<Sprite> sprites;
 	ComponentArray<Transform> transforms;

@@ -39,29 +39,33 @@ void Scene::Init()
 
 	entities = 0;
 	
-	for (int i = 0; i < 5000; i++) {
-		int ent = CreateEntity();
-		
-		Transform tf = Transform();
-		tf.position = Vector2(std::rand() % 1000, std::rand()%1000);
-		tf.velocity = Vector2(cosf(rand()) * 0.05f, sinf(rand()) * 0.05f);
-		transforms.AddComponent(ent, tf);
-
-		Sprite s = Sprite(".\\res\\Test.bmp", 8, 4);
-		sprites.AddComponent(ent, s);
-	}
-
-	std::cout << transforms.GetSize();
 }
 
 void Scene::Update(float deltaTime)
 {
-	for (int id = 1; id < entities; id++)
+	dt = deltaTime / 60;
+	
+	for (int i = 0; i < 5; i++)
+	{
+		int ent = CreateEntity();
+		Transform tf = Transform();
+		tf.position = Vector2(512, 512);
+		tf.velocity = Vector2(cosf(rand()) * 10, (sinf(rand()) + 1) / 2.0f * 15 + 5);
+		tf.scale = Vector2(0.25f, 0.25f);
+		transforms.AddComponent(ent, tf);
+		Sprite s = Sprite(".\\res\\jonathan.bmp", 1, 1);
+		sprites.AddComponent(ent, s);
+	}
+	
+	for (int id = 1; id <= entities; id++)
 		physics_system.UpdatePosition(id, deltaTime);
+
+	
 }
 
 void Scene::Render()
 {
-	for (int id = 1; id < entities; id++)
+	App::Print(200, 200, std::to_string(dt).c_str());
+	for (int id = 1; id <= entities; id++)
 		render_system.Render(id);
 }

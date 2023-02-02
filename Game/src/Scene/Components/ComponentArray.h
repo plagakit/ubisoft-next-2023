@@ -38,7 +38,7 @@ T& ComponentArray<T>::GetComponent(Entity id)
 	// TODO: add assert
 	std::cout << "TEST" << std::endl;
 	auto component_index = entity_map.find(id);
-	return components[component_index->first];
+	return components[component_index->first - 1];
 }
 
 template<typename T>
