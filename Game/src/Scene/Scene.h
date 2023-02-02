@@ -36,13 +36,14 @@ public:
 	void DeleteEntity(Entity id);
 
 private:
-	int entities;
-	float dt;
+	float m_deltaTime;
 
-	ComponentArray<Sprite> sprites;
-	ComponentArray<Transform> transforms;
+	int m_entities;
 
-	RenderSystem render_system;
-	PhysicsSystem physics_system;
+	ComponentArray<Sprite> m_sprites;
+	ComponentArray<Transform> m_transforms;
+
+	RenderSystem m_renderSystem;
+	PhysicsSystem m_physicsSystem;
 
 };

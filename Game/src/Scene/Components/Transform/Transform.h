@@ -6,7 +6,9 @@
 
 struct Transform {
 
-	Vector2 position, velocity, scale;
+	Vector2 position;
+	Vector2 velocity;
+	Vector2 scale;
 	float rotation;
 
 	Transform();
