@@ -12,5 +12,6 @@ void PhysicsSystem::UpdatePosition(Entity id)
 	
 	Transform& tf = scene->GetTransform(id);
 	tf.position += tf.velocity * dt;
+	tf.rotation += tf.velocity.y * dt * 0.1f;
 	tf.velocity -= Vector2(0, 9.8 * dt);
 }

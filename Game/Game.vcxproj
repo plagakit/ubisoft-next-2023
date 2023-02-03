@@ -188,6 +188,7 @@
     <ClInclude Include="include\stdafx.h" />
     <ClInclude Include="include\targetver.h" />
     <ClInclude Include="src\Scene\Components\ComponentArray.h" />
+    <ClInclude Include="src\Scene\Components\IComponentArray.h" />
     <ClInclude Include="src\Scene\Components\Sprite\Sprite.h" />
     <ClInclude Include="src\Scene\Components\Transform\Transform.h" />
     <ClInclude Include="src\Scene\Scene.h" />

@@ -2,17 +2,18 @@
 
 #include <stdafx.h>
 
+#include "IComponentArray.h"
 #include "Sprite/Sprite.h"
 #include "Transform/Transform.h"
 
 template<typename T>
-class ComponentArray {
+class ComponentArray : public IComponentArray {
 
 public:
 	ComponentArray();
 
 	T& GetComponent(Entity id);
-	int GetSize() const;
+	//int GetSize() const;
 
 	void AddComponent(Entity id, T component);
 	void RemoveComponent(Entity id);
@@ -63,11 +64,13 @@ void ComponentArray<T>::RemoveComponent(Entity id)
 	m_entityMap.erase(m_activeComponents);
 }
 
+/*
 template <typename T>
 int ComponentArray<T>::GetSize() const
 {
 	return m_activeComponents;
 }
+*/
 
 template class ComponentArray<Transform>;
 template class ComponentArray<Sprite>;
