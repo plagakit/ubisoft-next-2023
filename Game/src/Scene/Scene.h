@@ -29,14 +29,41 @@ public:
 	int CreateEntity();
 	void DeleteEntity(Entity id);
 
-	Transform& GetTransform(Entity id);
-	//void SetTransform(Entity id, Transform transform);
+	//template<typename T>
+	//T& GetComponent(Entity id);
 
-	Sprite& GetSprite(Entity id);
-	//void SetSprite(Entity id, Sprite sprite);
+	
+	template <typename T>
+	void CreateComponentArray()
+	{
+		const std::type_info& typeName = typeid(T);
+		assert("Component array already exists." && m_componentTypes.find(typeName) == m_componentTypes.end());
 
-	template<typename T>
-	T& GetComponent(Entity id);
+		m_componentArrays.insert({ typeName, std::make_shared<ComponentArray<T>>() });
+		m_componentTypes.insert({ typeName, m_typeCount });
+		m_typeCount++;
+	}
+
+	template <typename T>
+	std::shared_ptr<ComponentArray<T>> GetComponentArray()
+	{
+		const std::type_info& typeName = typeid(T);
+		assert("Component array doesn't exist." && m_componentTypes.find(typeName) != m_componentTypes.end());
+
+		return std::static_pointer_cast<ComponentArray<T>>(m_componentArrays[typeName]);
+	}
+
+	template <typename T>
+	T& GetComponent(Entity id)
+	{
+		// If the component array is not already created...
+		if (m_componentTypes.find(typeid(T)) == m_componentTypes.end())
+		{
+			CreateComponentArray<T>();
+		}
+
+		return GetComponentArray<T>()->GetComponent(id);
+	}
 
 private:
 	int m_entities;
@@ -45,17 +72,14 @@ private:
 	ComponentType m_typeCount = 0;
 	std::unordered_map<std::type_index, std::shared_ptr<IComponentArray>> m_componentArrays;
 	std::unordered_map<std::type_index, ComponentType> m_componentTypes;
-	
-	ComponentArray<Sprite> m_sprites;
-	ComponentArray<Transform> m_transforms;
 
 	RenderSystem m_renderSystem;
 	PhysicsSystem m_physicsSystem;
 
-	template<typename T>
-	void CreateComponentArray();
+	//template<typename T>
+	//void CreateComponentArray();
 
-	template<typename T>
-	std::shared_ptr<ComponentArray<T>> GetComponentArray();
+	//template<typename T>
+	//std::shared_ptr<ComponentArray<T>> GetComponentArray();
 
 };

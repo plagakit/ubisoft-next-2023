@@ -7,8 +7,8 @@ RenderSystem::RenderSystem(Scene* s) : scene(s) {}
 
 void RenderSystem::Render(Entity id) 
 {	
-	Transform& tf = scene->GetTransform(id);
-	Sprite& sp = scene->GetSprite(id);
+    Transform& tf = scene->GetComponent<Transform>(id);
+    Sprite& sp = scene->GetComponent<Sprite>(id);
 
 	// Code copied from SimpleSprite.cpp
 #if APP_USE_VIRTUAL_RES
