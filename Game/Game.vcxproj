@@ -192,6 +192,8 @@
     <ClInclude Include="src\Scene\Components\ComponentManager\ComponentManager.h" />
     <ClInclude Include="src\Scene\Components\Sprite\Sprite.h" />
     <ClInclude Include="src\Scene\Components\Transform\Transform.h" />
+    <ClInclude Include="src\Scene\ContiguousArray\ContiguousArray.h" />
+    <ClInclude Include="src\Scene\ContiguousArray\IContiguousArray.h" />
     <ClInclude Include="src\Scene\Scene.h" />
     <ClInclude Include="src\Scene\Systems\PhysicsSystem\PhysicsSystem.h" />
     <ClInclude Include="src\Scene\Systems\RenderSystem\RenderSystem.h" />
