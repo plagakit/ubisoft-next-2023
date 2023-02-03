@@ -3,8 +3,8 @@
 #include <stdafx.h>
 
 #include "IComponentArray.h"
-#include "Sprite/Sprite.h"
-#include "Transform/Transform.h"
+#include <Scene/Components/Sprite/Sprite.h>
+#include <Scene/Components/Transform/Transform.h>
 
 template<typename T>
 class ComponentArray : public IComponentArray {

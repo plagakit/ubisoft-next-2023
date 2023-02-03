@@ -2,7 +2,7 @@
 
 #include <stdafx.h>
 
-#include "Components/ComponentArray.h"
+#include "Components/ComponentArray/ComponentArray.h"
 #include "Components/Transform/Transform.h"
 #include "Components/Sprite/Sprite.h"
 
