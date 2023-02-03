@@ -29,10 +29,7 @@ public:
 	int CreateEntity();
 	void DeleteEntity(Entity id);
 
-	//template<typename T>
-	//T& GetComponent(Entity id);
 
-	
 	template <typename T>
 	void CreateComponentArray()
 	{
@@ -65,9 +62,17 @@ public:
 		return GetComponentArray<T>()->GetComponent(id);
 	}
 
+	template <typename T>
+	void AddComponent(Entity id, T component)
+	{
+		assert("Component array not found when adding component" && m_componentTypes.find(typeid(T)) != m_componentTypes.end());
+		assert("Entity doesn't exist" && id <= entities);
+		GetComponentArray<T>()->AddComponent(id, component);
+	}
+
 private:
 	int m_entities;
-	//std::vector<Signature> m_signatures;
+	std::vector<Signature> m_signatures;
 
 	ComponentType m_typeCount = 0;
 	std::unordered_map<std::type_index, std::shared_ptr<IComponentArray>> m_componentArrays;
