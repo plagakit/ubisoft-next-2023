@@ -4,7 +4,7 @@
 
 
 Scene::Scene() :
-	m_entities(0),
+	m_entities(-1),
 	m_renderSystem(RenderSystem(this)), m_physicsSystem(PhysicsSystem(this))
 {}
 
@@ -31,7 +31,7 @@ void Scene::Init()
 	CreateComponentArray<Transform>();
 	CreateComponentArray<Sprite>();
 
-	for (int i = 0; i < 50; i++)
+	for (int i = 0; i < 5; i++)
 	{
 		int ent = CreateEntity();
 
@@ -39,10 +39,10 @@ void Scene::Init()
 		tf.position = Vector2(20.0f*(i+1), 250.0f);
 		tf.velocity = Vector2(0.0f, 50.0f);
 		tf.scale = Vector2(0.25f, 0.25f);
-		GetComponentArray<Transform>()->AddComponent(ent, tf);
+		GetComponentArray<Transform>()->Add(ent, tf);
 
 		Sprite sp = Sprite(".//res//jonathan.bmp", 1, 1);
-		GetComponentArray<Sprite>()->AddComponent(ent, sp);
+		GetComponentArray<Sprite>()->Add(ent, sp);
 	}
 }
 
