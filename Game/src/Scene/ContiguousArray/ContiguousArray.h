@@ -17,11 +17,13 @@ public:
 
 	void Add(Entity id, T component);
 	void Remove(Entity id);	
+
+	std::string ToString();
 	
 private:
 	std::vector<T> m_items;
 	std::unordered_map<Entity, int> m_entityMap;
-	int m_numItems;
+ 	int m_numItems;
 
 };
 
@@ -45,7 +47,6 @@ void ContiguousArray<T>::Add(Entity id, T item)
 	// TODO: add assert
 	m_items.push_back(item);
 	m_entityMap.insert({ id, m_numItems });
-	//m_entityMap[id] = m_numItems;
 	m_numItems++;
 }
 
@@ -55,14 +56,14 @@ void ContiguousArray<T>::Remove(Entity id)
 	assert(("Remove: entity not found in map.") && m_entityMap.find(id) != m_entityMap.end());
 
 	// Swap memory of deleted component and last component in vector
-	int removed_index = m_entityMap[id];
-	Entity lastComponent = m_numItems - 1;
-	m_items[removed_index] = m_items[lastComponent];
-
-	m_items.erase(m_items.begin() + lastComponent);
-	m_entityMap.erase(lastComponent+1); // index starts at 1
-
 	m_numItems--;
+	int removedIndex = m_entityMap[id];
+
+	m_entityMap[id] = m_entityMap[m_numItems];
+	m_entityMap.erase(m_numItems);
+
+	std::swap(m_items[removedIndex], m_items.back());
+	m_items.pop_back();
 }
 
 /*
@@ -72,6 +73,15 @@ int ComponentArray<T>::GetSize() const
 	return m_activeComponents;
 }
 */
+
+template <typename T>
+std::string ContiguousArray<T>::ToString()
+{
+	std::string str = "";
+	for (auto const& pair : m_entityMap)
+		str += "{" + std::to_string(pair.first) + ": " + std::to_string(pair.second) + "} ";
+	return str;
+}
 
 template class ContiguousArray<Signature>;
 template class ContiguousArray<Transform>;

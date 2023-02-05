@@ -59,8 +59,8 @@ public:
 	template <typename T>
 	void AddComponent(Entity id, T component)
 	{
-		assert("AddComponent: Entity doesn't exist" && id <= m_entities);
-
+		// TODO: Add assert
+		
 		// If the component array is not already created...
 		if (m_componentTypes.find(typeid(T)) == m_componentTypes.end())
 		{
@@ -73,7 +73,7 @@ public:
 	template <typename T>
 	void RemoveComponent(Entity id)
 	{
-		assert("RemoveComponent: Entity doesn't exist" && id <= m_entities);
+		// TODO: Add assert
 		GetComponentArray<T>()->Remove(id);
 	}
 
