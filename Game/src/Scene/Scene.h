@@ -2,7 +2,7 @@
 
 #include <stdafx.h>
 
-#include "Components/ComponentArray/ComponentArray.h"
+#include "ContiguousArray/ContiguousArray.h"
 #include "Components/Transform/Transform.h"
 #include "Components/Sprite/Sprite.h"
 
@@ -11,9 +11,6 @@
 
 
 const Entity MAX_ENTITIES = 1000;
-const ComponentType MAX_COMPONENT_TYPES = 32;
-using Signature = std::bitset<MAX_COMPONENT_TYPES>();
-
 
 class Scene {
 
@@ -36,46 +33,47 @@ public:
 		const std::type_info& typeName = typeid(T);
 		assert("Component array already exists." && m_componentTypes.find(typeName) == m_componentTypes.end());
 
-		m_componentArrays.insert({ typeName, std::make_shared<ComponentArray<T>>() });
+		m_componentArrays.insert({ typeName, std::make_shared<ContiguousArray<T>>() });
 		m_componentTypes.insert({ typeName, m_typeCount });
 		m_typeCount++;
 	}
 
 	template <typename T>
-	std::shared_ptr<ComponentArray<T>> GetComponentArray()
+	std::shared_ptr<ContiguousArray<T>> GetComponentArray()
 	{
 		const std::type_info& typeName = typeid(T);
 		assert("Component array doesn't exist." && m_componentTypes.find(typeName) != m_componentTypes.end());
 
-		return std::static_pointer_cast<ComponentArray<T>>(m_componentArrays[typeName]);
+		return std::static_pointer_cast<ContiguousArray<T>>(m_componentArrays[typeName]);
 	}
 
 	template <typename T>
 	T& GetComponent(Entity id)
 	{
+		assert("Component array doesn't exist." && m_componentTypes.find(typeid(T)) != m_componentTypes.end());
+		return GetComponentArray<T>()->Get(id);
+	}
+
+	template <typename T>
+	void AddComponent(Entity id, T component)
+	{
+		assert("Entity doesn't exist" && id <= entities);
+
 		// If the component array is not already created...
 		if (m_componentTypes.find(typeid(T)) == m_componentTypes.end())
 		{
 			CreateComponentArray<T>();
 		}
 
-		return GetComponentArray<T>()->GetComponent(id);
-	}
-
-	template <typename T>
-	void AddComponent(Entity id, T component)
-	{
-		assert("Component array not found when adding component" && m_componentTypes.find(typeid(T)) != m_componentTypes.end());
-		assert("Entity doesn't exist" && id <= entities);
-		GetComponentArray<T>()->AddComponent(id, component);
+		GetComponentArray<T>()->Add(id, component);
 	}
 
 private:
 	int m_entities;
-	std::vector<Signature> m_signatures;
+	ContiguousArray<Signature> m_signatures;
 
 	ComponentType m_typeCount = 0;
-	std::unordered_map<std::type_index, std::shared_ptr<IComponentArray>> m_componentArrays;
+	std::unordered_map<std::type_index, std::shared_ptr<IContiguousArray>> m_componentArrays;
 	std::unordered_map<std::type_index, ComponentType> m_componentTypes;
 
 	RenderSystem m_renderSystem;

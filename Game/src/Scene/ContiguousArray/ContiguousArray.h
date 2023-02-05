@@ -3,10 +3,8 @@
 #include <stdafx.h>
 
 #include "IContiguousArray.h"
-#include <Scene/Scene.h>
 #include <Scene/Components/Sprite/Sprite.h>
 #include <Scene/Components/Transform/Transform.h>
-
 
 template<typename T>
 class ContiguousArray : public IContiguousArray {
@@ -39,7 +37,7 @@ T& ContiguousArray<T>::Get(Entity id)
 {
 	// TODO: add assert
 	auto itemIndex = m_entityMap.find(id);
-	return m_items[itemIndex->first];
+	return m_items[itemIndex->first-1];
 }
 
 template<typename T>
@@ -58,7 +56,7 @@ void ContiguousArray<T>::Remove(Entity id)
 
 	// Swap memory of deleted component and last component in vector
 	int removed_index = m_entityMap[id];
-	m_items[removed_index] = m_components[m_numItems];
+	m_items[removed_index] = m_items[m_numItems];
 
 	m_items.erase(m_items.begin() + m_numItems);
 	m_entityMap.erase(m_numItems);
@@ -74,5 +72,6 @@ int ComponentArray<T>::GetSize() const
 }
 */
 
+template class ContiguousArray<Signature>;
 template class ContiguousArray<Transform>;
 template class ContiguousArray<Sprite>;

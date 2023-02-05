@@ -24,3 +24,5 @@
 
 using Entity = std::uint32_t;
 using ComponentType = unsigned char;
+const ComponentType MAX_COMPONENT_TYPES = 32;
+using Signature = std::bitset<MAX_COMPONENT_TYPES>;
