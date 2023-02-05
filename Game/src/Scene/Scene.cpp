@@ -4,7 +4,7 @@
 
 
 Scene::Scene() :
-	m_entities(-1),
+	m_entities(-1), // starts at 0
 	m_renderSystem(RenderSystem(this)), m_physicsSystem(PhysicsSystem(this))
 {}
 
@@ -17,21 +17,21 @@ int Scene::CreateEntity()
 
 void Scene::DeleteEntity(Entity id)
 {
+	RemoveComponent<Transform>(id);
+	RemoveComponent<Sprite>(id);
 	m_entities--;
-	/*m_transforms.RemoveComponent(id);
-	m_sprites.RemoveComponent(id);*/
 }
 
 
 void Scene::Init()
 {
 	std::cout << "Scene initialized." << std::endl;
-	m_entities = 0;
+	m_entities = -1;
 
 	CreateComponentArray<Transform>();
 	CreateComponentArray<Sprite>();
 
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < 10; i++)
 	{
 		int ent = CreateEntity();
 
@@ -44,18 +44,21 @@ void Scene::Init()
 		Sprite sp = Sprite(".//res//jonathan.bmp", 1, 1);
 		GetComponentArray<Sprite>()->Add(ent, sp);
 	}
+
+	DeleteEntity(0);
+
 }
 
 void Scene::Update(float deltaTime)
 {	
 	m_deltaTime = deltaTime / 1000.0f; // deltaTime in seconds, want milliseconds
 	
-	for (int id = 1; id <= m_entities; id++)
+	for (Entity id = 0; id < m_entities; id++)
 		m_physicsSystem.UpdatePosition(id);	
 }
 
 void Scene::Render()
 {
-	for (int id = 1; id <= m_entities; id++)
+	for (Entity id = 0; id < m_entities; id++)
 		m_renderSystem.Render(id);
 }

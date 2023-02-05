@@ -16,8 +16,7 @@ public:
 	//int GetSize() const;
 
 	void Add(Entity id, T component);
-	void Remove(Entity id);
-
+	void Remove(Entity id);	
 	
 private:
 	std::vector<T> m_items;
@@ -35,9 +34,9 @@ ContiguousArray<T>::ContiguousArray()
 template<typename T>
 T& ContiguousArray<T>::Get(Entity id)
 {
-	// TODO: add assert
+	assert("Get: entity not found in map." && m_entityMap.find(id) != m_entityMap.end());
 	auto itemIndex = m_entityMap.find(id);
-	return m_items[itemIndex->first-1];
+	return m_items[itemIndex->first];
 }
 
 template<typename T>
@@ -45,21 +44,23 @@ void ContiguousArray<T>::Add(Entity id, T item)
 {
 	// TODO: add assert
 	m_items.push_back(item);
-	m_entityMap[id] = m_numItems;
+	m_entityMap.insert({ id, m_numItems });
+	//m_entityMap[id] = m_numItems;
 	m_numItems++;
 }
 
 template<typename T>
 void ContiguousArray<T>::Remove(Entity id)
 {
-	// TODO: add assert
+	assert(("Remove: entity not found in map.") && m_entityMap.find(id) != m_entityMap.end());
 
 	// Swap memory of deleted component and last component in vector
 	int removed_index = m_entityMap[id];
-	m_items[removed_index] = m_items[m_numItems];
+	Entity lastComponent = m_numItems - 1;
+	m_items[removed_index] = m_items[lastComponent];
 
-	m_items.erase(m_items.begin() + m_numItems);
-	m_entityMap.erase(m_numItems);
+	m_items.erase(m_items.begin() + lastComponent);
+	m_entityMap.erase(lastComponent+1); // index starts at 1
 
 	m_numItems--;
 }

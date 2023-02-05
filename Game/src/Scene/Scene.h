@@ -27,11 +27,13 @@ public:
 	void DeleteEntity(Entity id);
 
 
+	// COMPONENT ARRAY METHODS
+
 	template <typename T>
 	void CreateComponentArray()
 	{
 		const std::type_info& typeName = typeid(T);
-		assert("Component array already exists." && m_componentTypes.find(typeName) == m_componentTypes.end());
+		assert("CreateComponentArray: Component array already exists." && m_componentTypes.find(typeName) == m_componentTypes.end());
 
 		m_componentArrays.insert({ typeName, std::make_shared<ContiguousArray<T>>() });
 		m_componentTypes.insert({ typeName, m_typeCount });
@@ -42,7 +44,7 @@ public:
 	std::shared_ptr<ContiguousArray<T>> GetComponentArray()
 	{
 		const std::type_info& typeName = typeid(T);
-		assert("Component array doesn't exist." && m_componentTypes.find(typeName) != m_componentTypes.end());
+		assert("GetComponentArray: Component array doesn't exist." && m_componentTypes.find(typeName) != m_componentTypes.end());
 
 		return std::static_pointer_cast<ContiguousArray<T>>(m_componentArrays[typeName]);
 	}
@@ -50,14 +52,14 @@ public:
 	template <typename T>
 	T& GetComponent(Entity id)
 	{
-		assert("Component array doesn't exist." && m_componentTypes.find(typeid(T)) != m_componentTypes.end());
+		assert("GetComponent: Component array doesn't exist." && m_componentTypes.find(typeid(T)) != m_componentTypes.end());
 		return GetComponentArray<T>()->Get(id);
 	}
 
 	template <typename T>
 	void AddComponent(Entity id, T component)
 	{
-		assert("Entity doesn't exist" && id <= entities);
+		assert("AddComponent: Entity doesn't exist" && id <= m_entities);
 
 		// If the component array is not already created...
 		if (m_componentTypes.find(typeid(T)) == m_componentTypes.end())
@@ -68,8 +70,15 @@ public:
 		GetComponentArray<T>()->Add(id, component);
 	}
 
+	template <typename T>
+	void RemoveComponent(Entity id)
+	{
+		assert("RemoveComponent: Entity doesn't exist" && id <= m_entities);
+		GetComponentArray<T>()->Remove(id);
+	}
+
 private:
-	int m_entities;
+	Entity m_entities;
 	ContiguousArray<Signature> m_signatures;
 
 	ComponentType m_typeCount = 0;
