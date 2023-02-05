@@ -187,7 +187,6 @@
     <ClInclude Include="include\App\TextureLoader.h" />
     <ClInclude Include="include\stdafx.h" />
     <ClInclude Include="include\targetver.h" />
-    <ClInclude Include="src\Scene\Components\ComponentManager\ComponentManager.h" />
     <ClInclude Include="src\Scene\Components\Sprite\Sprite.h" />
     <ClInclude Include="src\Scene\Components\Transform\Transform.h" />
     <ClInclude Include="src\Scene\ContiguousArray\ContiguousArray.h" />
