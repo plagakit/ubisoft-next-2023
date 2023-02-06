@@ -56,7 +56,6 @@ void ContiguousArray<T>::Remove(Entity id)
 	assert(("Remove: entity not found in map.") && m_entityMap.find(id) != m_entityMap.end());
 
 	// Swap memory of deleted component and last component in vector
-	m_numItems--;
 	int removedIndex = m_entityMap[id];
 
 	m_entityMap[id] = m_entityMap[m_numItems];
@@ -64,6 +63,8 @@ void ContiguousArray<T>::Remove(Entity id)
 
 	std::swap(m_items[removedIndex], m_items.back());
 	m_items.pop_back();
+
+	m_numItems--;
 }
 
 /*

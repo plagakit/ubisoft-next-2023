@@ -16,11 +16,10 @@ void TimerSystem::Update(Entity id)
 	if (t.elapsed > t.duration)
 	{
 		t.elapsed = 0.0f;
-		t.done = true;
 		if (t.oneFire)
 		{
+			t.done = true;
 			t.isRunning = false;
-			t.done = false;
 		}	
 	}
 }

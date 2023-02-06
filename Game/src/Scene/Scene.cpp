@@ -35,7 +35,7 @@ void Scene::Init()
 	CreateComponentArray<Sprite>();
 	CreateComponentArray<Timer>();
 
-	for (int i = 1; i <= 10; i++)
+	for (int i = 1; i <= 5; i++)
 	{
 		int ent = CreateEntity();
 
@@ -48,12 +48,12 @@ void Scene::Init()
 		Sprite sp = Sprite(".//res//jonathan.bmp", 1, 1);
 		AddComponent<Sprite>(ent, sp);
 
-		Timer t = Timer(5);
+		Timer t = Timer(2);
 		AddComponent<Timer>(ent, t);
 	}
 
-	//DeleteEntity(0);
-	//GetComponent<Timer>(3).Start();
+	//DeleteEntity(1);
+	GetComponent<Timer>(2).Start();
 
 }
 
@@ -67,6 +67,15 @@ void Scene::Update(float deltaTime)
 	for (Entity id = 1; id <= m_entities; id++)
 		m_physicsSystem.UpdatePosition(id);
 
+	for (Entity id = 1; id <= m_entities; id++)
+	{
+		if (GetComponent<Timer>(id).done)
+		{
+			DeleteEntity(id);
+			return;
+		}
+	}
+
 }
 
 void Scene::Render()
@@ -75,9 +84,9 @@ void Scene::Render()
 	std::string timers = "";
 	for (Entity id = 1; id <= m_entities; id++)
 	{
+		m_renderSystem.Render(id);
 		str += std::to_string(id) + " ";
 		timers += std::to_string(GetComponent<Timer>(id).PercentElapsed()) + " ";
-		m_renderSystem.Render(id);
 	}
 
 	App::Print(100, 600, std::to_string(m_entities).c_str());
