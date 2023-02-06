@@ -28,54 +28,21 @@ public:
 
 
 	// COMPONENT ARRAY METHODS
+	template <typename T>
+	void CreateComponentArray();
 
 	template <typename T>
-	void CreateComponentArray()
-	{
-		const std::type_info& typeName = typeid(T);
-		assert("CreateComponentArray: Component array already exists." && m_componentTypes.find(typeName) == m_componentTypes.end());
-
-		m_componentArrays.insert({ typeName, std::make_shared<ContiguousArray<T>>() });
-		m_componentTypes.insert({ typeName, m_typeCount });
-		m_typeCount++;
-	}
+	std::shared_ptr<ContiguousArray<T>> GetComponentArray();
 
 	template <typename T>
-	std::shared_ptr<ContiguousArray<T>> GetComponentArray()
-	{
-		const std::type_info& typeName = typeid(T);
-		assert("GetComponentArray: Component array doesn't exist." && m_componentTypes.find(typeName) != m_componentTypes.end());
-
-		return std::static_pointer_cast<ContiguousArray<T>>(m_componentArrays[typeName]);
-	}
+	T& GetComponent(Entity id);
 
 	template <typename T>
-	T& GetComponent(Entity id)
-	{
-		assert("GetComponent: Component array doesn't exist." && m_componentTypes.find(typeid(T)) != m_componentTypes.end());
-		return GetComponentArray<T>()->Get(id);
-	}
+	void AddComponent(Entity id, T component);
 
 	template <typename T>
-	void AddComponent(Entity id, T component)
-	{
-		// TODO: Add assert
-		
-		// If the component array is not already created...
-		if (m_componentTypes.find(typeid(T)) == m_componentTypes.end())
-		{
-			CreateComponentArray<T>();
-		}
+	void RemoveComponent(Entity id);
 
-		GetComponentArray<T>()->Add(id, component);
-	}
-
-	template <typename T>
-	void RemoveComponent(Entity id)
-	{
-		// TODO: Add assert
-		GetComponentArray<T>()->Remove(id);
-	}
 
 private:
 	Entity m_entities;
@@ -95,3 +62,52 @@ private:
 	//std::shared_ptr<ComponentArray<T>> GetComponentArray();
 
 };
+
+// Component array method implementations
+
+template <typename T>
+void Scene::CreateComponentArray()
+{
+	const std::type_info& typeName = typeid(T);
+	assert("CreateComponentArray: Component array already exists." && m_componentTypes.find(typeName) == m_componentTypes.end());
+
+	m_componentArrays.insert({ typeName, std::make_shared<ContiguousArray<T>>() });
+	m_componentTypes.insert({ typeName, m_typeCount });
+	m_typeCount++;
+}
+
+template <typename T>
+std::shared_ptr<ContiguousArray<T>> Scene::GetComponentArray()
+{
+	const std::type_info& typeName = typeid(T);
+	assert("GetComponentArray: Component array doesn't exist." && m_componentTypes.find(typeName) != m_componentTypes.end());
+
+	return std::static_pointer_cast<ContiguousArray<T>>(m_componentArrays[typeName]);
+}
+
+template <typename T>
+T& Scene::GetComponent(Entity id)
+{
+	return GetComponentArray<T>()->Get(id);
+}
+
+template <typename T>
+void Scene::AddComponent(Entity id, T component)
+{
+	// TODO: Add assert
+
+	// If the component array is not already created...
+	if (m_componentTypes.find(typeid(T)) == m_componentTypes.end())
+	{
+		CreateComponentArray<T>();
+	}
+
+	GetComponentArray<T>()->Add(id, component);
+}
+
+template <typename T>
+void Scene::RemoveComponent(Entity id)
+{
+	// TODO: Add assert
+	GetComponentArray<T>()->Remove(id);
+}
