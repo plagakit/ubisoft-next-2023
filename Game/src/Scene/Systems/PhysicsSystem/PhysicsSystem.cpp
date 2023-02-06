@@ -1,10 +1,9 @@
 #include <stdafx.h>
 
-#include "Scene/Scene.h"
 #include "PhysicsSystem.h"
+#include "Scene/Scene.h"
+#include "Scene/Components/Transform/Transform.h"
 
-
-PhysicsSystem::PhysicsSystem(Scene* s) : scene(s) {}
 
 void PhysicsSystem::UpdatePosition(Entity id)
 {

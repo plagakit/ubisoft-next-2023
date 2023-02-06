@@ -2,16 +2,12 @@
 
 #include <stdafx.h>
 
-//#include "Scene/Scene.h"
-class Scene;
+#include "Scene/Systems/ISystem.h"
 
-class RenderSystem {
+class RenderSystem : public ISystem {
+	using ISystem::ISystem;
 
 public:
-	RenderSystem(Scene* scene);
 	void Render(Entity id);
-
-private:
-	Scene* scene;
 
 };

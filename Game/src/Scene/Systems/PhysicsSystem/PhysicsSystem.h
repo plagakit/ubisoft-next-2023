@@ -2,17 +2,13 @@
 
 #include <stdafx.h>
 
-#include "Scene/Components/Transform/Transform.h"
+#include "Scene/Systems/ISystem.h"
 
-class Scene;
 
-class PhysicsSystem {
+class PhysicsSystem : public ISystem {
+	using ISystem::ISystem;
 
 public:
-	PhysicsSystem(Scene* scene);
 	void UpdatePosition(Entity id);
-
-private:
-	Scene* scene;
 
 };

@@ -3,8 +3,6 @@
 #include "RenderSystem.h"
 #include "Scene/Scene.h"
 
-RenderSystem::RenderSystem(Scene* s) : scene(s) {}
-
 void RenderSystem::Render(Entity id) 
 {	
     Transform& tf = scene->GetComponent<Transform>(id);

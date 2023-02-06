@@ -6,6 +6,7 @@
 #include "Components/Transform/Transform.h"
 #include "Components/Sprite/Sprite.h"
 
+#include "Systems/ISystem.h"
 #include "Systems/RenderSystem/RenderSystem.h"
 #include "Systems/PhysicsSystem/PhysicsSystem.h"
 
