@@ -13,7 +13,7 @@ Timer::Timer(float dur, bool oneFr) :
 void Timer::Start()
 {
 	elapsed = 0.0f;
-	isRunning = false;
+	isRunning = true;
 	done = false;
 }
 

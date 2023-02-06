@@ -5,10 +5,12 @@
 #include "ContiguousArray/ContiguousArray.h"
 #include "Components/Transform/Transform.h"
 #include "Components/Sprite/Sprite.h"
+#include "Components/Timer/Timer.h"
 
 #include "Systems/ISystem.h"
 #include "Systems/RenderSystem/RenderSystem.h"
 #include "Systems/PhysicsSystem/PhysicsSystem.h"
+#include "Systems/TimerSystem/TimerSystem.h"
 
 
 const Entity MAX_ENTITIES = 1000;
@@ -55,6 +57,7 @@ private:
 
 	RenderSystem m_renderSystem;
 	PhysicsSystem m_physicsSystem;
+	TimerSystem m_timerSystem;
 
 	//template<typename T>
 	//void CreateComponentArray();

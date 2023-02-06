@@ -6,7 +6,7 @@
 
 void TimerSystem::Update(Entity id)
 {
-	Timer t = scene->GetComponent<Timer>(id);
+	Timer& t = scene->GetComponent<Timer>(id);
 	
 	if (!t.isRunning)
 		return;
@@ -16,7 +16,11 @@ void TimerSystem::Update(Entity id)
 	if (t.elapsed > t.duration)
 	{
 		t.elapsed = 0.0f;
+		t.done = true;
 		if (t.oneFire)
+		{
 			t.isRunning = false;
+			t.done = false;
+		}	
 	}
 }
