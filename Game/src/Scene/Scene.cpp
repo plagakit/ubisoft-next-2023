@@ -4,7 +4,7 @@
 
 
 Scene::Scene() :
-	m_entities(-1), // starts at 0
+	m_entities(0),
 	m_renderSystem(RenderSystem(this)), 
 	m_physicsSystem(PhysicsSystem(this)),
 	m_timerSystem(TimerSystem(this))
@@ -21,19 +21,21 @@ void Scene::DeleteEntity(Entity id)
 {
 	m_entities--;
 	RemoveComponent<Transform>(id);
-	RemoveComponent<Sprite>(id);	
+	RemoveComponent<Sprite>(id);
+	RemoveComponent<Timer>(id);
 }
 
 
 void Scene::Init()
 {
 	std::cout << "Scene initialized." << std::endl;
-	m_entities = -1;
+	m_entities = 0;
 
 	CreateComponentArray<Transform>();
 	CreateComponentArray<Sprite>();
+	CreateComponentArray<Timer>();
 
-	for (int i = 1; i <= 13; i++)
+	for (int i = 1; i <= 10; i++)
 	{
 		int ent = CreateEntity();
 
@@ -50,8 +52,8 @@ void Scene::Init()
 		AddComponent<Timer>(ent, t);
 	}
 
-	DeleteEntity(9);
-	GetComponent<Timer>(3).Start();
+	//DeleteEntity(0);
+	//GetComponent<Timer>(3).Start();
 
 }
 
@@ -59,25 +61,28 @@ void Scene::Update(float deltaTime)
 {	
 	m_deltaTime = deltaTime / 1000.0f; // deltaTime in seconds, want milliseconds
 	
-	for (Entity id = 0; id <= m_entities; id++)
+	for (Entity id = 1; id <= m_entities; id++)
 		m_timerSystem.Update(id);
 
-	for (Entity id = 0; id <= m_entities; id++)
+	for (Entity id = 1; id <= m_entities; id++)
 		m_physicsSystem.UpdatePosition(id);
+
 }
 
 void Scene::Render()
 {
 	std::string str = "";
 	std::string timers = "";
-	for (Entity id = 0; id <= m_entities; id++)
+	for (Entity id = 1; id <= m_entities; id++)
 	{
 		str += std::to_string(id) + " ";
 		timers += std::to_string(GetComponent<Timer>(id).PercentElapsed()) + " ";
 		m_renderSystem.Render(id);
 	}
 
+	App::Print(100, 600, std::to_string(m_entities).c_str());
 	App::Print(100, 500, str.c_str());
 	App::Print(100, 400, GetComponentArray<Sprite>()->ToString().c_str());
 	App::Print(100, 300, timers.c_str());
+
 }

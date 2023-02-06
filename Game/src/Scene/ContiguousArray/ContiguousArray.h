@@ -36,9 +36,9 @@ ContiguousArray<T>::ContiguousArray()
 template<typename T>
 T& ContiguousArray<T>::Get(Entity id)
 {
-	assert("Get: entity not found in map." && m_entityMap.find(id) != m_entityMap.end());
 	auto itemIndex = m_entityMap.find(id);
-	return m_items[itemIndex->first];
+	assert("Get: entity not found in map." && itemIndex != m_entityMap.end());
+	return m_items[itemIndex->first-1]; // Entity indexes start at 1
 }
 
 template<typename T>
