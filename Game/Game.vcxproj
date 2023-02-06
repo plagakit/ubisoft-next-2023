@@ -188,12 +188,15 @@
     <ClInclude Include="include\stdafx.h" />
     <ClInclude Include="include\targetver.h" />
     <ClInclude Include="src\Scene\Components\Sprite\Sprite.h" />
+    <ClInclude Include="src\Scene\Components\Timer\Timer.h" />
     <ClInclude Include="src\Scene\Components\Transform\Transform.h" />
     <ClInclude Include="src\Scene\ContiguousArray\ContiguousArray.h" />
     <ClInclude Include="src\Scene\ContiguousArray\IContiguousArray.h" />
     <ClInclude Include="src\Scene\Scene.h" />
+    <ClInclude Include="src\Scene\Systems\ISystem.h" />
     <ClInclude Include="src\Scene\Systems\PhysicsSystem\PhysicsSystem.h" />
     <ClInclude Include="src\Scene\Systems\RenderSystem\RenderSystem.h" />
+    <ClInclude Include="src\Scene\Systems\TimerSystem\TimerSystem.h" />
     <ClInclude Include="src\Scene\Vector2\Vector2.h" />
   </ItemGroup>
   <ItemGroup>
@@ -204,6 +207,7 @@
     <ClCompile Include="include\App\SimpleSprite.cpp" />
     <ClCompile Include="include\App\TextureLoader.cpp" />
     <ClCompile Include="src\Scene\Components\Sprite\Sprite.cpp" />
+    <ClCompile Include="src\Scene\Components\Timer\Timer.cpp" />
     <ClCompile Include="src\Scene\Components\Transform\Transform.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="include\stdafx.cpp">
@@ -215,6 +219,7 @@
     <ClCompile Include="src\Scene\Scene.cpp" />
     <ClCompile Include="src\Scene\Systems\PhysicsSystem\PhysicsSystem.cpp" />
     <ClCompile Include="src\Scene\Systems\RenderSystem\RenderSystem.cpp" />
+    <ClCompile Include="src\Scene\Systems\TimerSystem\TimerSystem.cpp" />
     <ClCompile Include="src\Scene\Vector2\Vector2.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
