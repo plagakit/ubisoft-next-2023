@@ -47,6 +47,7 @@ void EntityManager::DeleteEntity(ComponentManager& componentMgr, Entity id)
 	assert("Entity not found in vector!" && ent != m_entities.end());
 
 	m_entities.erase(ent);
+	m_availableEntities.push(id);
 	/*componentMgr.RemoveComponent<Transform>(id);
 	componentMgr.RemoveComponent<Sprite>(id);
 	componentMgr.RemoveComponent<Timer>(id);*/

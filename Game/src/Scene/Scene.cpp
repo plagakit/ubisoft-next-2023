@@ -17,7 +17,7 @@ void Scene::Init()
 	m_componentMgr.CreateComponentArray<Sprite>();
 	m_componentMgr.CreateComponentArray<Timer>();
 
-	for (int i = 1; i <= 999; i++)
+	for (int i = 1; i <= 500; i++)
 	{
 		Entity ent = m_entityMgr.CreateEntity();
 
@@ -46,14 +46,6 @@ void Scene::Update(float deltaTime)
 
 	for (auto id : m_entityMgr.GetEntities())
 		m_physicsSystem.UpdatePosition(id);
-
-	for (auto id : m_entityMgr.GetEntities())
-	{
-		if (m_componentMgr.GetComponent<Timer>(id).done)
-		{
-			m_entityMgr.DeleteEntity(m_componentMgr, id);
-		}
-	}
 
 }
 

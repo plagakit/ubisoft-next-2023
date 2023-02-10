@@ -87,8 +87,3 @@ std::string ContiguousArray<T>::ToString()
 		str += "{" + std::to_string(pair.first) + ": " + std::to_string(pair.second) + "} ";
 	return str;
 }
-
-template class ContiguousArray<Signature>;
-//template class ContiguousArray<Transform>;
-//template class ContiguousArray<Sprite>;
-//template class ContiguousArray<Timer>;
