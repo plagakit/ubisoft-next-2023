@@ -14,11 +14,13 @@
 // TODO: reference additional headers your program requires here
 #include <string>
 #include <math.h>
-#include <iostream>
 #include <unordered_map>
 #include <assert.h>
 #include <bitset>
 #include <typeindex>
+#include <queue>
+#include <memory>
+#include <algorithm>
 
 #include "App\app.h"
 

@@ -3,8 +3,6 @@
 #include <stdafx.h>
 
 #include "IContiguousArray.h"
-#include <Scene/Components/Sprite/Sprite.h>
-#include <Scene/Components/Transform/Transform.h>
 
 template<typename T>
 class ContiguousArray : public IContiguousArray {
@@ -23,6 +21,7 @@ public:
 private:
 	std::vector<T> m_items;
 	std::unordered_map<Entity, int> m_entityMap;
+	std::unordered_map<int, Entity> m_indexMap;
  	int m_numItems;
 
 };
@@ -30,15 +29,17 @@ private:
 
 template<typename T>
 ContiguousArray<T>::ContiguousArray()
-	: m_items(), m_entityMap(), m_numItems(0)
+	: m_items(), m_entityMap(), m_indexMap(), m_numItems(0)
 {}
 
 template<typename T>
 T& ContiguousArray<T>::Get(Entity id)
 {
 	auto itemIndex = m_entityMap.find(id);
+	if (itemIndex == m_entityMap.end())
+		int a = 5;
 	assert("Get: entity not found in map." && itemIndex != m_entityMap.end());
-	return m_items[itemIndex->first-1]; // Entity indexes start at 1
+	return m_items[m_entityMap[id]]; // Entity indexes start at 1
 }
 
 template<typename T>
@@ -47,6 +48,7 @@ void ContiguousArray<T>::Add(Entity id, T item)
 	// TODO: add assert
 	m_items.push_back(item);
 	m_entityMap.insert({ id, m_numItems });
+	m_indexMap.insert({ m_numItems, id });
 	m_numItems++;
 }
 
@@ -57,12 +59,14 @@ void ContiguousArray<T>::Remove(Entity id)
 
 	// Swap memory of deleted component and last component in vector
 	int removedIndex = m_entityMap[id];
-
-	m_entityMap[id] = m_entityMap[m_numItems];
-	m_entityMap.erase(m_numItems);
-
-	std::swap(m_items[removedIndex], m_items.back());
+	int lastID = m_indexMap[m_numItems - 1];
+	
+	
+	m_items[removedIndex] = m_items.back();
+	m_entityMap[lastID] = removedIndex;
+ 
 	m_items.pop_back();
+	m_entityMap.erase(id);
 
 	m_numItems--;
 }
@@ -85,5 +89,6 @@ std::string ContiguousArray<T>::ToString()
 }
 
 template class ContiguousArray<Signature>;
-template class ContiguousArray<Transform>;
-template class ContiguousArray<Sprite>;
+//template class ContiguousArray<Transform>;
+//template class ContiguousArray<Sprite>;
+//template class ContiguousArray<Timer>;
