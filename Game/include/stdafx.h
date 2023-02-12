@@ -21,10 +21,11 @@
 #include <queue>
 #include <memory>
 #include <algorithm>
+#include <iterator>
 
 #include "App\app.h"
 
 using Entity = std::uint32_t;
-using ComponentType = unsigned char;
-const ComponentType MAX_COMPONENT_TYPES = 32;
+using ComponentID = unsigned char;
+const ComponentID MAX_COMPONENT_TYPES = 32;
 using Signature = std::bitset<MAX_COMPONENT_TYPES>;

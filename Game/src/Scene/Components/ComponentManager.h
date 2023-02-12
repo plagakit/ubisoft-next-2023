@@ -24,9 +24,9 @@ public:
 
 
 private:
-	ComponentType m_typeCount = 0;
+	ComponentID m_typeCount = 0;
 	std::unordered_map<std::type_index, std::shared_ptr<IContiguousArray>> m_componentArrays;
-	std::unordered_map<std::type_index, ComponentType> m_componentTypes;
+	std::unordered_map<std::type_index, ComponentID> m_componentTypes;
 
 };
 

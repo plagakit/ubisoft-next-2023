@@ -3,9 +3,8 @@
 #include <stdafx.h>
 
 #include "EntityManager/EntityManager.h"
-
 #include "ContiguousArray/ContiguousArray.h"
-#include "Components/ComponentManager.h"
+
 #include "Components/Transform/Transform.h"
 #include "Components/Sprite/Sprite.h"
 #include "Components/Timer/Timer.h"
@@ -30,12 +29,10 @@ public:
 	void Render();
 
 	EntityManager& GetEntityManager();
-	ComponentManager& GetComponentManager();
 
 
 private:
 	EntityManager m_entityMgr;
-	ComponentManager m_componentMgr;
 
 	RenderSystem m_renderSystem;
 	PhysicsSystem m_physicsSystem;

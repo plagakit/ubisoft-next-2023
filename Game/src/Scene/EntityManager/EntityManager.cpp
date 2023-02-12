@@ -4,7 +4,7 @@
 
 
 EntityManager::EntityManager() :
-	m_count(0), MAX_ENTITIES(1000)
+	m_count(0), MAX_ENTITIES(100000)
 {}
 
 void EntityManager::Init()
@@ -17,10 +17,10 @@ void EntityManager::Init()
 		m_availableEntities.push(i);
 }
 
-std::vector<Entity> EntityManager::GetEntities()
-{
-	return m_entities;
-}
+//std::vector<Entity> EntityManager::GetEntities()
+//{
+//	return m_entities;
+//}
 
 Entity EntityManager::GetCount()
 {
@@ -34,12 +34,13 @@ Entity EntityManager::CreateEntity()
 	Entity id = m_availableEntities.front();
 	m_availableEntities.pop();
 	m_entities.push_back(id);
+	m_signatures.Add(id, Signature());
 	m_count++;
 
 	return id;
 }
 
-void EntityManager::DeleteEntity(ComponentManager& componentMgr, Entity id)
+void EntityManager::DeleteEntity(Entity id)
 {
 	m_count--;
 
@@ -48,7 +49,24 @@ void EntityManager::DeleteEntity(ComponentManager& componentMgr, Entity id)
 
 	m_entities.erase(ent);
 	m_availableEntities.push(id);
-	/*componentMgr.RemoveComponent<Transform>(id);
-	componentMgr.RemoveComponent<Sprite>(id);
-	componentMgr.RemoveComponent<Timer>(id);*/
+
+	// For each component type in the signature, call its remove function!
+	Signature& signature = m_signatures.Get(id);
+	for (auto i = 0; i < signature.size(); i++)
+		if (signature.test(i))
+			(this->*m_removeFunctions[i])(id);
+
+	//RemoveComponent<Transform>(id);
+	//RemoveComponent<Sprite>(id);
+	//RemoveComponent<Timer>(id);
+}
+
+void EntityManager::DeleteQueuedEntities()
+{
+	while (!m_deleteQueue.empty())
+	{
+		Entity id = m_deleteQueue.front();
+		DeleteEntity(id);
+		m_deleteQueue.pop();
+	}
 }

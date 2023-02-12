@@ -5,8 +5,8 @@
 
 void RenderSystem::Render(Entity id) 
 {	
-    Transform& tf = scene->GetComponentManager().GetComponent<Transform>(id);
-    Sprite& sp = scene->GetComponentManager().GetComponent<Sprite>(id);
+    Transform& tf = scene->GetEntityManager().GetComponent<Transform>(id);
+    Sprite& sp = scene->GetEntityManager().GetComponent<Sprite>(id);
 
 	// Code copied from SimpleSprite.cpp
 #if APP_USE_VIRTUAL_RES

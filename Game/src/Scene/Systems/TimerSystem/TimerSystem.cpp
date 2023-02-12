@@ -6,7 +6,7 @@
 
 void TimerSystem::Update(Entity id)
 {
-	Timer& t = scene->GetComponentManager().GetComponent<Timer>(id);
+	Timer& t = scene->GetEntityManager().GetComponent<Timer>(id);
 	
 	if (!t.isRunning)
 		return;

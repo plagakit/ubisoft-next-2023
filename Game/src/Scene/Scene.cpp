@@ -13,67 +13,71 @@ void Scene::Init()
 {
 	m_entityMgr.Init();
 
-	m_componentMgr.CreateComponentArray<Transform>();
-	m_componentMgr.CreateComponentArray<Sprite>();
-	m_componentMgr.CreateComponentArray<Timer>();
+	m_entityMgr.CreateComponentArray<Transform>();
+	m_entityMgr.CreateComponentArray<Sprite>();
+	m_entityMgr.CreateComponentArray<Timer>();
 
-	for (int i = 1; i <= 500; i++)
+	for (int i = 1; i <= 100; i++)
 	{
 		Entity ent = m_entityMgr.CreateEntity();
 
 		Transform tf = Transform();
-		tf.position = Vector2(50.0f+.5f*i, 250.0f);
-		tf.velocity = Vector2(0.0f, 50.0f+(i*.1f));
+		tf.position = Vector2(250.0f, 250.0f);
+		tf.velocity = Vector2(sin(std::rand()) * 50.0f, 150.0f);
 		tf.scale = Vector2(0.25f, 0.25f);
-		m_componentMgr.AddComponent<Transform>(ent, tf);
+		m_entityMgr.AddComponent<Transform>(ent, tf);
 
 		Sprite sp = Sprite(".//res//jonathan.bmp", 1, 1);
-		m_componentMgr.AddComponent<Sprite>(ent, sp);
+		m_entityMgr.AddComponent<Sprite>(ent, sp);
 
-		Timer t = Timer(0.005f*(i+1));
+		Timer t = Timer(3);
 		t.Start();
-		m_componentMgr.AddComponent<Timer>(ent, t);
+		m_entityMgr.AddComponent<Timer>(ent, t);
 	}
+
+	m_entityMgr.DeleteEntity(5);
 
 }
 
 void Scene::Update(float deltaTime)
 {	
 	m_deltaTime = deltaTime / 1000.0f; // deltaTime in seconds, want milliseconds
-	
-	for (auto id : m_entityMgr.GetEntities())
+
+
+	Entity ent = m_entityMgr.CreateEntity();
+
+	Transform tf = Transform();
+	tf.position = Vector2(250.0f, 250.0f);
+	tf.velocity = Vector2(sin(std::rand())*50.0f, 150.0f);
+	tf.scale = Vector2(0.25f, 0.25f);
+	m_entityMgr.AddComponent<Transform>(ent, tf);
+
+	Sprite sp = Sprite(".//res//jonathan.bmp", 1, 1);
+	m_entityMgr.AddComponent<Sprite>(ent, sp);
+
+	Timer t = Timer(3);
+	t.Start();
+	m_entityMgr.AddComponent<Timer>(ent, t);
+
+
+	for (auto id : m_entityMgr.GetEntities<Timer>())
 		m_timerSystem.Update(id);
 
-	for (auto id : m_entityMgr.GetEntities())
+	for (auto id : m_entityMgr.GetEntities<Transform>())
 		m_physicsSystem.UpdatePosition(id);
+
+
 
 }
 
 void Scene::Render()
 {
-	//std::string str = "";
-	//std::string timers = "";
-	for (auto id : m_entityMgr.GetEntities())
-	{
-
-		//str += std::to_string(id) + " ";
-		//timers += std::to_string(m_componentMgr.GetComponent<Timer>(id).PercentElapsed()) + " ";
+	for (auto id : m_entityMgr.GetEntities<Transform, Sprite>())
 		m_renderSystem.Render(id);
-	}
-
-	//App::Print(100, 600, std::to_string(m_entityMgr.GetCount()).c_str());
-	//App::Print(100, 500, str.c_str());
-	//App::Print(100, 400, m_componentMgr.GetComponentArray<Sprite>()->ToString().c_str());
-	//App::Print(100, 300, timers.c_str());
 }
 
 
 EntityManager& Scene::GetEntityManager()
 {
 	return m_entityMgr;
-}
-
-ComponentManager& Scene::GetComponentManager()
-{
-	return m_componentMgr;
 }
