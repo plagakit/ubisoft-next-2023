@@ -1,9 +1,11 @@
 #include <stdafx.h>
 
 #include "Scene.h"
+#include <Scene/EntityManager/EntityManagerTest.cpp>
 
 
 Scene::Scene() :
+	m_entityMgr(10000),
 	m_renderSystem(RenderSystem(this)), 
 	m_physicsSystem(PhysicsSystem(this)),
 	m_timerSystem(TimerSystem(this))
@@ -11,13 +13,10 @@ Scene::Scene() :
 
 void Scene::Init()
 {
+	EntityManagerTest::RunTests();
 	m_entityMgr.Init();
 
-	m_entityMgr.CreateComponentArray<Transform>();
-	m_entityMgr.CreateComponentArray<Sprite>();
-	m_entityMgr.CreateComponentArray<Timer>();
-
-	for (int i = 1; i <= 100; i++)
+	for (int i = 1; i <= 1000; i++)
 	{
 		Entity ent = m_entityMgr.CreateEntity();
 
@@ -43,7 +42,7 @@ void Scene::Update(float deltaTime)
 {	
 	m_deltaTime = deltaTime / 1000.0f; // deltaTime in seconds, want milliseconds
 
-
+	/*
 	Entity ent = m_entityMgr.CreateEntity();
 
 	Transform tf = Transform();
@@ -58,7 +57,7 @@ void Scene::Update(float deltaTime)
 	Timer t = Timer(3);
 	t.Start();
 	m_entityMgr.AddComponent<Timer>(ent, t);
-
+	*/
 
 	for (auto id : m_entityMgr.GetEntities<Timer>())
 		m_timerSystem.Update(id);

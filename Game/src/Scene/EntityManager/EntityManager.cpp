@@ -3,8 +3,8 @@
 #include "EntityManager.h"
 
 
-EntityManager::EntityManager() :
-	m_count(0), MAX_ENTITIES(100000)
+EntityManager::EntityManager(Entity MAX_ENTS) :
+	m_count(0), MAX_ENTITIES(MAX_ENTS)
 {}
 
 void EntityManager::Init()
@@ -55,10 +55,11 @@ void EntityManager::DeleteEntity(Entity id)
 	for (auto i = 0; i < signature.size(); i++)
 		if (signature.test(i))
 			(this->*m_removeFunctions[i])(id);
+}
 
-	//RemoveComponent<Transform>(id);
-	//RemoveComponent<Sprite>(id);
-	//RemoveComponent<Timer>(id);
+bool EntityManager::HasEntity(Entity id)
+{
+	return std::find(m_entities.begin(), m_entities.end(), id) != m_entities.end();
 }
 
 void EntityManager::DeleteQueuedEntities()

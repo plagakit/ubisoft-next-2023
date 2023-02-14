@@ -8,7 +8,7 @@ class EntityManager {
 
 public:
 
-	EntityManager();
+	EntityManager(Entity MAX_ENTITIES);
 
 	void Init();
 
@@ -18,8 +18,10 @@ public:
 	Entity GetCount();
 
 	Entity CreateEntity();
+	
 	void DeleteEntity(Entity id);
 
+	bool HasEntity(Entity id);
 
 	template <typename T>
 	void CreateComponentArray();
