@@ -18,8 +18,8 @@ public:
 	Entity GetCount();
 
 	Entity CreateEntity();
-	
-	void DeleteEntity(Entity id);
+
+	void QueueDelete(Entity id);
 
 	bool HasEntity(Entity id);
 
@@ -51,7 +51,7 @@ private:
 	std::vector<Entity> m_entities;
 	std::queue<Entity> m_availableEntities;
 	ContiguousArray<Signature> m_signatures;
-	std::queue<Entity> m_deleteQueue;
+	std::deque<Entity> m_deleteQueue;
 
 	ComponentID m_typeCount = 0;
 	std::unordered_map<std::type_index, std::shared_ptr<IContiguousArray>> m_componentArrays;
@@ -66,6 +66,8 @@ private:
 	*/
 	using ComponentArrayFunction = void (EntityManager::*)(Entity);
 	std::unordered_map<ComponentID, ComponentArrayFunction> m_removeFunctions;
+
+	void DeleteEntity(Entity id);
 
 };
 

@@ -54,9 +54,10 @@ public:
 			{
 				id = randEntity(r);
 			} while (!em.HasEntity(id));
-			em.DeleteEntity(id);
+			em.QueueDelete(id);
+			em.DeleteQueuedEntities();
 		}
-
+		
 	}
 
 };

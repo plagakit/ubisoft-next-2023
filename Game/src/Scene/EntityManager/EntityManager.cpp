@@ -62,12 +62,18 @@ bool EntityManager::HasEntity(Entity id)
 	return std::find(m_entities.begin(), m_entities.end(), id) != m_entities.end();
 }
 
+void EntityManager::QueueDelete(Entity id)
+{
+	if (std::find(m_deleteQueue.begin(), m_deleteQueue.end(), id) == m_deleteQueue.end())
+		m_deleteQueue.push_back(id);
+}
+
 void EntityManager::DeleteQueuedEntities()
 {
 	while (!m_deleteQueue.empty())
 	{
 		Entity id = m_deleteQueue.front();
 		DeleteEntity(id);
-		m_deleteQueue.pop();
+		m_deleteQueue.pop_front();
 	}
 }
