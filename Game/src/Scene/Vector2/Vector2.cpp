@@ -21,6 +21,11 @@ Vector2 Vector2::operator*(float scalar) const
 	return Vector2(this->x * scalar, this->y * scalar);
 }
 
+Vector2 Vector2::operator*(const Vector2& v) const
+{
+	return Vector2(this->x * v.x, this->y * v.y);
+}
+
 Vector2 Vector2::operator/(float scalar) const
 {
 	return Vector2(this->x / scalar, this->y / scalar);
@@ -44,6 +49,13 @@ Vector2& Vector2::operator*=(float scalar)
 {
 	x *= scalar;
 	y *= scalar;
+	return *this;
+}
+
+Vector2& Vector2::operator*=(const Vector2& v)
+{
+	x *= v.x;
+	y *= v.y;
 	return *this;
 }
 
@@ -84,11 +96,19 @@ float Vector2::Distance(const Vector2& to) const
 	return abs((to - *this).Length());
 }
 
-Vector2 Vector2::Normalize() const
+Vector2 Vector2::Normalized() const
 {
 	Vector2 v;
 	if (LengthSquared() > 0)
 		v = *this / Length();
+	return v;
+}
+
+Vector2 Vector2::Rotated(float r) const
+{
+	Vector2 v;
+	v.x = x * cosf(r) - y * sinf(r);
+	v.y = x * sinf(r) + y * cosf(r);
 	return v;
 }
 

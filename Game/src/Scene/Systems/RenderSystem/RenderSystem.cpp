@@ -62,11 +62,15 @@ void RenderSystem::RenderWireframe(EntityManager& entityMgr, Entity id)
     const Transform& tf = entityMgr.GetComponent<Transform>(id);
     const Wireframe& wf = entityMgr.GetComponent<Wireframe>(id);
 
-    int len = wf.points.size();
-    for (int i = 0; i < len + 1; i++)
+    int numPoints = wf.points.size();
+    for (int i = 0; i < numPoints + 1; i++)
     {
-        Vector2 v1 = tf.position + wf.points[i % len];
-        Vector2 v2 = tf.position + wf.points[(i + 1) % len];
+        const Vector2 &t1 = wf.points[i % numPoints];
+        const Vector2 &t2 = wf.points[(i + 1) % numPoints];
+
+        Vector2 v1 = t1.Rotated(tf.rotation) * tf.scale + tf.position;
+        Vector2 v2 = t2.Rotated(tf.rotation) * tf.scale + tf.position;
+
         App::DrawLine(v1.x, v1.y, v2.x, v2.y, wf.r, wf.g, wf.b);
     }
 

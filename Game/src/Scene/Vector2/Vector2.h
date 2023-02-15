@@ -12,11 +12,13 @@ struct Vector2 {
 	Vector2 operator+(const Vector2 &v) const;
 	Vector2 operator-(const Vector2 &v) const;
 	Vector2 operator*(float scalar) const;
+	Vector2 operator*(const Vector2& v) const;
 	Vector2 operator/(float scalar) const;
 
 	Vector2& operator+=(const Vector2& v);
 	Vector2& operator-=(const Vector2& v);
 	Vector2& operator*=(float scalar);
+	Vector2& operator*=(const Vector2& v);
 	Vector2& operator/=(float scalar);
 
 	bool operator==(const Vector2& v) const;
@@ -26,7 +28,8 @@ struct Vector2 {
 	float Length() const;
 	float LengthSquared() const;
 	float Distance(const Vector2& to) const;
-	Vector2 Normalize() const;
+	Vector2 Normalized() const;
+	Vector2 Rotated(float radians) const;
 
 	std::string ToString() const;
 };

@@ -44,8 +44,18 @@ void Scene::Init()
 		m_entityMgr.AddComponent<Timer>(ent, t);
 	}
 
-	m_entityMgr.QueueDelete(5);
-	m_entityMgr.DeleteQueuedEntities();
+
+	Entity ent = m_entityMgr.CreateEntity();
+
+	Wireframe wf = Wireframe();
+	wf.points = { Vector2(-5, -5), Vector2(0, 10), Vector2(5, -5) };
+	m_entityMgr.AddComponent<Wireframe>(ent, wf);
+
+	Transform tf = Transform();
+	tf.position = Vector2(500, 250);
+	tf.scale = Vector2(5, 5);
+	m_entityMgr.AddComponent<Transform>(ent, tf);
+
 
 }
 
