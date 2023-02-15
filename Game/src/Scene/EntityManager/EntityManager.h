@@ -83,8 +83,7 @@ std::vector<Entity> EntityManager::GetEntities()
 	Signature mask;
 	for (int i = 1; i < (sizeof...(Components) + 1); i++)
 	{
-		const std::type_info& type = typeid(types[i]);
-		mask.set(m_componentTypes[type]);
+		mask.set(types[i]);
 	}
 
 	// Copies any matches for the component mask into the vector
@@ -109,12 +108,15 @@ void EntityManager::CreateComponentArray()
 	m_typeCount++;
 }
 
+
 template <typename T>
 ComponentID EntityManager::GetComponentType()
 {
 	const std::type_info& type = typeid(T);
+	assert("GetComponentArray: Component array doesn't exist." && m_componentTypes.find(type) != m_componentTypes.end());
 	return m_componentTypes[type];
 }
+
 
 template <typename T>
 std::shared_ptr<ContiguousArray<T>> EntityManager::GetComponentArray()

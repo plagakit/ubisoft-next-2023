@@ -1,12 +1,24 @@
 #include <stdafx.h>
 
 #include "RenderSystem.h"
-#include "Scene/Scene.h"
 
-void RenderSystem::Render(Entity id) 
+#include <Scene/Components/Transform/Transform.h>
+#include <Scene/Components/Sprite/Sprite.h>
+#include <Scene/Components/Wireframe/Wireframe.h>
+
+void RenderSystem::Update(EntityManager& entityMgr)
+{
+    for (auto id : entityMgr.GetEntities<Transform, Sprite>())
+        Render(entityMgr, id);
+
+    for (auto id : entityMgr.GetEntities<Transform, Wireframe>())
+        RenderWireframe(entityMgr, id);
+}
+
+void RenderSystem::Render(EntityManager &entityMgr, Entity id) 
 {	
-    Transform& tf = scene->GetEntityManager().GetComponent<Transform>(id);
-    Sprite& sp = scene->GetEntityManager().GetComponent<Sprite>(id);
+    const Transform& tf = entityMgr.GetComponent<Transform>(id);
+    const Sprite& sp = entityMgr.GetComponent<Sprite>(id);
 
 	// Code copied from SimpleSprite.cpp
 #if APP_USE_VIRTUAL_RES
@@ -43,12 +55,19 @@ void RenderSystem::Render(Entity id)
     glDisable(GL_BLEND);
     glDisable(GL_TEXTURE_2D);
 
-	/*float sx = tf.position.x - sp.width / 2.0f;
-	float sy = tf.position.y - sp.height / 2.0f;
-	int r = sp.r, g = sp.g, b = sp.b;
+}
 
-	App::DrawLine(sx, sy, sx + sp.width, sy, r, g, b);
-	App::DrawLine(sx, sy, sx, sy + sp.height, r, g, b);
-	App::DrawLine(sx, sy + sp.height, sx + sp.width, sy + sp.height, r, g, b);
-	App::DrawLine(sx + sp.width, sy, sx + sp.width, sy + sp.height, r, g, b);*/
+void RenderSystem::RenderWireframe(EntityManager& entityMgr, Entity id)
+{
+    const Transform& tf = entityMgr.GetComponent<Transform>(id);
+    const Wireframe& wf = entityMgr.GetComponent<Wireframe>(id);
+
+    int len = wf.points.size();
+    for (int i = 0; i < len + 1; i++)
+    {
+        Vector2 v1 = tf.position + wf.points[i % len];
+        Vector2 v2 = tf.position + wf.points[(i + 1) % len];
+        App::DrawLine(v1.x, v1.y, v2.x, v2.y, wf.r, wf.g, wf.b);
+    }
+
 }

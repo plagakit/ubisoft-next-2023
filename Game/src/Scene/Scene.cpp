@@ -3,6 +3,11 @@
 #include "Scene.h"
 #include <Scene/EntityManager/EntityManagerTest.cpp>
 
+#include <Scene/Components/Sprite/Sprite.h>
+#include <Scene/Components/Transform/Transform.h>
+#include <Scene/Components/Timer/Timer.h>
+#include <Scene/Components/Wireframe/Wireframe.h>
+
 
 Scene::Scene() :
 	m_entityMgr(10000),
@@ -15,6 +20,11 @@ void Scene::Init()
 {
 	EntityManagerTest::RunTests();
 	m_entityMgr.Init();
+
+	m_entityMgr.CreateComponentArray<Transform>();
+	m_entityMgr.CreateComponentArray<Sprite>();
+	m_entityMgr.CreateComponentArray<Timer>();
+	m_entityMgr.CreateComponentArray<Wireframe>();
 
 	for (int i = 1; i <= 1000; i++)
 	{
@@ -52,8 +62,7 @@ void Scene::Update(float deltaTime)
 
 void Scene::Render()
 {
-	for (auto id : m_entityMgr.GetEntities<Transform, Sprite>())
-		m_renderSystem.Render(id);
+	m_renderSystem.Update(m_entityMgr);
 }
 
 
