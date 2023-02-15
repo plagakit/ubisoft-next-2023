@@ -52,10 +52,9 @@ void Scene::Init()
 	m_entityMgr.AddComponent<Wireframe>(ent, wf);
 
 	Transform tf = Transform();
-	tf.position = Vector2(500, 250);
+	tf.position = Vector2(0, 0);
 	tf.scale = Vector2(5, 5);
 	m_entityMgr.AddComponent<Transform>(ent, tf);
-
 
 }
 
@@ -72,11 +71,17 @@ void Scene::Update(float deltaTime)
 
 void Scene::Render()
 {
-	m_renderSystem.Update(m_entityMgr);
+	m_renderSystem.Update(*this);
+	App::Print(100, 100, std::to_string(m_camera.rotation).c_str());
 }
 
 
 EntityManager& Scene::GetEntityManager()
 {
 	return m_entityMgr;
+}
+
+Camera& Scene::GetCamera()
+{
+	return m_camera;
 }

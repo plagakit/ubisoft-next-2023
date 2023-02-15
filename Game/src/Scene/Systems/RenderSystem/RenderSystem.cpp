@@ -5,17 +5,25 @@
 #include <Scene/Components/Transform/Transform.h>
 #include <Scene/Components/Sprite/Sprite.h>
 #include <Scene/Components/Wireframe/Wireframe.h>
+#include <Scene/Camera/Camera.h>
 
-void RenderSystem::Update(EntityManager& entityMgr)
+#include "Scene/Scene.h"
+
+const Vector2 CENTER = Vector2(APP_VIRTUAL_WIDTH / 2.0f, APP_VIRTUAL_HEIGHT / 2.0f);
+
+void RenderSystem::Update(Scene& scene)
 {
+    Camera& cam = scene.GetCamera();
+    EntityManager& entityMgr = scene.GetEntityManager();
+    
     for (auto id : entityMgr.GetEntities<Transform, Sprite>())
-        Render(entityMgr, id);
+        Render(cam, entityMgr, id);
 
     for (auto id : entityMgr.GetEntities<Transform, Wireframe>())
-        RenderWireframe(entityMgr, id);
+        RenderWireframe(cam, entityMgr, id);
 }
 
-void RenderSystem::Render(EntityManager &entityMgr, Entity id) 
+void RenderSystem::Render(Camera& cam, EntityManager &entityMgr, Entity id)
 {	
     const Transform& tf = entityMgr.GetComponent<Transform>(id);
     const Sprite& sp = entityMgr.GetComponent<Sprite>(id);
@@ -57,7 +65,7 @@ void RenderSystem::Render(EntityManager &entityMgr, Entity id)
 
 }
 
-void RenderSystem::RenderWireframe(EntityManager& entityMgr, Entity id)
+void RenderSystem::RenderWireframe(Camera& cam, EntityManager& entityMgr, Entity id)
 {
     const Transform& tf = entityMgr.GetComponent<Transform>(id);
     const Wireframe& wf = entityMgr.GetComponent<Wireframe>(id);
@@ -68,8 +76,15 @@ void RenderSystem::RenderWireframe(EntityManager& entityMgr, Entity id)
         const Vector2 &t1 = wf.points[i % numPoints];
         const Vector2 &t2 = wf.points[(i + 1) % numPoints];
 
-        Vector2 v1 = t1.Rotated(tf.rotation) * tf.scale + tf.position;
-        Vector2 v2 = t2.Rotated(tf.rotation) * tf.scale + tf.position;
+        // For vector: Scale -> rotate -> translate
+        // Then camera: translate -> rotate -> zoom
+        // Could have been simplified with a matrix class. If this was 3D, I would try to make one
+        Vector2 v1 = (t1 * tf.scale).Rotated(tf.rotation) + tf.position;
+        Vector2 v2 = (t2 * tf.scale).Rotated(tf.rotation) + tf.position;
+
+        // Translating by CENTER ensures that cam pos is the middle of the screen
+        v1 = (v1 - cam.position).Rotated(cam.rotation) * cam.zoom + CENTER;
+        v2 = (v2 - cam.position).Rotated(cam.rotation) * cam.zoom + CENTER;
 
         App::DrawLine(v1.x, v1.y, v2.x, v2.y, wf.r, wf.g, wf.b);
     }

@@ -14,6 +14,8 @@
 #include "Systems/PhysicsSystem/PhysicsSystem.h"
 #include "Systems/TimerSystem/TimerSystem.h"
 
+#include "Camera/Camera.h"
+
 
 const Entity MAX_ENTITIES = 1000;
 
@@ -29,6 +31,7 @@ public:
 	void Render();
 
 	EntityManager& GetEntityManager();
+	Camera& GetCamera();
 
 
 private:
@@ -37,5 +40,7 @@ private:
 	RenderSystem m_renderSystem;
 	PhysicsSystem m_physicsSystem;
 	TimerSystem m_timerSystem;
+
+	Camera m_camera;
 
 };

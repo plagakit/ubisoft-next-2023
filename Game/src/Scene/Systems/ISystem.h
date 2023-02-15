@@ -2,7 +2,6 @@
 
 #include <stdafx.h>
 
-#include <Scene/EntityManager/EntityManager.h>
 class Scene;
 
 class ISystem {
@@ -10,7 +9,7 @@ class ISystem {
 public:
 	ISystem(Scene* s) : scene(s) {}
 
-	virtual void Update(EntityManager& entityMgr) {}
+	virtual void Update(Scene& scene) {}
 
 protected:
 	Scene* scene; //smart pointer not needed b/c not deleting scene upon system deletion

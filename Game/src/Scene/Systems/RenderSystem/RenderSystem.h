@@ -4,14 +4,17 @@
 
 #include "Scene/Systems/ISystem.h"
 
+struct Camera;
+class EntityManager;
+
 class RenderSystem : public ISystem {
 	using ISystem::ISystem;
 
 private:
-	void Render(EntityManager& entityMgr, Entity id);
-	void RenderWireframe(EntityManager& entityMgr, Entity id);
+	void Render(Camera& camera, EntityManager& entityMgr, Entity id);
+	void RenderWireframe(Camera& camera, EntityManager& entityMgr, Entity id);
 
 public:
-	void Update(EntityManager& entityMgr);
+	void Update(Scene& scene);
 
 };
