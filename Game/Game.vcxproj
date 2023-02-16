@@ -201,6 +201,7 @@
     <ClInclude Include="src\Scene\Systems\ISignalManager\ISignalManager.h" />
     <ClInclude Include="src\Scene\Systems\PhysicsSystem\PhysicsSystem.h" />
     <ClInclude Include="src\Scene\Systems\RenderSystem\RenderSystem.h" />
+    <ClInclude Include="src\Scene\Systems\Signal\Signal.h" />
     <ClInclude Include="src\Scene\Systems\TimerSystem\TimerSystem.h" />
     <ClInclude Include="src\Scene\Vector2\Vector2.h" />
   </ItemGroup>
@@ -229,6 +230,7 @@
     <ClCompile Include="src\Scene\Systems\ISignalManager\ISignalManager.cpp" />
     <ClCompile Include="src\Scene\Systems\PhysicsSystem\PhysicsSystem.cpp" />
     <ClCompile Include="src\Scene\Systems\RenderSystem\RenderSystem.cpp" />
+    <ClCompile Include="src\Scene\Systems\Signal\Signal.cpp" />
     <ClCompile Include="src\Scene\Systems\TimerSystem\TimerSystem.cpp" />
     <ClCompile Include="src\Scene\Vector2\Vector2.cpp" />
   </ItemGroup>
