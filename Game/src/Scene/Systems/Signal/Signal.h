@@ -9,7 +9,7 @@ class Signal {
 
 public:
 	void Connect(SignalCallback callback);
-	void Disconncet(SignalCallback callback);
+	void Disconnect(SignalCallback callback);
 	void Emit(Entity id);
 
 private:
