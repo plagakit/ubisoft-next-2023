@@ -2,7 +2,7 @@
 
 #include <stdafx.h>
 
-#include "Scene/Systems/ISignalManager.h"
+#include "Scene/Systems/ISignalManager/ISignalManager.h"
 
 struct Camera;
 class EntityManager;

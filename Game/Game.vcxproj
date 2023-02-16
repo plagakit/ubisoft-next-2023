@@ -198,7 +198,7 @@
     <ClInclude Include="src\Scene\ContiguousArray\IContiguousArray.h" />
     <ClInclude Include="src\Scene\EntityManager\EntityManager.h" />
     <ClInclude Include="src\Scene\Scene.h" />
-    <ClInclude Include="src\Scene\Systems\ISignalManager.h" />
+    <ClInclude Include="src\Scene\Systems\ISignalManager\ISignalManager.h" />
     <ClInclude Include="src\Scene\Systems\PhysicsSystem\PhysicsSystem.h" />
     <ClInclude Include="src\Scene\Systems\RenderSystem\RenderSystem.h" />
     <ClInclude Include="src\Scene\Systems\TimerSystem\TimerSystem.h" />
@@ -226,6 +226,7 @@
     <ClCompile Include="src\Scene\EntityManager\EntityManager.cpp" />
     <ClCompile Include="src\Scene\EntityManager\EntityManagerTest.cpp" />
     <ClCompile Include="src\Scene\Scene.cpp" />
+    <ClCompile Include="src\Scene\Systems\ISignalManager\ISignalManager.cpp" />
     <ClCompile Include="src\Scene\Systems\PhysicsSystem\PhysicsSystem.cpp" />
     <ClCompile Include="src\Scene\Systems\RenderSystem\RenderSystem.cpp" />
     <ClCompile Include="src\Scene\Systems\TimerSystem\TimerSystem.cpp" />
