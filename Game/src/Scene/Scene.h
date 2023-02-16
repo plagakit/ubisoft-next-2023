@@ -8,8 +8,9 @@
 #include "Components/Transform/Transform.h"
 #include "Components/Sprite/Sprite.h"
 #include "Components/Timer/Timer.h"
+#include "Components/Wireframe/Wireframe.h"
 
-#include "Systems/ISystem.h"
+#include "Systems/ISignalManager.h"
 #include "Systems/RenderSystem/RenderSystem.h"
 #include "Systems/PhysicsSystem/PhysicsSystem.h"
 #include "Systems/TimerSystem/TimerSystem.h"

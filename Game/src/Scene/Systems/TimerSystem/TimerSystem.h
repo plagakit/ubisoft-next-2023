@@ -2,11 +2,11 @@
 
 #include <stdafx.h>
 
-#include "Scene/Systems/ISystem.h"
+#include "Scene/Systems/ISignalManager.h"
 
-class TimerSystem : public ISystem {
+class TimerSystem : public ISignalManager {
 
 public:
-	void Update(Scene& scene);
+	void UpdateTimers(Scene& scene);
 
 };

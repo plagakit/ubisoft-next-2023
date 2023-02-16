@@ -2,9 +2,9 @@
 
 #include "TimerSystem.h"
 #include "Scene/Scene.h"
-#include "Scene/Components/Timer/Timer.h"
 
-void TimerSystem::Update(Scene& scene)
+
+void TimerSystem::UpdateTimers(Scene& scene)
 {
 	for (Entity id : scene.GetEntityManager().GetEntities<Timer>())
 	{

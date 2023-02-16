@@ -2,18 +2,18 @@
 
 #include <stdafx.h>
 
-#include "Scene/Systems/ISystem.h"
+#include "Scene/Systems/ISignalManager.h"
 
 struct Camera;
 class EntityManager;
 
-class RenderSystem : public ISystem {
+class RenderSystem : public ISignalManager {
 
 public:
-	void Update(Scene& scene);
+	void Render(Scene& scene);
 
 private:
-	void Render(Camera& camera, EntityManager& entityMgr, Entity id);
+	void RenderSprite(Camera& camera, EntityManager& entityMgr, Entity id);
 	void RenderWireframe(Camera& camera, EntityManager& entityMgr, Entity id);
 
 };

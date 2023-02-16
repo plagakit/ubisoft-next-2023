@@ -2,28 +2,23 @@
 
 #include "RenderSystem.h"
 
-#include <Scene/Components/Transform/Transform.h>
-#include <Scene/Components/Sprite/Sprite.h>
-#include <Scene/Components/Wireframe/Wireframe.h>
-#include <Scene/Camera/Camera.h>
-
 #include "Scene/Scene.h"
 
 const Vector2 CENTER = Vector2(APP_VIRTUAL_WIDTH / 2.0f, APP_VIRTUAL_HEIGHT / 2.0f);
 
-void RenderSystem::Update(Scene& scene)
+void RenderSystem::Render(Scene& scene)
 {
     Camera& cam = scene.GetCamera();
     EntityManager& entityMgr = scene.GetEntityManager();
     
     for (auto id : entityMgr.GetEntities<Transform, Sprite>())
-        Render(cam, entityMgr, id);
+        RenderSprite(cam, entityMgr, id);
 
     for (auto id : entityMgr.GetEntities<Transform, Wireframe>())
         RenderWireframe(cam, entityMgr, id);
 }
 
-void RenderSystem::Render(Camera& cam, EntityManager &entityMgr, Entity id)
+void RenderSystem::RenderSprite(Camera& cam, EntityManager &entityMgr, Entity id)
 {	
     const Transform& tf = entityMgr.GetComponent<Transform>(id);
     const Sprite& sp = entityMgr.GetComponent<Sprite>(id);
@@ -82,7 +77,7 @@ void RenderSystem::RenderWireframe(Camera& cam, EntityManager& entityMgr, Entity
         Vector2 v1 = (t1 * tf.scale).Rotated(tf.rotation) + tf.position;
         Vector2 v2 = (t2 * tf.scale).Rotated(tf.rotation) + tf.position;
 
-        // Translating by CENTER ensures that cam pos is the middle of the screen
+        // Translating by CENTER ensures that cam's pos is the middle of the screen
         v1 = (v1 - cam.position).Rotated(cam.rotation) * cam.zoom + CENTER;
         v2 = (v2 - cam.position).Rotated(cam.rotation) * cam.zoom + CENTER;
 

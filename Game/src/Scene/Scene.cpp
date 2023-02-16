@@ -58,14 +58,14 @@ void Scene::Update(float deltaTime)
 {	
 	m_deltaTime = deltaTime / 1000.0f; // deltaTime in seconds, want milliseconds
 
-	m_timerSystem.Update(*this);
-	m_physicsSystem.Update(*this);
+	m_timerSystem.UpdateTimers(*this);
+	m_physicsSystem.UpdatePosition(*this);
 
 }
 
 void Scene::Render()
 {
-	m_renderSystem.Update(*this);
+	m_renderSystem.Render(*this);
 }
 
 

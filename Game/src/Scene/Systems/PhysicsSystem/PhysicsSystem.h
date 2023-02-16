@@ -2,11 +2,12 @@
 
 #include <stdafx.h>
 
-#include "Scene/Systems/ISystem.h"
+#include "Scene/Systems/ISignalManager.h"
 
-class PhysicsSystem : public ISystem {
+
+class PhysicsSystem : public ISignalManager {
 
 public:
-	void Update(Scene& scene);
+	void UpdatePosition(Scene& scene);
 
 };

@@ -1,19 +1,14 @@
 #include <stdafx.h>
 
 #include "PhysicsSystem.h"
+
 #include "Scene/Scene.h"
-#include "Scene/Components/Transform/Transform.h"
 
-void PhysicsSystem::Update(Scene& scene)
+void PhysicsSystem::UpdatePosition(Scene& scene)
 {
-	float dt = scene.m_deltaTime;
-	EntityManager& entityMgr = scene.GetEntityManager();
-	
-	// Update position
-	for (Entity id : entityMgr.GetEntities<Transform>())
+	for (Entity id : scene.GetEntityManager().GetEntities<Transform>())
 	{
-		Transform& tf = entityMgr.GetComponent<Transform>(id);
-		tf.position += tf.velocity * dt;
+		Transform& tf = scene.GetEntityManager().GetComponent<Transform>(id);
+		tf.position += tf.velocity * scene.m_deltaTime;
 	}
-
 }
