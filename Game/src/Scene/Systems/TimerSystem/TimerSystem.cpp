@@ -4,22 +4,26 @@
 #include "Scene/Scene.h"
 #include "Scene/Components/Timer/Timer.h"
 
-void TimerSystem::Update(Entity id)
+void TimerSystem::Update(Scene& scene)
 {
-	Timer& t = scene->GetEntityManager().GetComponent<Timer>(id);
-	
-	if (!t.isRunning)
-		return;
-
-	t.elapsed += scene->m_deltaTime;
-
-	if (t.elapsed > t.duration)
+	for (Entity id : scene.GetEntityManager().GetEntities<Timer>())
 	{
-		t.elapsed = 0.0f;
-		if (t.oneFire)
+		Timer& t = scene.GetEntityManager().GetComponent<Timer>(id);
+
+		if (!t.isRunning)
+			return;
+
+		t.elapsed += scene.m_deltaTime;
+
+		if (t.elapsed > t.duration)
 		{
-			t.done = true;
-			t.isRunning = false;
-		}	
+			t.elapsed = 0.0f;
+			if (t.oneFire)
+			{
+				t.done = true;
+				t.isRunning = false;
+			}
+		}
 	}
+	
 }

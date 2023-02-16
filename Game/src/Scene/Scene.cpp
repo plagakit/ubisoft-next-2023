@@ -10,10 +10,7 @@
 
 
 Scene::Scene() :
-	m_entityMgr(10000),
-	m_renderSystem(RenderSystem(this)), 
-	m_physicsSystem(PhysicsSystem(this)),
-	m_timerSystem(TimerSystem(this))
+	m_entityMgr(10000)
 {}
 
 void Scene::Init()
@@ -55,24 +52,20 @@ void Scene::Init()
 	tf.position = Vector2(0, 0);
 	tf.scale = Vector2(5, 5);
 	m_entityMgr.AddComponent<Transform>(ent, tf);
-
 }
 
 void Scene::Update(float deltaTime)
 {	
 	m_deltaTime = deltaTime / 1000.0f; // deltaTime in seconds, want milliseconds
 
-	for (auto id : m_entityMgr.GetEntities<Timer>())
-		m_timerSystem.Update(id);
+	m_timerSystem.Update(*this);
+	m_physicsSystem.Update(*this);
 
-	for (auto id : m_entityMgr.GetEntities<Transform>())
-		m_physicsSystem.UpdatePosition(id);
 }
 
 void Scene::Render()
 {
 	m_renderSystem.Update(*this);
-	App::Print(100, 100, std::to_string(m_camera.rotation).c_str());
 }
 
 

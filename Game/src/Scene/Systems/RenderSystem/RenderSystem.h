@@ -8,13 +8,12 @@ struct Camera;
 class EntityManager;
 
 class RenderSystem : public ISystem {
-	using ISystem::ISystem;
+
+public:
+	void Update(Scene& scene);
 
 private:
 	void Render(Camera& camera, EntityManager& entityMgr, Entity id);
 	void RenderWireframe(Camera& camera, EntityManager& entityMgr, Entity id);
-
-public:
-	void Update(Scene& scene);
 
 };
