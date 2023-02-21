@@ -10,7 +10,6 @@
 #include "Components/Timer/Timer.h"
 #include "Components/Wireframe/Wireframe.h"
 
-#include "Systems/ISignalManager/ISignalManager.h"
 #include "Systems/RenderSystem/RenderSystem.h"
 #include "Systems/PhysicsSystem/PhysicsSystem.h"
 #include "Systems/TimerSystem/TimerSystem.h"

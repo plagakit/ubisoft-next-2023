@@ -2,10 +2,9 @@
 
 #include <stdafx.h>
 
-#include "Scene/Systems/ISignalManager/ISignalManager.h"
+class Scene;
 
-
-class PhysicsSystem : public ISignalManager {
+class PhysicsSystem {
 
 public:
 	void UpdatePosition(Scene& scene);

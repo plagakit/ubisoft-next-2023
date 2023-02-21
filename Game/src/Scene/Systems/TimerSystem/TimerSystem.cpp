@@ -23,6 +23,7 @@ void TimerSystem::UpdateTimers(Scene& scene)
 				t.done = true;
 				t.isRunning = false;
 			}
+			e_timerFired.Emit();
 		}
 	}
 	
