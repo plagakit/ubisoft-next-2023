@@ -10,7 +10,7 @@ class TimerSystem {
 
 public:
 
-	Signal e_timerFired;
+	Signal<Entity> e_timerFired;
 
 	void UpdateTimers(Scene& scene);
 

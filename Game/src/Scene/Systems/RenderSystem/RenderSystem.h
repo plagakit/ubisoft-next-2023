@@ -12,14 +12,14 @@ class RenderSystem {
 
 public:
 	void Render(Scene& scene);
-	void test() { width += 100; }
+	void test(Entity e) { ids += std::to_string(e) + " "; }
 
 private:
 	void RenderSprite(Camera& camera, EntityManager& entityMgr, Entity id);
 	void RenderWireframe(Camera& camera, EntityManager& entityMgr, Entity id);
 
 
-	int width;
+	std::string ids;
 	
 
 };

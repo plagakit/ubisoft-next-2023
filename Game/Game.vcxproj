@@ -228,7 +228,6 @@
     <ClCompile Include="src\Scene\Scene.cpp" />
     <ClCompile Include="src\Scene\Systems\PhysicsSystem\PhysicsSystem.cpp" />
     <ClCompile Include="src\Scene\Systems\RenderSystem\RenderSystem.cpp" />
-    <ClCompile Include="src\Scene\Systems\Signal\Signal.cpp" />
     <ClCompile Include="src\Scene\Systems\TimerSystem\TimerSystem.cpp" />
     <ClCompile Include="src\Scene\Vector2\Vector2.cpp" />
   </ItemGroup>
