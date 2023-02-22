@@ -14,5 +14,6 @@ public:
 private:
 	void RenderSprite(Camera& camera, EntityManager& entityMgr, Entity id);
 	void RenderWireframe(Camera& camera, EntityManager& entityMgr, Entity id);
+	void RenderPhysicsBounds(Camera& camera, EntityManager& entityMgr, Entity id);
 
 };

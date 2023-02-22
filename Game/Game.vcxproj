@@ -198,6 +198,7 @@
     <ClInclude Include="src\Scene\EntityManager\EntityManager.h" />
     <ClInclude Include="src\Scene\Scene.h" />
     <ClInclude Include="src\Scene\Systems\PhysicsSystem\PhysicsSystem.h" />
+    <ClInclude Include="src\Scene\Systems\PlayerSystem\PlayerSystem.h" />
     <ClInclude Include="src\Scene\Systems\RenderSystem\RenderSystem.h" />
     <ClInclude Include="src\Core\Signal\Signal.h" />
     <ClInclude Include="src\Scene\Systems\TimerSystem\TimerSystem.h" />
@@ -227,6 +228,7 @@
     <ClCompile Include="src\Scene\EntityManager\EntityManagerTest.cpp" />
     <ClCompile Include="src\Scene\Scene.cpp" />
     <ClCompile Include="src\Scene\Systems\PhysicsSystem\PhysicsSystem.cpp" />
+    <ClCompile Include="src\Scene\Systems\PlayerSystem\PlayerSystem.cpp" />
     <ClCompile Include="src\Scene\Systems\RenderSystem\RenderSystem.cpp" />
     <ClCompile Include="src\Scene\Systems\TimerSystem\TimerSystem.cpp" />
     <ClCompile Include="src\Core\Vector2\Vector2.cpp" />

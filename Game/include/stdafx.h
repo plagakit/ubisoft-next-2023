@@ -22,7 +22,6 @@
 #include <memory>
 #include <algorithm>
 #include <random>
-#include <functional>
 
 #include "App\app.h"
 

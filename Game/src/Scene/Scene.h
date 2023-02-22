@@ -7,6 +7,7 @@
 #include "Systems/RenderSystem/RenderSystem.h"
 #include "Systems/PhysicsSystem/PhysicsSystem.h"
 #include "Systems/TimerSystem/TimerSystem.h"
+#include "Systems/PlayerSystem/PlayerSystem.h"
 
 #include "Camera/Camera.h"
 
@@ -34,6 +35,7 @@ private:
 	RenderSystem m_renderSystem;
 	PhysicsSystem m_physicsSystem;
 	TimerSystem m_timerSystem;
+	PlayerSystem m_playerSystem;
 
 	Camera m_camera;
 

@@ -30,6 +30,7 @@ struct Vector2 {
 	float Distance(const Vector2& to) const;
 	Vector2 Normalized() const;
 	Vector2 Rotated(float radians) const;
+	float Atan2() const;
 
 	std::string ToString() const;
 };
