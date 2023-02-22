@@ -5,23 +5,32 @@
 #include "Scene/Scene.h"
 #include "Scene/Components/Wireframe/Wireframe.h"
 #include "Scene/Components/Transform/Transform.h"
+#include "Scene/Components/Physics/Physics.h"
 
 
 void PlayerSystem::UpdatePlayer(Scene& scene)
 {
-	for (Entity id : scene.GetEntityManager().GetEntities<Wireframe, Transform>())
+	for (Entity id : scene.GetEntityManager().GetEntities<Wireframe, Transform, Physics>())
 	{
 
-		Transform& tf = scene.GetEntityManager().GetComponent <Transform>(id);
+		Transform& tf = scene.GetEntityManager().GetComponent<Transform>(id);
+		Physics& ph = scene.GetEntityManager().GetComponent<Physics>(id);
 		
 		if (App::IsKeyPressed('W'))
-			tf.velocity += Vector2(0, 1).Rotated(tf.rotation);
+			ph.velocity += Vector2(0, 1).Rotated(tf.rotation);
 
 		if (App::IsKeyPressed('A'))
-			tf.rotation += 10 / 3.14f * scene.m_deltaTime;
+			ph.angularVelocity += 0.25f / 3.14f;
 
 		if (App::IsKeyPressed('D'))
-			tf.rotation -= 10  / 3.14f * scene.m_deltaTime;
+			ph.angularVelocity -= 0.25f / 3.14f;
+
+		if (ph.angularVelocity > 1.57f)
+			ph.angularVelocity = 1.57f;
+		else if (ph.angularVelocity < -1.57f)
+			ph.angularVelocity = -1.57f;
+		
+		//ph.angularVelocity -= (ph.angularVelocity > 0) - (ph.angularVelocity < 0);aa
 
 	}
 }

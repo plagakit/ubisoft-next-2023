@@ -1,12 +1,18 @@
 #pragma once
 
+#include <stdafx.h>
+
+#include "Core/Vector2/Vector2.h"
 
 struct Physics {
 
-	enum Type { STATIC, KINEMATIC };
-	Type type;
+	enum BodyType { STATIC, KINEMATIC };
+	BodyType bodyType;
 
+	Vector2 velocity;
+	Vector2 acceleration;
+	float angularVelocity;
 
-
+	Physics(BodyType bodyType);
 
 };

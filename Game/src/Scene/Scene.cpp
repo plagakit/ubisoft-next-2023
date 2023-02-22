@@ -7,6 +7,9 @@
 #include "Scene/Components/Transform/Transform.h"
 #include "Scene/Components/Timer/Timer.h"
 #include "Scene/Components/Wireframe/Wireframe.h"
+#include "Scene/Components/Physics/Physics.h"
+#include "Scene/Components/BoxBounds/BoxBounds.h"
+#include "Scene/Components/CircleBounds/CircleBounds.h"
 
 
 Scene::Scene() :
@@ -22,6 +25,9 @@ void Scene::Init()
 	m_entityMgr.CreateComponentArray<Sprite>();
 	m_entityMgr.CreateComponentArray<Timer>();
 	m_entityMgr.CreateComponentArray<Wireframe>();
+	m_entityMgr.CreateComponentArray<Physics>();
+	m_entityMgr.CreateComponentArray<BoxBounds>();
+	m_entityMgr.CreateComponentArray<CircleBounds>();
 
 	Entity ent = m_entityMgr.CreateEntity();
 
@@ -33,6 +39,9 @@ void Scene::Init()
 	tf.position = Vector2(0, 0);
 	tf.scale = Vector2(5, 5);
 	m_entityMgr.AddComponent<Transform>(ent, tf);
+
+	Physics ph = Physics(Physics::KINEMATIC);
+	m_entityMgr.AddComponent<Physics>(ent, ph);
 
 }
 

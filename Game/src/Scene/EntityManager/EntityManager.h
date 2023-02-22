@@ -36,6 +36,9 @@ public:
 	ComponentID GetComponentType();
 
 	template <typename T>
+	bool HasComponent(Entity id);
+
+	template <typename T>
 	T& GetComponent(Entity id);
 
 	template <typename T>
@@ -135,6 +138,12 @@ template <typename T>
 T& EntityManager::GetComponent(Entity id)
 {
 	return GetComponentArray<T>()->Get(id);
+}
+
+template <typename T>
+bool EntityManager::HasComponent(Entity id)
+{
+	return m_signatures.Get(id).test(GetComponentType<T>());
 }
 
 template <typename T>

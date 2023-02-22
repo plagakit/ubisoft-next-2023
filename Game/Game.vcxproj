@@ -189,6 +189,9 @@
     <ClInclude Include="include\stdafx.h" />
     <ClInclude Include="include\targetver.h" />
     <ClInclude Include="src\Scene\Camera\Camera.h" />
+    <ClInclude Include="src\Scene\Components\CircleBounds\CircleBounds.h" />
+    <ClInclude Include="src\Scene\Components\BoxBounds\BoxBounds.h" />
+    <ClInclude Include="src\Scene\Components\Physics\Physics.h" />
     <ClInclude Include="src\Scene\Components\Sprite\Sprite.h" />
     <ClInclude Include="src\Scene\Components\Timer\Timer.h" />
     <ClInclude Include="src\Scene\Components\Transform\Transform.h" />
@@ -213,6 +216,9 @@
     <ClCompile Include="include\App\SimpleSprite.cpp" />
     <ClCompile Include="include\App\TextureLoader.cpp" />
     <ClCompile Include="src\Scene\Camera\Camera.cpp" />
+    <ClCompile Include="src\Scene\Components\BoxBounds\BoxBounds.cpp" />
+    <ClCompile Include="src\Scene\Components\CircleBounds\CircleBounds.cpp" />
+    <ClCompile Include="src\Scene\Components\Physics\Physics.cpp" />
     <ClCompile Include="src\Scene\Components\Sprite\Sprite.cpp" />
     <ClCompile Include="src\Scene\Components\Timer\Timer.cpp" />
     <ClCompile Include="src\Scene\Components\Transform\Transform.cpp" />
