@@ -2,11 +2,9 @@
 
 #include <stdafx.h>
 
-#include "Scene/Systems/Signal/Signal.h"
-
 class Scene;
-struct Camera;
 class EntityManager;
+struct Camera;
 
 class RenderSystem {
 

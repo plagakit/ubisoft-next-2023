@@ -2,7 +2,7 @@
 
 #include <stdafx.h>
 
-#include <Scene/Vector2/Vector2.h>
+#include <Core/Vector2/Vector2.h>
 
 struct Transform {
 

@@ -2,7 +2,7 @@
 
 #include <stdafx.h>
 
-#include "Scene/Systems/Signal/Signal.h"
+#include "Core/Signal/Signal.h"
 
 class Scene;
 

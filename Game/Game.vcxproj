@@ -199,10 +199,10 @@
     <ClInclude Include="src\Scene\Scene.h" />
     <ClInclude Include="src\Scene\Systems\PhysicsSystem\PhysicsSystem.h" />
     <ClInclude Include="src\Scene\Systems\RenderSystem\RenderSystem.h" />
-    <ClInclude Include="src\Scene\Systems\Signal\Signal.h" />
+    <ClInclude Include="src\Core\Signal\Signal.h" />
     <ClInclude Include="src\Scene\Systems\TimerSystem\TimerSystem.h" />
-    <ClInclude Include="src\Scene\Vector2\Vector2.h" />
-    <ClInclude Include="src\Core\Delegate.h" />
+    <ClInclude Include="src\Core\Vector2\Vector2.h" />
+    <ClInclude Include="src\Core\Delegate\Delegate.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="include\App\app.cpp" />
@@ -229,7 +229,7 @@
     <ClCompile Include="src\Scene\Systems\PhysicsSystem\PhysicsSystem.cpp" />
     <ClCompile Include="src\Scene\Systems\RenderSystem\RenderSystem.cpp" />
     <ClCompile Include="src\Scene\Systems\TimerSystem\TimerSystem.cpp" />
-    <ClCompile Include="src\Scene\Vector2\Vector2.cpp" />
+    <ClCompile Include="src\Core\Vector2\Vector2.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
