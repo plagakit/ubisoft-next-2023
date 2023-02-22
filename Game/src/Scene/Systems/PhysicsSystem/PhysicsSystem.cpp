@@ -3,6 +3,7 @@
 #include "PhysicsSystem.h"
 
 #include "Scene/Scene.h"
+#include "Scene/Components/Transform/Transform.h"
 
 void PhysicsSystem::UpdatePosition(Scene& scene)
 {

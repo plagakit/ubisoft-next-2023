@@ -17,7 +17,8 @@ void Timer::Start()
 	done = false;
 }
 
-float Timer::PercentElapsed()
+// Returns the percentage time elapsed from 0.0-1.0, can be inlined b/c very simple function
+inline float Timer::PercentElapsed()
 {
 	return elapsed / duration;
 }

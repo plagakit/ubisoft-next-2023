@@ -2,7 +2,6 @@
 
 #include "EntityManager.h"
 
-
 EntityManager::EntityManager(Entity MAX_ENTS) :
 	m_count(0), MAX_ENTITIES(MAX_ENTS)
 {}

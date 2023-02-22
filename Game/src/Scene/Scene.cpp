@@ -1,12 +1,12 @@
 #include <stdafx.h>
 
 #include "Scene.h"
-#include <Scene/EntityManager/EntityManagerTest.cpp>
+#include "Scene/EntityManager/EntityManagerTest.cpp"
 
-#include <Scene/Components/Sprite/Sprite.h>
-#include <Scene/Components/Transform/Transform.h>
-#include <Scene/Components/Timer/Timer.h>
-#include <Scene/Components/Wireframe/Wireframe.h>
+#include "Scene/Components/Sprite/Sprite.h"
+#include "Scene/Components/Transform/Transform.h"
+#include "Scene/Components/Timer/Timer.h"
+#include "Scene/Components/Wireframe/Wireframe.h"
 
 
 Scene::Scene() :

@@ -31,8 +31,8 @@ Sprite::Sprite(const char* filename, unsigned int nrows, unsigned int ncols, uns
         
         textureID = data.textureID;
         frame = frame_;
-        width = data.tex_width / ncols;
-        height = data.tex_height / nrows;
+        width = data.tex_width / static_cast<float>(ncols);
+        height = data.tex_height / static_cast<float>(nrows);
         
         CalculateUVsAndPoints(data);
         return;
@@ -58,8 +58,8 @@ Sprite::Sprite(const char* filename, unsigned int nrows, unsigned int ncols, uns
     master_list[filename] = SpriteSheetData(texture, tex_width, tex_height, nrows, ncols);
     textureID = texture;
     frame = frame_;
-    width = tex_width / ncols;
-    height = tex_height / nrows;
+    width = tex_width / static_cast<float>(ncols);
+    height = tex_height / static_cast<float>(nrows);
 
     CalculateUVsAndPoints(master_list[filename]);
 }

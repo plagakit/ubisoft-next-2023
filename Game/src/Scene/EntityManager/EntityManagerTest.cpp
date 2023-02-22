@@ -1,9 +1,9 @@
 #include <stdafx.h>
 
-#include <Scene/Components/Transform/Transform.h>
-#include <Scene/Components/Sprite/Sprite.h>
-#include <Scene/Components/Timer/Timer.h>
-#include <Scene/EntityManager/EntityManager.h>
+#include "Scene/Components/Transform/Transform.h"
+#include "Scene/Components/Sprite/Sprite.h"
+#include "Scene/Components/Timer/Timer.h"
+#include "Scene/EntityManager/EntityManager.h"
 
 class EntityManagerTest {
 

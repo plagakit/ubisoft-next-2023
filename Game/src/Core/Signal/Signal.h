@@ -19,7 +19,7 @@ public:
 
 	///void Disconnect(SignalDelegate callback);
 
-	void Emit(Args... args)
+	void Emit(Args... args) const
 	{
 		for (Delegate<Args...> d : connections)
 			d(args...);

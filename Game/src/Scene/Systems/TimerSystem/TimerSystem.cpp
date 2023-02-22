@@ -1,7 +1,9 @@
 #include <stdafx.h>
 
 #include "TimerSystem.h"
+
 #include "Scene/Scene.h"
+#include "Scene/Components/Timer/Timer.h"
 
 
 void TimerSystem::UpdateTimers(Scene& scene)

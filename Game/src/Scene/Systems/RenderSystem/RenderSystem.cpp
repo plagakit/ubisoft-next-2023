@@ -3,6 +3,9 @@
 #include "RenderSystem.h"
 
 #include "Scene/Scene.h"
+#include "Scene/Components/Transform/Transform.h"
+#include "Scene/Components/Sprite/Sprite.h"
+#include "Scene/Components/Wireframe/Wireframe.h"
 
 const Vector2 CENTER = Vector2(APP_VIRTUAL_WIDTH / 2.0f, APP_VIRTUAL_HEIGHT / 2.0f);
 
@@ -65,7 +68,7 @@ void RenderSystem::RenderWireframe(Camera& cam, EntityManager& entityMgr, Entity
     const Transform& tf = entityMgr.GetComponent<Transform>(id);
     const Wireframe& wf = entityMgr.GetComponent<Wireframe>(id);
 
-    int numPoints = wf.points.size();
+    auto numPoints = wf.points.size();
     for (int i = 0; i < numPoints + 1; i++)
     {
         const Vector2 &t1 = wf.points[i % numPoints];

@@ -3,12 +3,6 @@
 #include <stdafx.h>
 
 #include "EntityManager/EntityManager.h"
-#include "ContiguousArray/ContiguousArray.h"
-
-#include "Components/Transform/Transform.h"
-#include "Components/Sprite/Sprite.h"
-#include "Components/Timer/Timer.h"
-#include "Components/Wireframe/Wireframe.h"
 
 #include "Systems/RenderSystem/RenderSystem.h"
 #include "Systems/PhysicsSystem/PhysicsSystem.h"
