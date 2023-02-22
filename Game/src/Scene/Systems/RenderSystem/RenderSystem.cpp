@@ -84,6 +84,4 @@ void RenderSystem::RenderWireframe(Camera& cam, EntityManager& entityMgr, Entity
         App::DrawLine(v1.x, v1.y, v2.x, v2.y, wf.r, wf.g, wf.b);
     }
 
-    App::Print(100, 100, ids.c_str());
-
 }

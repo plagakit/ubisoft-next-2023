@@ -27,7 +27,7 @@ public:
 
 private:
 
-	// It's okay if function pointers are stored in the signal because if
+	// It's okay if delegates are stored in the signal because if
 	// one system is destroyed, all systems and their corresponding signals
 	// are destroyed so there can't be any dangling pointers to deleted functions :D
 	std::vector<Delegate<Args...>> connections;

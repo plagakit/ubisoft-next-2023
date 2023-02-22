@@ -53,12 +53,6 @@ void Scene::Init()
 	tf.scale = Vector2(5, 5);
 	m_entityMgr.AddComponent<Transform>(ent, tf);
 
-	//auto f = std::mem_fn(&RenderSystem::test);
-	//auto b = std::bind(f, &m_renderSystem, std::placeholders::_1);
-	//m_timerSystem.e_timerFired.Connect(RenderSystem::test);
-
-	m_timerSystem.e_timerFired.Connect<RenderSystem, &RenderSystem::test>(&m_renderSystem);
-
 }
 
 void Scene::Update(float deltaTime)
