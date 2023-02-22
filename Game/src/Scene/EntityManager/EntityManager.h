@@ -3,7 +3,7 @@
 #include <stdafx.h>
 
 #include "Scene/ContiguousArray/ContiguousArray.h"
-#include "Utils/Delegate.h"
+#include "Core/Delegate.h"
 
 class EntityManager {
 

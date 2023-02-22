@@ -202,7 +202,7 @@
     <ClInclude Include="src\Scene\Systems\Signal\Signal.h" />
     <ClInclude Include="src\Scene\Systems\TimerSystem\TimerSystem.h" />
     <ClInclude Include="src\Scene\Vector2\Vector2.h" />
-    <ClInclude Include="src\Utils\Delegate.h" />
+    <ClInclude Include="src\Core\Delegate.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="include\App\app.cpp" />

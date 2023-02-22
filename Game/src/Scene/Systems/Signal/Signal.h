@@ -2,7 +2,7 @@
 
 #include <stdafx.h>
 
-#include "Utils/Delegate.h"
+#include "Core/Delegate.h"
 
 template <typename... Args>
 class Signal {
