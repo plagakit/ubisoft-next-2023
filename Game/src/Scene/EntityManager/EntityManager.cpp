@@ -54,7 +54,7 @@ void EntityManager::DeleteEntity(Entity id)
 	Signature& signature = m_signatures.Get(id);
 	for (auto i = 0; i < signature.size(); i++)
 		if (signature.test(i))
-			(this->*m_removeFunctions[i])(id);
+			m_removeDelegates[i](id);
 }
 
 bool EntityManager::HasEntity(Entity id)

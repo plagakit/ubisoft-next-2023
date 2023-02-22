@@ -2,7 +2,8 @@
 
 #include <stdafx.h>
 
-#include <Scene/ContiguousArray/ContiguousArray.h>
+#include "Scene/ContiguousArray/ContiguousArray.h"
+#include "Utils/Delegate.h"
 
 class EntityManager {
 
@@ -20,6 +21,8 @@ public:
 	Entity CreateEntity();
 
 	void QueueDelete(Entity id);
+
+	void DeleteQueuedEntities();
 
 	bool HasEntity(Entity id);
 
@@ -41,8 +44,6 @@ public:
 	template <typename T>
 	void RemoveComponent(Entity id);
 
-	void DeleteQueuedEntities();
-
 
 private:
 	const Entity MAX_ENTITIES;
@@ -61,11 +62,10 @@ private:
 	/* Contiguous arrays are template classes - generated at compile time.
 	*  Remove function is used at runtime - see DeleteEntity() in EntityManager.cpp.
 	*  Keeping a map to function pointers ensures we can use each specific implementation
-	*  of the template function at runtime when given a ComponentID. Function
-	*  pointers are assigned when the component array is created.
+	*  of the template function at runtime when given a ComponentID. Delegates
+	*  are assigned when the component array is created.
 	*/
-	using ComponentArrayFunction = void (EntityManager::*)(Entity);
-	std::unordered_map<ComponentID, ComponentArrayFunction> m_removeFunctions;
+	std::unordered_map<ComponentID, Delegate<Entity>> m_removeDelegates;
 
 	void DeleteEntity(Entity id);
 
@@ -104,7 +104,11 @@ void EntityManager::CreateComponentArray()
 
 	m_componentArrays.insert({ type, std::make_shared<ContiguousArray<T>>() });
 	m_componentTypes.insert({ type, m_typeCount });
-	m_removeFunctions.insert({ m_typeCount, &EntityManager::RemoveComponent<T> });
+
+	auto removeDelegate = Delegate<Entity>();
+	removeDelegate.Bind<EntityManager, &EntityManager::RemoveComponent<T>>(this);
+	m_removeDelegates.insert({ m_typeCount, removeDelegate });
+
 	m_typeCount++;
 }
 
