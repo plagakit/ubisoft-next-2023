@@ -43,6 +43,8 @@ void Scene::Init()
 	Physics ph = Physics(Physics::KINEMATIC);
 	m_entityMgr.AddComponent<Physics>(ent, ph);
 
+	CircleBounds cb = CircleBounds(10);
+	m_entityMgr.AddComponent<CircleBounds>(ent, cb);
 }
 
 void Scene::Update(float deltaTime)
