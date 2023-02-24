@@ -7,6 +7,11 @@
 #include "Scene/Components/Sprite/Sprite.h"
 #include "Scene/Components/Wireframe/Wireframe.h"
 
+#ifdef _DEBUG
+#include "Scene/Components/BoxBounds/BoxBounds.h"
+#include "Scene/Components/CircleBounds/CircleBounds.h"
+#endif
+
 const Vector2 CENTER = Vector2(APP_VIRTUAL_WIDTH / 2.0f, APP_VIRTUAL_HEIGHT / 2.0f);
 
 void RenderSystem::Render(Scene& scene)
@@ -14,11 +19,16 @@ void RenderSystem::Render(Scene& scene)
     Camera& cam = scene.GetCamera();
     EntityManager& entityMgr = scene.GetEntityManager();
     
-    for (auto id : entityMgr.GetEntities<Transform, Sprite>())
+    for (Entity id : entityMgr.GetEntities<Transform, Sprite>())
         RenderSprite(cam, entityMgr, id);
 
-    for (auto id : entityMgr.GetEntities<Transform, Wireframe>())
+    for (Entity id : entityMgr.GetEntities<Transform, Wireframe>())
         RenderWireframe(cam, entityMgr, id);
+
+#ifdef _DEBUG
+    RenderPhysicsBounds(cam, entityMgr);
+#endif
+    
 }
 
 void RenderSystem::RenderSprite(Camera& cam, EntityManager &entityMgr, Entity id)
@@ -65,14 +75,64 @@ void RenderSystem::RenderSprite(Camera& cam, EntityManager &entityMgr, Entity id
 
 void RenderSystem::RenderWireframe(Camera& cam, EntityManager& entityMgr, Entity id)
 {
-    const Transform& tf = entityMgr.GetComponent<Transform>(id);
-    const Wireframe& wf = entityMgr.GetComponent<Wireframe>(id);
+    Transform& tf = entityMgr.GetComponent<Transform>(id);
+    Wireframe& wf = entityMgr.GetComponent<Wireframe>(id);
 
-    auto numPoints = wf.points.size();
+    DrawWireframe(cam, tf, wf.points, wf.r, wf.g, wf.b);
+
+}
+
+void RenderSystem::RenderPhysicsBounds(Camera& cam, EntityManager& entityMgr)
+{
+    for (Entity id : entityMgr.GetEntities<CircleBounds>())
+    {
+        Transform& tf = entityMgr.GetComponent<Transform>(id);
+        CircleBounds& cb = entityMgr.GetComponent<CircleBounds>(id);
+
+        int numLines = 16;
+        float angleStep = 2.0f * PI / numLines;
+        std::vector<Vector2> points;
+        
+        // Fill points with the points on a circle
+        for (int i = 0; i < numLines + 1; i++)
+        {
+            int j = i % numLines;
+
+            float x = cosf(angleStep * j) * cb.radius + cb.offset.x;
+            float y = sinf(angleStep * j) * cb.radius + cb.offset.y;
+
+            points.push_back(Vector2(x, y));
+        }
+
+        DrawWireframe(cam, tf, points, 0, 0, 1.0f);
+    }
+
+    for (Entity id : entityMgr.GetEntities<BoxBounds>())
+    {
+        Transform& tf = entityMgr.GetComponent<Transform>(id);
+        BoxBounds& b = entityMgr.GetComponent<BoxBounds>(id);
+
+        std::vector<Vector2> points;
+        float w = b.width / 2;
+        float h = b.height / 2;
+        points.push_back(Vector2(-w, -h) + b.offset); // top left
+        points.push_back(Vector2(w, -h) + b.offset); // top right
+        points.push_back(Vector2(-w, h) + b.offset); // bottom left
+        points.push_back(Vector2(w, h) + b.offset); // bottom right
+
+        DrawWireframe(cam, tf, points, 0, 0, 1.0f);
+    }
+}
+
+
+void RenderSystem::DrawWireframe(Camera& cam, Transform& tf, std::vector<Vector2>& points, float r, float g, float b)
+{
+    auto numPoints = points.size();
     for (int i = 0; i < numPoints + 1; i++)
     {
-        const Vector2 &t1 = wf.points[i % numPoints];
-        const Vector2 &t2 = wf.points[(i + 1) % numPoints];
+        // i % numpoints means i wraps around numpoints
+        const Vector2& t1 = points[i % numPoints];
+        const Vector2& t2 = points[(i + 1) % numPoints];
 
         // For vector: Scale -> rotate -> translate
         // Then camera: translate -> rotate -> zoom
@@ -84,7 +144,6 @@ void RenderSystem::RenderWireframe(Camera& cam, EntityManager& entityMgr, Entity
         v1 = (v1 - cam.position).Rotated(cam.rotation) * cam.zoom + CENTER;
         v2 = (v2 - cam.position).Rotated(cam.rotation) * cam.zoom + CENTER;
 
-        App::DrawLine(v1.x, v1.y, v2.x, v2.y, wf.r, wf.g, wf.b);
+        App::DrawLine(v1.x, v1.y, v2.x, v2.y, r, g, b);
     }
-
 }

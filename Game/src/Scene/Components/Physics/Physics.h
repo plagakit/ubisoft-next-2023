@@ -8,11 +8,12 @@ struct Physics {
 
 	enum BodyType { STATIC, KINEMATIC };
 	BodyType bodyType;
+	bool isTrigger;
 
 	Vector2 velocity;
 	Vector2 acceleration;
 	float angularVelocity;
 
-	Physics(BodyType bodyType);
+	Physics(BodyType bodyType, bool isTrigger = false);
 
 };
