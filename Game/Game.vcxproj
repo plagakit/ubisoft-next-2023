@@ -198,7 +198,6 @@
     <ClInclude Include="src\Scene\Components\Wireframe\Wireframe.h" />
     <ClInclude Include="src\Scene\ContiguousArray\ContiguousArray.h" />
     <ClInclude Include="src\Scene\ContiguousArray\IContiguousArray.h" />
-    <ClInclude Include="src\Scene\EntityManager\EntityManager.h" />
     <ClInclude Include="src\Scene\Scene.h" />
     <ClInclude Include="src\Scene\Systems\PhysicsSystem\PhysicsSystem.h" />
     <ClInclude Include="src\Scene\Systems\PlayerSystem\PlayerSystem.h" />
@@ -230,7 +229,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\Scene\Components\Wireframe\Wireframe.cpp" />
-    <ClCompile Include="src\Scene\EntityManager\EntityManager.cpp" />
     <ClCompile Include="src\Scene\EntityManager\EntityManagerTest.cpp" />
     <ClCompile Include="src\Scene\Scene.cpp" />
     <ClCompile Include="src\Scene\Systems\PhysicsSystem\PhysicsSystem.cpp" />

@@ -1,7 +1,6 @@
 #include <stdafx.h>
 
 #include "Scene.h"
-#include "Scene/EntityManager/EntityManagerTest.cpp"
 
 #include "Scene/Components/Sprite/Sprite.h"
 #include "Scene/Components/Transform/Transform.h"
@@ -21,7 +20,7 @@ void Scene::Init()
 	// Initialize entities
 	m_count = 0;
 	m_entities.clear();
-	m_availableEntities = {};
+	m_availableEntities.clear();
 
 	for (Entity i = 0; i < MAX_ENTITIES; i++)
 		m_availableEntities.push_back(i);
