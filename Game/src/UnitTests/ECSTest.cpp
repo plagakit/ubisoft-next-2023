@@ -5,7 +5,7 @@
 #include "Scene/Components/Sprite/Sprite.h"
 #include "Scene/Components/Timer/Timer.h"
 
-class EntityManagerTest {
+class ECSTest {
 
 public:
 	static void RunTests()

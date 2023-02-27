@@ -15,8 +15,6 @@
 
 void Scene::Init()
 {
-	EntityManagerTest::RunTests();
-	
 	// Initialize entities
 	m_count = 0;
 	m_entities.clear();

@@ -4,11 +4,14 @@
 #include <math.h>  
 
 #include "Scene/Scene.h"
+#include "UnitTests/ECSTest.cpp"
 
 Scene* current_scene;
 
 void Init() 
 {
+	ECSTest::RunTests();
+	
 	current_scene = new Scene;
 	current_scene->Init();
 }
