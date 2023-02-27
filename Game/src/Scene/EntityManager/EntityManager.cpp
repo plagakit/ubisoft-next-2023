@@ -6,16 +6,6 @@ EntityManager::EntityManager(Entity MAX_ENTS) :
 	m_count(0), MAX_ENTITIES(MAX_ENTS)
 {}
 
-void EntityManager::Init()
-{
-	m_count = 0;
-	m_entities.clear();
-	m_availableEntities = {};
-
-	for (Entity i = 0; i < MAX_ENTITIES; i++)
-		m_availableEntities.push(i);
-}
-
 //std::vector<Entity> EntityManager::GetEntities()
 //{
 //	return m_entities;

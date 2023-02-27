@@ -12,39 +12,48 @@
 #include "Scene/Components/CircleBounds/CircleBounds.h"
 
 
-Scene::Scene() :
-	m_entityMgr(10000)
-{}
+// Scene methods
 
 void Scene::Init()
 {
 	EntityManagerTest::RunTests();
-	m_entityMgr.Init();
 	
-	m_entityMgr.CreateComponentArray<Transform>();
-	m_entityMgr.CreateComponentArray<Sprite>();
-	m_entityMgr.CreateComponentArray<Timer>();
-	m_entityMgr.CreateComponentArray<Wireframe>();
-	m_entityMgr.CreateComponentArray<Physics>();
-	m_entityMgr.CreateComponentArray<BoxBounds>();
-	m_entityMgr.CreateComponentArray<CircleBounds>();
+	// Initialize entities
+	m_count = 0;
+	m_entities.clear();
+	m_availableEntities = {};
 
-	Entity ent = m_entityMgr.CreateEntity();
+	for (Entity i = 0; i < MAX_ENTITIES; i++)
+		m_availableEntities.push_back(i);
+	
+	// Initialize components
+	CreateComponentArray<Transform>();
+	CreateComponentArray<Sprite>();
+	CreateComponentArray<Timer>();
+	CreateComponentArray<Wireframe>();
+	CreateComponentArray<Physics>();
+	CreateComponentArray<BoxBounds>();
+	CreateComponentArray<CircleBounds>();
+
+
+
+	// Create ship
+	Entity ent = CreateEntity();
 
 	Wireframe wf = Wireframe();
 	wf.points = { Vector2(-5, -5), Vector2(0, 10), Vector2(5, -5) };
-	m_entityMgr.AddComponent<Wireframe>(ent, wf);
+	AddComponent<Wireframe>(ent, wf);
 
 	Transform tf = Transform();
 	tf.position = Vector2(0, 0);
 	tf.scale = Vector2(5, 5);
-	m_entityMgr.AddComponent<Transform>(ent, tf);
+	AddComponent<Transform>(ent, tf);
 
 	Physics ph = Physics(Physics::KINEMATIC);
-	m_entityMgr.AddComponent<Physics>(ent, ph);
+	AddComponent<Physics>(ent, ph);
 
 	CircleBounds cb = CircleBounds(10);
-	m_entityMgr.AddComponent<CircleBounds>(ent, cb);
+	AddComponent<CircleBounds>(ent, cb);
 }
 
 void Scene::Update(float deltaTime)
@@ -63,10 +72,68 @@ void Scene::Render()
 }
 
 
-EntityManager& Scene::GetEntityManager()
+// Entity methods
+
+Entity Scene::GetCount()
 {
-	return m_entityMgr;
+	return m_count;
 }
+
+bool Scene::DoesEntityExist(Entity id)
+{
+	return std::find(m_entities.begin(), m_entities.end(), id) != m_entities.end();
+}
+
+Entity Scene::CreateEntity()
+{
+	assert("Entity limit reached." && m_availableEntities.size() > 0);
+
+	Entity id = m_availableEntities.front();
+	m_availableEntities.pop_front();
+	m_entities.push_back(id);
+	m_signatures.Add(id, Signature());
+	m_count++;
+
+	return id;
+}
+
+void Scene::DeleteEntity(Entity id)
+{
+	auto entityIdx = std::find(m_entities.begin(), m_entities.end(), id);
+	assert("Entity not found in vector!" && entityIdx != m_entities.end());
+
+	m_count--;
+	m_entities.erase(entityIdx);
+	m_availableEntities.push_back(id);
+
+	// For each component type in the signature, call its remove function!
+	Signature& signature = m_signatures.Get(id);
+	for (auto i = 0; i < signature.size(); i++)
+		if (signature.test(i))
+			m_removeComponentFunctions[i](id);
+}
+
+void Scene::QueueDelete(Entity id)
+{
+	m_deleteQueue.push_back(id);
+}
+
+void Scene::DeleteQueuedEntities()
+{
+	while (!m_deleteQueue.empty())
+	{
+		Entity id = m_deleteQueue.front();
+		DeleteEntity(id);
+		m_deleteQueue.pop_front();
+	}
+}
+
+// Component methods
+
+// ...which there are none of cuz they're all templated :P
+
+
+// Misc methods
 
 Camera& Scene::GetCamera()
 {
