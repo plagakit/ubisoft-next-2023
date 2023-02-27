@@ -14,9 +14,9 @@ public:
 	void Render(Scene& scene);
 
 private:
-	void RenderSprite(Camera& camera, EntityManager& entityMgr, Entity id);
-	void RenderWireframe(Camera& camera, EntityManager& entityMgr, Entity id);
-	void RenderPhysicsBounds(Camera& camera, EntityManager& entityMgr);
+	void RenderSprite(Scene& scene, Entity id);
+	void RenderWireframe(Scene& scene, Entity id);
+	void RenderPhysicsBounds(Scene& scene);
 
 	void DrawWireframe(Camera& camera, Transform& transform, std::vector<Vector2>& points, float r = 1.0f, float g = 1.0f, float b = 1.0f);
 

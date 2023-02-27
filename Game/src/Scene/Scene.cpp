@@ -32,15 +32,13 @@ void Scene::Init()
 	CreateComponentArray<BoxBounds>();
 	CreateComponentArray<CircleBounds>();
 
-
-
-	// Create ship
+	// Create ship	
 	Entity ent = CreateEntity();
-
+	
 	Wireframe wf = Wireframe();
 	wf.points = { Vector2(-5, -5), Vector2(0, 10), Vector2(5, -5) };
 	AddComponent<Wireframe>(ent, wf);
-
+	
 	Transform tf = Transform();
 	tf.position = Vector2(0, 0);
 	tf.scale = Vector2(5, 5);
@@ -51,11 +49,12 @@ void Scene::Init()
 
 	CircleBounds cb = CircleBounds(10);
 	AddComponent<CircleBounds>(ent, cb);
+	
 }
 
 void Scene::Update(float deltaTime)
 {	
-	m_deltaTime = deltaTime / 1000.0f; // deltaTime in seconds, want milliseconds
+	m_deltaTime = deltaTime / 1000.0f; // deltaTime is in seconds, we want milliseconds
 
 	m_timerSystem.UpdateTimers(*this);
 	m_playerSystem.UpdatePlayer(*this);

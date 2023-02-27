@@ -10,11 +10,11 @@
 
 void PlayerSystem::UpdatePlayer(Scene& scene)
 {
-	for (Entity id : scene.GetEntityManager().GetEntities<Wireframe, Transform, Physics>())
+	for (Entity id : scene.GetEntities<Wireframe, Transform, Physics>())
 	{
 
-		Transform& tf = scene.GetEntityManager().GetComponent<Transform>(id);
-		Physics& ph = scene.GetEntityManager().GetComponent<Physics>(id);
+		Transform& tf = scene.GetComponent<Transform>(id);
+		Physics& ph = scene.GetComponent<Physics>(id);
 		
 		if (App::IsKeyPressed('W'))
 			ph.velocity += Vector2(0, 1).Rotated(tf.rotation);

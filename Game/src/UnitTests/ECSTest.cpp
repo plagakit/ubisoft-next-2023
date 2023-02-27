@@ -48,6 +48,8 @@ public:
 		}
 
 		// Test deleting at random
+
+		Entity prevCount = scene.GetCount();
 		while (scene.GetCount() > 0)
 		{
 			Entity id; 
@@ -57,6 +59,8 @@ public:
 			} while (!scene.DoesEntityExist(id));
 			scene.QueueDelete(id);
 			scene.DeleteQueuedEntities();
+			assert(prevCount > scene.GetCount());
+			prevCount++;
 		}
 		
 	}

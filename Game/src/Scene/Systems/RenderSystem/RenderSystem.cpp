@@ -16,25 +16,23 @@ const Vector2 CENTER = Vector2(APP_VIRTUAL_WIDTH / 2.0f, APP_VIRTUAL_HEIGHT / 2.
 
 void RenderSystem::Render(Scene& scene)
 {
-    Camera& cam = scene.GetCamera();
-    EntityManager& entityMgr = scene.GetEntityManager();
-    
-    for (Entity id : entityMgr.GetEntities<Transform, Sprite>())
-        RenderSprite(cam, entityMgr, id);
 
-    for (Entity id : entityMgr.GetEntities<Transform, Wireframe>())
-        RenderWireframe(cam, entityMgr, id);
+    for (Entity id : scene.GetEntities<Transform, Sprite>())
+        RenderSprite(scene, id);
+
+    for (Entity id : scene.GetEntities<Transform, Wireframe>())
+        RenderWireframe(scene, id);
 
 #ifdef _DEBUG
-    RenderPhysicsBounds(cam, entityMgr);
+    RenderPhysicsBounds(scene);
 #endif
     
 }
 
-void RenderSystem::RenderSprite(Camera& cam, EntityManager &entityMgr, Entity id)
+void RenderSystem::RenderSprite(Scene& scene, Entity id)
 {	
-    const Transform& tf = entityMgr.GetComponent<Transform>(id);
-    const Sprite& sp = entityMgr.GetComponent<Sprite>(id);
+    const Transform& tf = scene.GetComponent<Transform>(id);
+    const Sprite& sp = scene.GetComponent<Sprite>(id);
 
 	// Code copied from SimpleSprite.cpp
 #if APP_USE_VIRTUAL_RES
@@ -73,21 +71,21 @@ void RenderSystem::RenderSprite(Camera& cam, EntityManager &entityMgr, Entity id
 
 }
 
-void RenderSystem::RenderWireframe(Camera& cam, EntityManager& entityMgr, Entity id)
+void RenderSystem::RenderWireframe(Scene& scene, Entity id)
 {
-    Transform& tf = entityMgr.GetComponent<Transform>(id);
-    Wireframe& wf = entityMgr.GetComponent<Wireframe>(id);
+    Transform& tf = scene.GetComponent<Transform>(id);
+    Wireframe& wf = scene.GetComponent<Wireframe>(id);
 
-    DrawWireframe(cam, tf, wf.points, wf.r, wf.g, wf.b);
+    DrawWireframe(scene.GetCamera(), tf, wf.points, wf.r, wf.g, wf.b);
 
 }
 
-void RenderSystem::RenderPhysicsBounds(Camera& cam, EntityManager& entityMgr)
+void RenderSystem::RenderPhysicsBounds(Scene& scene)
 {
-    for (Entity id : entityMgr.GetEntities<CircleBounds>())
+    for (Entity id : scene.GetEntities<CircleBounds>())
     {
-        Transform& tf = entityMgr.GetComponent<Transform>(id);
-        CircleBounds& cb = entityMgr.GetComponent<CircleBounds>(id);
+        Transform& tf = scene.GetComponent<Transform>(id);
+        CircleBounds& cb = scene.GetComponent<CircleBounds>(id);
 
         int numLines = 16;
         float angleStep = 2.0f * PI / numLines;
@@ -104,13 +102,13 @@ void RenderSystem::RenderPhysicsBounds(Camera& cam, EntityManager& entityMgr)
             points.push_back(Vector2(x, y));
         }
 
-        DrawWireframe(cam, tf, points, 0, 0, 1.0f);
+        DrawWireframe(scene.GetCamera(), tf, points, 0, 0, 1.0f);
     }
 
-    for (Entity id : entityMgr.GetEntities<BoxBounds>())
+    for (Entity id : scene.GetEntities<BoxBounds>())
     {
-        Transform& tf = entityMgr.GetComponent<Transform>(id);
-        BoxBounds& b = entityMgr.GetComponent<BoxBounds>(id);
+        Transform& tf = scene.GetComponent<Transform>(id);
+        BoxBounds& b = scene.GetComponent<BoxBounds>(id);
 
         std::vector<Vector2> points;
         float w = b.width / 2;
@@ -120,7 +118,7 @@ void RenderSystem::RenderPhysicsBounds(Camera& cam, EntityManager& entityMgr)
         points.push_back(Vector2(-w, h) + b.offset); // bottom left
         points.push_back(Vector2(w, h) + b.offset); // bottom right
 
-        DrawWireframe(cam, tf, points, 0, 0, 1.0f);
+        DrawWireframe(scene.GetCamera(), tf, points, 0, 0, 1.0f);
     }
 }
 

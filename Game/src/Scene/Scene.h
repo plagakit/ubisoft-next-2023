@@ -16,7 +16,7 @@ public:
 	const Entity MAX_ENTITIES = 1000;
 	float m_deltaTime = 0;
 
-	Scene() = default;
+	Scene() : m_count(0) {}
 
 	// Scene methods
 
@@ -49,7 +49,7 @@ public:
 	void CreateComponentArray();
 
 	template <typename T>
-	ContiguousArray<T>* GetComponentArray();
+	std::shared_ptr<ContiguousArray<T>> GetComponentArray();
 
 	template <typename T>
 	ComponentID GetComponentType();
@@ -84,7 +84,7 @@ private:
 	// Components
 	ComponentID m_typeCount = 0;
 	std::unordered_map<std::type_index, ComponentID> m_componentTypes;
-	std::unordered_map<std::type_index, IContiguousArray*> m_componentArrays;
+	std::unordered_map<std::type_index, std::shared_ptr<IContiguousArray>> m_componentArrays;
 
 	/* Contiguous arrays are template classes - generated at compile time.
 	*  Remove function is used at runtime - see DeleteEntity() in Scene.cpp.
@@ -139,22 +139,21 @@ void Scene::CreateComponentArray()
 {
 	const std::type_info& type = typeid(T);
 
-	IContiguousArray* ptr = static_cast<IContiguousArray*>(&ContiguousArray<T>());
-	m_componentArrays.insert({ type, ptr });
+	m_componentArrays.insert({ type, std::make_shared<ContiguousArray<T>>() });
 	m_componentTypes.insert({ type, m_typeCount });
 
-	//auto removeDelegate = Delegate<Entity>();
-	//removeDelegate.Bind<Scene, &Scene::RemoveComponent<T>>(this);
-	//m_removeDelegates.insert({ m_typeCount, removeDelegate });
+	auto rmFunc = Delegate<Entity>();
+	rmFunc.Bind<Scene, &Scene::RemoveComponent<T>>(this);
+	m_removeComponentFunctions.insert({ m_typeCount, rmFunc });
 
 	m_typeCount++;
 }
 
 template <typename T>
-ContiguousArray<T>* Scene::GetComponentArray()
+std::shared_ptr<ContiguousArray<T>> Scene::GetComponentArray()
 {
 	const auto& type = typeid(T);
-	return static_cast<ContiguousArray<T>*>(m_componentArrays[type]);
+	return std::static_pointer_cast<ContiguousArray<T>>(m_componentArrays[type]);
 }
 
 template <typename T>

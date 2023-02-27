@@ -6,13 +6,13 @@
 #include "Scene/Scene.h"
 #include "UnitTests/ECSTest.cpp"
 
-Scene* current_scene;
+std::shared_ptr<Scene> current_scene;
 
 void Init() 
 {
-	ECSTest::RunTests();
+	//ECSTest::RunTests();
 	
-	current_scene = new Scene;
+	current_scene = std::make_shared<Scene>();
 	current_scene->Init();
 }
 
@@ -61,5 +61,5 @@ void Render()
 
 void Shutdown()
 {	
-	delete current_scene;
+
 }

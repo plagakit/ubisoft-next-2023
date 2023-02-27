@@ -10,11 +10,10 @@
 
 void PhysicsSystem::UpdatePosition(Scene& scene)
 {
-	auto mgr = scene.GetEntityManager();
-	for (Entity id : scene.GetEntityManager().GetEntities<Transform, Physics>())
+	for (Entity id : scene.GetEntities<Transform, Physics>())
 	{
-		Transform& tf = mgr.GetComponent<Transform>(id);
-		Physics& ph = mgr.GetComponent<Physics>(id);
+		Transform& tf = scene.GetComponent<Transform>(id);
+		Physics& ph = scene.GetComponent<Physics>(id);
 
 		// Update movement and rotation
 		if (ph.bodyType == Physics::KINEMATIC)

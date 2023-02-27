@@ -8,9 +8,9 @@
 
 void TimerSystem::UpdateTimers(Scene& scene)
 {
-	for (Entity id : scene.GetEntityManager().GetEntities<Timer>())
+	for (Entity id : scene.GetEntities<Timer>())
 	{
-		Timer& t = scene.GetEntityManager().GetComponent<Timer>(id);
+		Timer& t = scene.GetComponent<Timer>(id);
 
 		if (!t.isRunning)
 			return;

@@ -3,9 +3,6 @@
 #include <stdafx.h>
 
 class Scene;
-struct Transform;
-struct CircleBounds;
-struct BoxBounds;
 
 class PhysicsSystem {
 
