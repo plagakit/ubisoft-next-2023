@@ -32,7 +32,8 @@ void Scene::Init()
 	CreateComponentArray<BoxBounds>();
 	CreateComponentArray<CircleBounds>();
 
-	// Create ship	
+	// Create ship
+	for (int i = 0; i < 100; i++) {
 	Entity ent = CreateEntity();
 	
 	Wireframe wf = Wireframe();
@@ -40,8 +41,8 @@ void Scene::Init()
 	AddComponent<Wireframe>(ent, wf);
 	
 	Transform tf = Transform();
-	tf.position = Vector2(0, 0);
-	tf.scale = Vector2(5, 5);
+	tf.position = Vector2(i*2, 0);
+	tf.scale = Vector2(2, 2);
 	AddComponent<Transform>(ent, tf);
 
 	Physics ph = Physics(Physics::KINEMATIC);
@@ -49,7 +50,7 @@ void Scene::Init()
 
 	CircleBounds cb = CircleBounds(10);
 	AddComponent<CircleBounds>(ent, cb);
-	
+	}
 }
 
 void Scene::Update(float deltaTime)

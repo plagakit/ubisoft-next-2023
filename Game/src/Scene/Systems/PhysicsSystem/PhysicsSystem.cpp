@@ -21,54 +21,62 @@ void PhysicsSystem::UpdatePosition(Scene& scene)
 			tf.position += ph.velocity * scene.m_deltaTime;
 			tf.rotation += ph.angularVelocity * scene.m_deltaTime;
 
+			// If object is moving & kinematic, check collision
+			/*
 			if (abs(ph.velocity.x) > 0 || abs(ph.velocity.y) > 0)
 			{
-				if (scene.HasComponent<CircleBounds>(id))
-					UpdateCollision(scene, id, scene.GetComponent<CircleBounds>(id));
+				for (Entity other : scene.GetEntities<Transform, Physics>())
+				{
+					Transform& otf = scene.GetComponent<Transform>(other);
+					Physics& oph = scene.GetComponent<Physics>(other);
 
-				if (scene.HasComponent<BoxBounds>(id))
-					UpdateCollision(scene, id, scene.GetComponent<BoxBounds>(id));
+					// Does not share any physics layer or is self
+					if (other == id || (ph.layer | oph.layer) == 0)
+						continue;
+
+					if (scene.HasComponent<CircleBounds>(id))
+						UpdateCircleCollision(scene, id, other);
+
+					if (scene.HasComponent<BoxBounds>(id))
+						UpdateBoxCollision(scene, id, other);
+
+				}
 			}
+			*/
 		}
 	}
 }
 
-void PhysicsSystem::UpdateCollision(Scene& scene, Entity id, BoxBounds& bb)
+void PhysicsSystem::UpdateCircleCollision(Scene& scene, Entity id1, Entity id2)
 {
-	for (Entity other : scene.GetEntities<Transform, Physics>())
-	{
-		if (other == id) continue;
+	Transform& tf1 = scene.GetComponent<Transform>(id1);
+	Physics& ph1 = scene.GetComponent<Physics>(id1);
+	CircleBounds& cb = scene.GetComponent<CircleBounds>(id1);
 
 
-
-	}
+	
 }
 
-void PhysicsSystem::UpdateCollision(Scene& scene, Entity id, CircleBounds& cb)
+void PhysicsSystem::UpdateBoxCollision(Scene& scene, Entity id1, Entity id2)
 {
-	for (Entity other : scene.GetEntities<Transform, Physics>())
-	{
-		if (other == id) continue;
-
-
-
-	}
+	Transform& tf1 = scene.GetComponent<Transform>(id1);
+	Physics& ph1 = scene.GetComponent<Physics>(id1);
 }
 
 // Circle & circle
 bool PhysicsSystem::IsColliding(Scene& scene, Entity id1, Entity id2, CircleBounds& cb1, CircleBounds& cb2)
 {
-
+	return false;
 }
 
 // Box & box
 bool PhysicsSystem::IsColliding(Scene& scene, Entity id1, Entity id2, BoxBounds& bb1, BoxBounds& bb2)
 {
-
+	return false;
 }
 
 // Circle & box
 bool PhysicsSystem::IsColliding(Scene& scene, Entity id1, Entity id2, CircleBounds& cb, BoxBounds& bb)
 {
-
+	return false;
 }

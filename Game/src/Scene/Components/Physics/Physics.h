@@ -8,6 +8,8 @@ struct Physics {
 
 	enum BodyType { STATIC, KINEMATIC };
 	BodyType bodyType;
+
+	Signature layer;
 	bool isTrigger;
 
 	Vector2 velocity;

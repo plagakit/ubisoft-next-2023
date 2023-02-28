@@ -16,8 +16,8 @@ public:
 	void UpdatePosition(Scene& scene);
 
 private:
-	void UpdateCollision(Scene& scene, Entity id, BoxBounds& bb);
-	void UpdateCollision(Scene& scene, Entity id, CircleBounds& cb);
+	void UpdateCircleCollision(Scene& scene, Entity id, Entity other);
+	void UpdateBoxCollision(Scene& scene, Entity id, Entity other);
 
 	bool IsColliding(Scene& scene, Entity id1, Entity id2, CircleBounds& cb1, CircleBounds& cb2);
 	bool IsColliding(Scene& scene, Entity id1, Entity id2, BoxBounds& bb1, BoxBounds& bb2);
