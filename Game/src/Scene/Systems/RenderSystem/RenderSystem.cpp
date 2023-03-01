@@ -25,6 +25,8 @@ void RenderSystem::Render(Scene& scene)
 
 #ifdef _DEBUG
     RenderPhysicsBounds(scene);
+    App::Print(0, 250, test.c_str());
+    test = "";
 #endif
     
 }
@@ -99,7 +101,9 @@ void RenderSystem::RenderPhysicsBounds(Scene& scene)
             float x = cosf(angleStep * j) * cb.radius + cb.offset.x;
             float y = sinf(angleStep * j) * cb.radius + cb.offset.y;
 
-            points.push_back(Vector2(x, y));
+            // reverse transform's rotation & scaling for bounds
+            Vector2 v = Vector2(x, y).Rotated(-tf.rotation) / tf.scale;
+            points.push_back(v);
         }
 
         DrawWireframe(scene.GetCamera(), tf, points, 0, 0, 1.0f);
@@ -110,13 +114,21 @@ void RenderSystem::RenderPhysicsBounds(Scene& scene)
         Transform& tf = scene.GetComponent<Transform>(id);
         BoxBounds& b = scene.GetComponent<BoxBounds>(id);
 
-        std::vector<Vector2> points;
         float w = b.width / 2;
         float h = b.height / 2;
-        points.push_back(Vector2(-w, -h) + b.offset); // top left
-        points.push_back(Vector2(w, -h) + b.offset); // top right
-        points.push_back(Vector2(-w, h) + b.offset); // bottom left
-        points.push_back(Vector2(w, h) + b.offset); // bottom right
+        std::vector<Vector2> points = 
+        {
+            Vector2(-w, -h), // top left
+            Vector2(w, -h),  // top right
+            Vector2(w, h),   // bottom right
+            Vector2(-w, h)   // bottom left
+        };
+        
+        for (auto& v : points)
+        {
+            v = v.Rotated(-tf.rotation) / tf.scale; // reverse transform's rotation & scaling for bounds
+            v += b.offset;
+        }
 
         DrawWireframe(scene.GetCamera(), tf, points, 0, 0, 1.0f);
     }
@@ -137,7 +149,7 @@ void RenderSystem::DrawWireframe(Camera& cam, Transform& tf, std::vector<Vector2
         // Could have been simplified with a matrix class. If this was 3D, I would try to make one
         Vector2 v1 = (t1 * tf.scale).Rotated(tf.rotation) + tf.position;
         Vector2 v2 = (t2 * tf.scale).Rotated(tf.rotation) + tf.position;
-
+        
         // Translating by CENTER ensures that cam's pos is the middle of the screen
         v1 = (v1 - cam.position).Rotated(cam.rotation) * cam.zoom + CENTER;
         v2 = (v2 - cam.position).Rotated(cam.rotation) * cam.zoom + CENTER;

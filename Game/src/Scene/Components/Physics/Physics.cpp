@@ -4,7 +4,5 @@
 
 Physics::Physics(BodyType type, bool trigger) :
 	bodyType(type), velocity(Vector2()), acceleration(Vector2()), 
-	angularVelocity(0.0f), isTrigger(trigger), layer(Signature())
-{
-	layer.set(0);
-}
+	angularVelocity(0.0f), isTrigger(trigger)
+{}

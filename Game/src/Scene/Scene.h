@@ -142,6 +142,7 @@ void Scene::CreateComponentArray()
 	m_componentArrays.insert({ type, std::make_shared<ContiguousArray<T>>() });
 	m_componentTypes.insert({ type, m_typeCount });
 
+	// Add the remove component function to map so that it can be used @ runtime w/ ComponentID
 	auto rmFunc = Delegate<Entity>();
 	rmFunc.Bind<Scene, &Scene::RemoveComponent<T>>(this);
 	m_removeComponentFunctions.insert({ m_typeCount, rmFunc });

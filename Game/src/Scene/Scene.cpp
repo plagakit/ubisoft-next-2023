@@ -33,7 +33,7 @@ void Scene::Init()
 	CreateComponentArray<CircleBounds>();
 
 	// Create ship
-	for (int i = 0; i < 100; i++) {
+	for (int i = 0; i < 1; i++) {
 	Entity ent = CreateEntity();
 	
 	Wireframe wf = Wireframe();
@@ -41,16 +41,38 @@ void Scene::Init()
 	AddComponent<Wireframe>(ent, wf);
 	
 	Transform tf = Transform();
-	tf.position = Vector2(i*2, 0);
+	tf.position = Vector2(i*5, 0);
 	tf.scale = Vector2(2, 2);
 	AddComponent<Transform>(ent, tf);
 
 	Physics ph = Physics(Physics::KINEMATIC);
 	AddComponent<Physics>(ent, ph);
 
-	CircleBounds cb = CircleBounds(10);
-	AddComponent<CircleBounds>(ent, cb);
+	BoxBounds cb = BoxBounds(20, 20);
+	AddComponent<BoxBounds>(ent, cb);
 	}
+
+	// Create box
+	Entity wall = CreateEntity();
+
+	Wireframe wf = Wireframe();
+	wf.points = { Vector2(-50, -50), Vector2(50, -50), Vector2(50, 50), Vector2(-50, 50) };
+	AddComponent<Wireframe>(wall, wf);
+
+	Transform tf = Transform();
+	tf.position = Vector2(-200, 200);
+	AddComponent<Transform>(wall, tf);
+
+	Physics ph = Physics(Physics::STATIC);
+	AddComponent<Physics>(wall, ph);
+
+	BoxBounds bb = BoxBounds(100, 100);
+	AddComponent<BoxBounds>(wall, bb);
+
+	AddComponent<Timer>(wall, Timer(5));
+
+	// Bind systems
+	m_physicsSystem.s_onCollision.Connect<RenderSystem, &RenderSystem::Test>(&m_renderSystem);
 }
 
 void Scene::Update(float deltaTime)
@@ -60,6 +82,8 @@ void Scene::Update(float deltaTime)
 	m_timerSystem.UpdateTimers(*this);
 	m_playerSystem.UpdatePlayer(*this);
 	m_physicsSystem.UpdatePosition(*this);
+
+	m_physicsSystem.UpdateCollision(*this, GetEntities<BoxBounds>(), GetEntities<Timer>());
 
 }
 

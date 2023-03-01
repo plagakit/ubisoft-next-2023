@@ -31,6 +31,18 @@ Vector2 Vector2::operator/(float scalar) const
 	return Vector2(this->x / scalar, this->y / scalar);
 }
 
+Vector2 Vector2::operator/(const Vector2& v) const
+{
+	return Vector2(this->x / v.x, this->y / v.y);
+}
+
+Vector2& Vector2::operator-()
+{
+	x = -x;
+	y = -y;
+	return *this;
+}
+
 Vector2& Vector2::operator+=(const Vector2& v)
 {
 	x += v.x;
@@ -66,6 +78,13 @@ Vector2& Vector2::operator/=(float scalar)
 	return *this;
 }
 
+Vector2& Vector2::operator/=(const Vector2& v)
+{
+	x /= v.x;
+	y /= v.y;
+	return *this;
+}
+
 bool Vector2::operator==(const Vector2& v) const
 {
 	return x == v.x && y == v.y;
@@ -96,11 +115,17 @@ float Vector2::Distance(const Vector2& to) const
 	return abs((to - *this).Length());
 }
 
+float Vector2::DistanceSquared(const Vector2& to) const
+{
+	return abs((to - *this).LengthSquared());
+}
+
 Vector2 Vector2::Normalized() const
 {
 	Vector2 v;
-	if (LengthSquared() > 0)
-		v = *this / Length();
+	float length = Length();
+	if (length > 0)
+		v = *this / length;
 	return v;
 }
 
