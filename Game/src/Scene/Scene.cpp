@@ -48,7 +48,7 @@ void Scene::Init()
 	Physics ph = Physics(Physics::KINEMATIC);
 	AddComponent<Physics>(ent, ph);
 
-	BoxBounds cb = BoxBounds(20, 20);
+	BoxBounds cb = BoxBounds(20,20);
 	AddComponent<BoxBounds>(ent, cb);
 	}
 
@@ -66,7 +66,7 @@ void Scene::Init()
 	Physics ph = Physics(Physics::STATIC);
 	AddComponent<Physics>(wall, ph);
 
-	BoxBounds bb = BoxBounds(100, 100);
+	BoxBounds bb = BoxBounds(100,100);
 	AddComponent<BoxBounds>(wall, bb);
 
 	AddComponent<Timer>(wall, Timer(5));

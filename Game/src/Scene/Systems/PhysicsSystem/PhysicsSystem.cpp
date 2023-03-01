@@ -2,6 +2,7 @@
 
 #include "PhysicsSystem.h"
 
+#include "Utils/Utils.h"
 #include "Scene/Scene.h"
 #include "Scene/Components/Transform/Transform.h"
 #include "Scene/Components/Physics/Physics.h"
@@ -38,11 +39,11 @@ void PhysicsSystem::UpdateCollision(Scene& scene, Entity one, Entity two)
 	Physics& ph2 = scene.GetComponent<Physics>(two);
 	
 	// Lots of ugly code and if statements (also bad because branch misprediction),
-	// would get particularly ugly with 3+ types of bounds. An alternative would be 
-	// to use inheritance to put all the specific bound x bound collision code 
-	// inside subclasses so that C++ uses nice and fast vtable lookups instead of 
-	// if statements. Did not implement because of time, but this solution still 
-	// works nicely for my game due to its small size.
+	// would get particularly ugly with 3+ types of bounds like capsules or rays. 
+	// An alternative would be to use inheritance to put all the specific bound x 
+	// bound collision code inside subclasses so that C++ uses nice and fast vtable 
+	// lookups instead of if statements. Did not implement because of time, but my 
+	// solution still works nicely for the game due to its small scope.
 
 	// Circle x ?
 	if (scene.HasComponent<CircleBounds>(one))
@@ -56,6 +57,25 @@ void PhysicsSystem::UpdateCollision(Scene& scene, Entity one, Entity two)
 			if (IsColliding(tf1, tf2, cb1, cb2))
 			{
 				collision = true;
+
+				// Compute distance between centers
+				Vector2 diff = (tf2.position + cb2.offset) - (tf1.position + cb1.offset);
+				float dist = diff.Length();
+
+				// Compute minimum distance to separate colliders
+				float minDist = dist - (cb1.radius + cb2.radius);
+
+				// Compute separation direction with length of min dist
+				Vector2 separationVector = diff.Normalized() * minDist;
+
+				// Move the bodies (only the first if 2nd never moves)
+				if (ph2.bodyType == Physics::STATIC)
+					tf1.position += separationVector;
+				else
+				{
+					tf1.position += separationVector / 2.0f;
+					tf2.position -= separationVector / 2.0f;
+				}
 			}
 		}
 
@@ -93,6 +113,30 @@ void PhysicsSystem::UpdateCollision(Scene& scene, Entity one, Entity two)
 			if (IsColliding(tf1, tf2, bb1, bb2))
 			{
 				collision = true;
+
+				// Compute distance between centers
+				Vector2 dist = (tf2.position + bb2.offset) - (tf1.position + bb1.offset);
+
+				// Find overlap and project onto x & y axis
+				Vector2 overlap = Vector2(
+					(bb1.width + bb2.width) / 2 - abs(dist.x),
+					(bb2.height + bb2.height) / 2 - abs(dist.y)
+				);
+
+				// Convert overlap into the minimum translation vector by taking the minimum
+				if (overlap.x < overlap.y)
+					overlap *= Vector2(-1 * Utils::Sign(dist.x), 0);
+				else
+					overlap *= Vector2(0, -1 * Utils::Sign(dist.y));
+
+				// Move the bodies (only the first if 2nd never moves)
+				if (ph2.bodyType == Physics::STATIC)
+					tf1.position += overlap;
+				else
+				{
+					tf1.position += overlap / 2.0f;
+					tf2.position -= overlap / 2.0f;
+				}
 			}
 		}
 	}

@@ -28,11 +28,13 @@ Vector2 Vector2::operator*(const Vector2& v) const
 
 Vector2 Vector2::operator/(float scalar) const
 {
+	assert(scalar != 0 && "Division by zero.");
 	return Vector2(this->x / scalar, this->y / scalar);
 }
 
 Vector2 Vector2::operator/(const Vector2& v) const
 {
+	assert(v.x != 0 && v.y != 0 && "Division by zero.");
 	return Vector2(this->x / v.x, this->y / v.y);
 }
 
@@ -73,6 +75,7 @@ Vector2& Vector2::operator*=(const Vector2& v)
 
 Vector2& Vector2::operator/=(float scalar)
 {
+	assert(scalar != 0 && "Division by zero.");
 	x /= scalar;
 	y /= scalar;
 	return *this;
@@ -80,6 +83,7 @@ Vector2& Vector2::operator/=(float scalar)
 
 Vector2& Vector2::operator/=(const Vector2& v)
 {
+	assert(v.x != 0 && v.y != 0 && "Division by zero.");
 	x /= v.x;
 	y /= v.y;
 	return *this;

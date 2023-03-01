@@ -5,6 +5,7 @@
 #include "Core/Signal/Signal.h"
 
 class Scene;
+struct Vector2;
 struct Transform;
 struct BoxBounds;
 struct CircleBounds;
@@ -23,5 +24,9 @@ private:
 	bool IsColliding(Transform& tf1, Transform& tf2, CircleBounds& cb1, CircleBounds& cb2);
 	bool IsColliding(Transform& tf1, Transform& tf2, BoxBounds& bb1, BoxBounds& bb2);
 	bool IsColliding(Transform& tf1, Transform& tf2, CircleBounds& cb, BoxBounds& bb);
+
+	//Vector2 ResolveCollision(Transform& tf1, Transform& tf2, CircleBounds& cb1, CircleBounds& cb2);
+	//Vector2 ResolveCollision(Transform& tf1, Transform& tf2, BoxBounds& bb1, BoxBounds& bb2);
+	//Vector2 ResolveCollision(Transform& tf1, Transform& tf2, CircleBounds& cb, BoxBounds& bb);
 
 };
