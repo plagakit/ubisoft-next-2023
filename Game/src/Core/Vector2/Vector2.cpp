@@ -146,6 +146,7 @@ float Vector2::Atan2() const
 	return atan2f(y, x);
 }
 
+
 std::string Vector2::ToString() const
 {
 	return "(" + std::to_string(x) + ", " + std::to_string(y) + ")";

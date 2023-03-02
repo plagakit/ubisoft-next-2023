@@ -4,6 +4,11 @@
 
 #include "Core/Vector2/Vector2.h"
 
+bool Utils::Equalf(float f1, float f2, float epsilon)
+{
+	return abs(f1 - f2) < epsilon;
+}
+
 int Utils::Sign(float f)
 {
 	return f < 0.0f ? -1 : f > 0.0f;

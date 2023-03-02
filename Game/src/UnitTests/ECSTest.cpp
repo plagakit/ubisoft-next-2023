@@ -2,7 +2,7 @@
 
 #include "Scene/Scene.h"
 #include "Scene/Components/Transform/Transform.h"
-#include "Scene/Components/Sprite/Sprite.h"
+#include "Scene/Components/Wireframe/Wireframe.h"
 #include "Scene/Components/Timer/Timer.h"
 
 class ECSTest {
@@ -17,7 +17,9 @@ public:
 		std::uniform_int_distribution<> randEntity(0, 1000);
 		
 		Scene scene;
-		scene.Init();
+		scene.CreateComponentArray<Transform>();
+		scene.CreateComponentArray<Timer>();
+		scene.CreateComponentArray<Wireframe>();
 
 		// Test adding of entity & component
 		Entity test = scene.CreateEntity();
@@ -40,7 +42,7 @@ public:
 				scene.AddComponent<Transform>(ent, Transform());
 
 			if (randBool(r))
-				scene.AddComponent<Sprite>(ent, Sprite());
+				scene.AddComponent<Wireframe>(ent, Wireframe());
 
 			if (randBool(r))
 				scene.AddComponent<Timer>(ent, Timer(5));

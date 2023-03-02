@@ -5,12 +5,14 @@
 
 #include "Scene/Scene.h"
 #include "UnitTests/ECSTest.cpp"
+#include "UnitTests/Vector2Test.cpp"
 
 std::shared_ptr<Scene> current_scene;
 
 void Init() 
 {
-	//ECSTest::RunTests();
+	ECSTest::RunTests();
+	Vector2Test::RunTests();
 	
 	current_scene = std::make_shared<Scene>();
 	current_scene->Init();

@@ -7,6 +7,8 @@ struct Vector2;
 class Utils {
 
 public:
+	static bool Equalf(float f1, float f2, float epsilon = 1e-06);
+
 	static int Sign(float f);
 
 	static float Clamp(float f, float min, float max);

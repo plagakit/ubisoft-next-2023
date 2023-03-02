@@ -26,7 +26,7 @@ struct Vector2 {
 
 	bool operator==(const Vector2& v) const;
 	bool operator!=(const Vector2& v) const;
-	bool ApproxEqual(const Vector2 & v, float epsilon) const;
+	bool ApproxEqual(const Vector2 & v, float epsilon = 1e-06) const;
 
 	float Length() const;
 	float LengthSquared() const;

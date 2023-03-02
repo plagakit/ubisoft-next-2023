@@ -13,6 +13,16 @@
 
 
 // Scene methods
+Scene::Scene()
+{
+	m_count = 0;
+	m_entities.clear();
+	m_availableEntities.clear();
+
+	for (Entity i = 0; i < MAX_ENTITIES; i++)
+		m_availableEntities.push_back(i);
+}
+
 
 void Scene::Init()
 {
@@ -83,8 +93,9 @@ void Scene::Update(float deltaTime)
 {	
 	m_deltaTime = deltaTime / 1000.0f; // deltaTime is in seconds, we want milliseconds
 	
-	m_camera.position = Utils::Lerp(m_camera.position, GetComponent<Transform>(0).position, 0.01f);
-	m_camera.zoom += 0.001f;
+	m_camera.position = Utils::Lerp(m_camera.position, GetComponent<Transform>(0).position, 0.05f);
+	float vel = GetComponent<Physics>(0).velocity.Length();
+	m_camera.zoom = Utils::Lerp(1.0f, 0.5f, Utils::Clamp(vel / 300.0f, 0.0f, 1.0f));
 
 	m_timerSystem.UpdateTimers(*this);
 	m_playerSystem.UpdatePlayer(*this);
