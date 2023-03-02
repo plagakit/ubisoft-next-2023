@@ -35,25 +35,42 @@ void RenderSystem::RenderSprite(Scene& scene, Entity id)
 {	
     const Transform& tf = scene.GetComponent<Transform>(id);
     const Sprite& sp = scene.GetComponent<Sprite>(id);
+    const Camera& cam = scene.GetCamera();
 
-	// Code copied from SimpleSprite.cpp
+	// Code copied & modified from SimpleSprite.cpp
 #if APP_USE_VIRTUAL_RES
-    float scalex = (tf.scale.x / APP_VIRTUAL_WIDTH) * 2.0f;
-    float scaley = (tf.scale.y / APP_VIRTUAL_HEIGHT) * 2.0f;
+    float scalex = (tf.scale.x / APP_VIRTUAL_WIDTH);
+    float scaley = (tf.scale.y / APP_VIRTUAL_HEIGHT);
 #else
     float scalex = tf.scale.x;
     float scaley = tf.scale.y;
 #endif
     float x = tf.position.x;
     float y = tf.position.y;
+    float cx = APP_VIRTUAL_WIDTH - cam.position.x;
+    float cy = APP_VIRTUAL_HEIGHT - cam.position.y;
 #if APP_USE_VIRTUAL_RES
     APP_VIRTUAL_TO_NATIVE_COORDS(x, y);
+    APP_VIRTUAL_TO_NATIVE_COORDS(cx, cy);
 #endif
-
     glPushMatrix();
+
+    // Zoom in cam
+    glScalef(cam.zoom, cam.zoom, 0.0f);
+
+    // Makes sure cam rotation isnt skewed 
+    glScalef(scalex, scaley, 1.0f);
+    glRotatef(cam.rotation * 180 / PI, 0.0f, 0.0f, 1.0f);
+    glScalef(1.0f/scalex, 1.0f/scaley, 1.0f);
+
+    // Translate cam
+    glTranslatef(cx, cy, 0.0f);
+
+    // Code copied from SimpleSprite
     glTranslatef(x, y, 0.0f);
     glScalef(scalex, scaley, 1.0f);
     glRotatef(tf.rotation * 180 / PI, 0.0f, 0.0f, 1.0f);
+    
     glColor3f(1.0f, 1.0f, 1.0f);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

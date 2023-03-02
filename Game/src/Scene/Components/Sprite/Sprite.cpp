@@ -10,7 +10,7 @@ Sprite::Sprite() {}
 
 Sprite::Sprite(const char* filename, unsigned int frame_)
 {
-    assert("Sprite not in master list" && master_list.find(filename) != master_list.end());
+    assert("Sprite not in master list, use other constructor" && master_list.find(filename) != master_list.end());
     
     SpriteSheetData& data = master_list[filename];
     

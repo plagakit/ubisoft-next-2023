@@ -2,6 +2,7 @@
 
 #include "Scene.h"
 
+#include "Utils/Utils.h"
 #include "Scene/Components/Sprite/Sprite.h"
 #include "Scene/Components/Transform/Transform.h"
 #include "Scene/Components/Timer/Timer.h"
@@ -39,6 +40,9 @@ void Scene::Init()
 	Wireframe wf = Wireframe();
 	wf.points = { Vector2(-5, -5), Vector2(0, 10), Vector2(5, -5) };
 	AddComponent<Wireframe>(ent, wf);
+
+	Sprite sp = Sprite("res/shuttle.bmp", 1, 1, 0);
+	AddComponent<Sprite>(ent, sp);
 	
 	Transform tf = Transform();
 	tf.position = Vector2(i*5, 0);
@@ -48,8 +52,8 @@ void Scene::Init()
 	Physics ph = Physics(Physics::KINEMATIC);
 	AddComponent<Physics>(ent, ph);
 
-	BoxBounds cb = BoxBounds(20,20);
-	AddComponent<BoxBounds>(ent, cb);
+	CircleBounds cb = CircleBounds(20);
+	AddComponent<CircleBounds>(ent, cb);
 	}
 
 	// Create box
@@ -78,12 +82,15 @@ void Scene::Init()
 void Scene::Update(float deltaTime)
 {	
 	m_deltaTime = deltaTime / 1000.0f; // deltaTime is in seconds, we want milliseconds
+	
+	m_camera.position = Utils::Lerp(m_camera.position, GetComponent<Transform>(0).position, 0.01f);
+	m_camera.zoom += 0.001f;
 
 	m_timerSystem.UpdateTimers(*this);
 	m_playerSystem.UpdatePlayer(*this);
 	m_physicsSystem.UpdatePosition(*this);
 
-	m_physicsSystem.UpdateCollision(*this, GetEntities<BoxBounds>(), GetEntities<Timer>());
+	m_physicsSystem.UpdateCollision(*this, GetEntities<Physics>(), GetEntities<Physics>());
 
 }
 
