@@ -3,6 +3,12 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+# Unignore glut folder
+!./external/glut/bin
+!./external/glut/bin/*
+!./external/glut/lib/x64
+!./external/glut/lib/x64/*
+
 # User-specific files
 *.rsuser
 *.suo

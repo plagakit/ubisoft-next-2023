@@ -77,7 +77,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>.\glut;$(IncludePath);.\external\glut;.\include</IncludePath>
-    <LibraryPath>.\glut\lib\x64;$(LibraryPath);.\external\glut\lib\x64;.\external\glut\lib\glutx64</LibraryPath>
+    <LibraryPath>.\glut\lib\x64;$(LibraryPath);.\external\glut\lib\x64</LibraryPath>
     <ExecutablePath>$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
