@@ -2,26 +2,15 @@
 
 #include <stdafx.h>
 
+struct Vector2;
+
 class Utils {
 
 public:
-	static inline int Sign(int i)
-	{
-		return i < 0 ? -1 : i > 0;
-	}
+	static int Sign(float f);
 
-	static inline int Sign(float f)
-	{
-		return f < 0 ? -1 : f > 0;
-	}
+	static float Clamp(float f, float min, float max);
 
-	static inline float Lerp(float a, float b, float t)
-	{
-		return a + (b - a) * t;
-	}
-
-	static inline Vector2 Lerp(const Vector2& a, const Vector2& b, float t)
-	{
-		return a + (b - a) * t;
-	}
+	static float Lerp(float a, float b, float t);
+	static Vector2 Lerp(const Vector2& a, const Vector2& b, float t);
 };

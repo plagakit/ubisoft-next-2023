@@ -25,8 +25,4 @@ private:
 	bool IsColliding(Transform& tf1, Transform& tf2, BoxBounds& bb1, BoxBounds& bb2);
 	bool IsColliding(Transform& tf1, Transform& tf2, CircleBounds& cb, BoxBounds& bb);
 
-	//Vector2 ResolveCollision(Transform& tf1, Transform& tf2, CircleBounds& cb1, CircleBounds& cb2);
-	//Vector2 ResolveCollision(Transform& tf1, Transform& tf2, BoxBounds& bb1, BoxBounds& bb2);
-	//Vector2 ResolveCollision(Transform& tf1, Transform& tf2, CircleBounds& cb, BoxBounds& bb);
-
 };

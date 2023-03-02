@@ -37,6 +37,7 @@ void PhysicsSystem::UpdateCollision(Scene& scene, Entity one, Entity two)
 	Physics& ph1 = scene.GetComponent<Physics>(one);
 	Transform& tf2 = scene.GetComponent<Transform>(two);
 	Physics& ph2 = scene.GetComponent<Physics>(two);
+	Vector2 resolution;
 	
 	// Lots of ugly code and if statements (also bad because branch misprediction),
 	// would get particularly ugly with 3+ types of bounds like capsules or rays. 
@@ -57,25 +58,14 @@ void PhysicsSystem::UpdateCollision(Scene& scene, Entity one, Entity two)
 			if (IsColliding(tf1, tf2, cb1, cb2))
 			{
 				collision = true;
-
+				
 				// Compute distance between centers
 				Vector2 diff = (tf2.position + cb2.offset) - (tf1.position + cb1.offset);
 				float dist = diff.Length();
+				float minimumColDist = dist - (cb1.radius + cb2.radius);
 
-				// Compute minimum distance to separate colliders
-				float minDist = dist - (cb1.radius + cb2.radius);
-
-				// Compute separation direction with length of min dist
-				Vector2 separationVector = diff.Normalized() * minDist;
-
-				// Move the bodies (only the first if 2nd never moves)
-				if (ph2.bodyType == Physics::STATIC)
-					tf1.position += separationVector;
-				else
-				{
-					tf1.position += separationVector / 2.0f;
-					tf2.position -= separationVector / 2.0f;
-				}
+				// Compute translation direction vector with length of min dist
+				resolution += diff.Normalized() * minimumColDist;
 			}
 		}
 
@@ -86,6 +76,23 @@ void PhysicsSystem::UpdateCollision(Scene& scene, Entity one, Entity two)
 			if (IsColliding(tf1, tf2, cb1, bb2))
 			{
 				collision = true;
+				
+				// Compute distance between centers
+				Vector2 dist = (tf2.position + bb2.offset) - (tf1.position + cb1.offset);
+
+				// Find overlap and project onto x & y axis
+				Vector2 overlap = Vector2(
+					bb2.width / 2 + cb1.radius - abs(dist.x),
+					bb2.height / 2 + cb1.radius - abs(dist.y)
+				);
+
+				// Convert overlap into the minimum translation vector by taking the minimum
+				if (overlap.x < overlap.y)
+					overlap *= Vector2(-1.0f * Utils::Sign(dist.x), 0);
+				else
+					overlap *= Vector2(0, -1.0f * Utils::Sign(dist.y));
+
+				resolution += overlap;
 			}
 		}
 
@@ -103,6 +110,23 @@ void PhysicsSystem::UpdateCollision(Scene& scene, Entity one, Entity two)
 			if (IsColliding(tf1, tf2, cb2, bb1))
 			{
 				collision = true;
+
+				// Project center of circle onto the rect (find closest point on rect)
+				Vector2 box = tf1.position + bb1.offset;
+				Vector2 circ = tf2.position + cb2.offset; // center of circ
+				float w = bb1.width / 2.0f;
+				float h = bb1.width / 2.0f;
+
+				Vector2 circProjection = Vector2(
+					Utils::Clamp(circ.x, box.x - w, box.x + w),
+					Utils::Clamp(circ.y, box.y - h, box.y + h)
+				);
+				
+				// Find direction to move box out and minimum distance to collide
+				Vector2 dir = (circ - circProjection).Normalized();
+				float minColDist = circProjection.Distance(circ) - cb2.radius;
+				
+				resolution += dir * minColDist;
 			}
 		}
 
@@ -113,30 +137,23 @@ void PhysicsSystem::UpdateCollision(Scene& scene, Entity one, Entity two)
 			if (IsColliding(tf1, tf2, bb1, bb2))
 			{
 				collision = true;
-
+				
 				// Compute distance between centers
 				Vector2 dist = (tf2.position + bb2.offset) - (tf1.position + bb1.offset);
 
 				// Find overlap and project onto x & y axis
 				Vector2 overlap = Vector2(
 					(bb1.width + bb2.width) / 2 - abs(dist.x),
-					(bb2.height + bb2.height) / 2 - abs(dist.y)
+					(bb1.height + bb2.height) / 2 - abs(dist.y)
 				);
 
 				// Convert overlap into the minimum translation vector by taking the minimum
 				if (overlap.x < overlap.y)
-					overlap *= Vector2(-1 * Utils::Sign(dist.x), 0);
+					overlap *= Vector2(-1.0f * Utils::Sign(dist.x), 0);
 				else
-					overlap *= Vector2(0, -1 * Utils::Sign(dist.y));
+					overlap *= Vector2(0, -1.0f * Utils::Sign(dist.y));
 
-				// Move the bodies (only the first if 2nd never moves)
-				if (ph2.bodyType == Physics::STATIC)
-					tf1.position += overlap;
-				else
-				{
-					tf1.position += overlap / 2.0f;
-					tf2.position -= overlap / 2.0f;
-				}
+				resolution += overlap;
 			}
 		}
 	}
@@ -145,8 +162,18 @@ void PhysicsSystem::UpdateCollision(Scene& scene, Entity one, Entity two)
 	{
 		if (ph2.isTrigger) 
 			s_onTrigger.Emit(one, two);
-		else 
+		else
+		{
 			s_onCollision.Emit(one, two);
+
+			if (ph2.bodyType == Physics::STATIC)
+				tf1.position += resolution;
+			else
+			{
+				tf1.position += resolution / 2.0f;
+				tf2.position -= resolution / 2.0f;
+			}
+		}
 	}
 }
 
