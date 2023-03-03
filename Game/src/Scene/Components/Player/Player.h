@@ -4,8 +4,8 @@
 
 struct Player {
 
-
-
+	bool kicking;
+	bool bombOut;
 
 	Player();
 

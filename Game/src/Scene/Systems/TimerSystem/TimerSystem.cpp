@@ -25,7 +25,7 @@ void TimerSystem::UpdateTimers(Scene& scene)
 				t.done = true;
 				t.isRunning = false;
 			}
-			s_timerDone.Emit(id);
+			s_TimerDone.Emit(id);
 		}
 	}
 	

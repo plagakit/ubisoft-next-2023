@@ -2,5 +2,6 @@
 
 #include "Player.h"
 
-Player::Player()
+Player::Player() :
+	kicking(false), bombOut(false)
 {}

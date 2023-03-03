@@ -28,6 +28,7 @@ void PlayerSystem::CreatePlayer(Scene& scene, Entity id)
 	scene.AddComponent<Transform>(id, Transform());
 	scene.AddComponent<Physics>(id, Physics(Physics::KINEMATIC));
 	scene.AddComponent<CircleBounds>(id, CircleBounds(20));
+	scene.AddComponent<Timer>(id, Timer(KICK_TIME));
 	scene.AddComponent<Player>(id, Player());
 }
 
@@ -35,37 +36,61 @@ void PlayerSystem::UpdatePlayers(Scene& scene)
 {
 	for (Entity id : scene.GetEntities<Player>())
 	{
-
 		Transform& tf = scene.GetComponent<Transform>(id);
 		Physics& ph = scene.GetComponent<Physics>(id);
+		Player& pl = scene.GetComponent<Player>(id);
 		
+		// Input
+		bool up = App::GetController().CheckButton(XINPUT_GAMEPAD_DPAD_UP, false);
+		bool down = App::GetController().CheckButton(XINPUT_GAMEPAD_DPAD_DOWN, false);
+		bool left = App::GetController().CheckButton(XINPUT_GAMEPAD_DPAD_LEFT, false);
+		bool right = App::GetController().CheckButton(XINPUT_GAMEPAD_DPAD_RIGHT, false);
+		
+		// For some reason, XINPUT_GAMEPAD_A/B can't be triggered on my keyboard, so I check for Z and X instead
+		bool placeBomb = App::GetController().CheckButton(XINPUT_GAMEPAD_A, true) || App::IsKeyPressed('Z');
+		bool kick = App::GetController().CheckButton(XINPUT_GAMEPAD_B, true) || App::IsKeyPressed('X');
+
 		// MOVEMENT
-		if (App::IsKeyPressed('W'))
-			ph.velocity.y += ACCELERATION;
-
-		if (App::IsKeyPressed('S'))
-			ph.velocity.y -= ACCELERATION;
-
-		if (App::IsKeyPressed('D'))
-			ph.velocity.x += ACCELERATION;
-
-		if (App::IsKeyPressed('A'))
-			ph.velocity.x -= ACCELERATION;
+		if (up)		ph.velocity.y += ACCELERATION;
+		if (down)	ph.velocity.y -= ACCELERATION;
+		if (right)	ph.velocity.x += ACCELERATION;
+		if (left)	ph.velocity.x -= ACCELERATION;
 		
-		// Slow down if key not pressed
-		if (!App::IsKeyPressed('W') && !App::IsKeyPressed('S') && abs(ph.velocity.y) > 0.0f)
+		if (!up && !down && abs(ph.velocity.y) > 0.0f)
 			ph.velocity.y -= ACCELERATION * Utils::Sign(ph.velocity.y);
 
-		if (!App::IsKeyPressed('A') && !App::IsKeyPressed('D') && abs(ph.velocity.x) > 0.0f)
+		if (!left && !right && abs(ph.velocity.x) > 0.0f)
 			ph.velocity.x -= ACCELERATION * Utils::Sign(ph.velocity.x);
 
-
-		ph.velocity.x = Utils::Clamp(ph.velocity.x, -WALK_SPEED, WALK_SPEED);
-		ph.velocity.y = Utils::Clamp(ph.velocity.y, -WALK_SPEED, WALK_SPEED);
+		if (pl.kicking)
+			ph.velocity = Vector2(0, 0);
+		else
+		{
+			ph.velocity.x = Utils::Clamp(ph.velocity.x, -WALK_SPEED, WALK_SPEED);
+			ph.velocity.y = Utils::Clamp(ph.velocity.y, -WALK_SPEED, WALK_SPEED);
+		}
 
 		// Rotate towards movement direction
 		if (!ph.velocity.ApproxEqual(Vector2(0, 0)))
 			tf.rotation = ph.velocity.Atan2() - PI/2;
 
+		// Actions
+		if (placeBomb && !pl.bombOut) 
+		{ 
+			pl.bombOut = true;
+			s_PlacedBomb.Emit(id); 
+		}
+
+		if (kick && !pl.kicking)
+		{
+			pl.kicking = true;
+			s_Kicked.Emit(id);
+			scene.GetComponent<Timer>(id).Start();
+		}
 	}
+}
+
+void PlayerSystem::OnDoneKick(Entity id)
+{
+
 }

@@ -12,7 +12,7 @@ class RenderSystem {
 
 public:
 	void Render(Scene& scene);
-	void Test(Entity a, Entity b) { test += "a"; }
+	void Test(Entity a) { test += "a"; }
 
 private:
 	void RenderSprite(Scene& scene, Entity id);

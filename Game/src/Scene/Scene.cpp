@@ -12,6 +12,7 @@
 #include "Scene/Components/BoxBounds/BoxBounds.h"
 #include "Scene/Components/CircleBounds/CircleBounds.h"
 #include "Scene/Components/Player/Player.h"
+#include "Scene/Components/Bomb/Bomb.h"
 
 
 // Scene methods
@@ -45,6 +46,7 @@ void Scene::Init()
 	CreateComponentArray<BoxBounds>();
 	CreateComponentArray<CircleBounds>();
 	CreateComponentArray<Player>();
+	CreateComponentArray<Bomb>();
 
 	// Create bomberman
 	m_player = CreateEntity();
@@ -70,7 +72,10 @@ void Scene::Init()
 	AddComponent<Timer>(wall, Timer(5));
 
 	// Bind systems
-	m_physicsSystem.s_onCollision.Connect<RenderSystem, &RenderSystem::Test>(&m_renderSystem);
+	
+	m_timerSystem.s_TimerDone.Connect<PlayerSystem, &PlayerSystem::OnDoneKick>(&m_playerSystem);
+	m_playerSystem.s_Kicked.Connect<RenderSystem, &RenderSystem::Test>(&m_renderSystem);
+	m_playerSystem.s_PlacedBomb.Connect<RenderSystem, &RenderSystem::Test>(&m_renderSystem);
 }
 
 void Scene::Update(float deltaTime)

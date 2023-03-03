@@ -26,7 +26,6 @@ void RenderSystem::Render(Scene& scene)
 #ifdef _DEBUG
     RenderPhysicsBounds(scene);
     App::Print(0, 250, test.c_str());
-    test = "";
 #endif
     
 }
