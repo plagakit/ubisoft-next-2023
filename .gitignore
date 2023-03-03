@@ -3,6 +3,12 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+# Unignore glut folder
+!./external/glut/bin
+!./external/glut/bin/*
+!./external/glut/lib/x64
+!./external/glut/lib/x64/*
+
 # User-specific files
 *.rsuser
 *.suo
@@ -21,13 +27,13 @@ mono_crash.*
 [Dd]ebugPublic/
 [Rr]elease/
 [Rr]eleases/
-x64/
-x86/
+#x64/
+#x86/
 [Ww][Ii][Nn]32/
 [Aa][Rr][Mm]/
 [Aa][Rr][Mm]64/
 bld/
-[Bb]in/
+#[Bb]in/
 [Oo]bj/
 [Oo]ut/
 [Ll]og/
