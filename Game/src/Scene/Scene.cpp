@@ -141,7 +141,9 @@ void Scene::DeleteEntity(Entity id)
 
 void Scene::QueueDelete(Entity id)
 {
-	m_deleteQueue.push_back(id);
+	// Does nothing if the entity is already in the queue
+	if (std::find(m_deleteQueue.begin(), m_deleteQueue.end(), id) == m_deleteQueue.end())
+		m_deleteQueue.push_back(id);
 }
 
 void Scene::DeleteQueuedEntities()

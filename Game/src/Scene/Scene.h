@@ -48,6 +48,9 @@ public:
 	// Component methods
 
 	template <typename T>
+	bool IsComponentArrayCreated();
+
+	template <typename T>
 	void CreateComponentArray();
 
 	template <typename T>
@@ -121,7 +124,7 @@ std::vector<Entity> Scene::GetEntities()
 	if (sizeof...(Components) == 0)
 		return m_entities;
 
-	// Unpack variadic template into a list of component types
+	// Unpack variadic template into a list of component types, ignoring first
 	ComponentID types[] = { 0, GetComponentType<Components>()... };
 
 	// Set the signature's bits based on types array
@@ -129,7 +132,7 @@ std::vector<Entity> Scene::GetEntities()
 	for (int i = 1; i < (sizeof...(Components) + 1); i++)
 		mask.set(types[i]);
 
-	// Copy any signature that matches the component mask (has required components) into a vector
+	// Copy any signature that has at least the component mask's bits (has required components) into a vector
 	std::vector<Entity> matches;
 	std::copy_if(m_entities.begin(), m_entities.end(), std::back_inserter(matches),
 		[this, &mask](Entity id) { return (m_signatures.Get(id) & mask) == mask; });
@@ -139,6 +142,12 @@ std::vector<Entity> Scene::GetEntities()
 
 
 // Templated component methods
+
+template<typename T>
+bool Scene::IsComponentArrayCreated()
+{
+	return m_componentTypes.find(typeid(T)) != m_componentTypes.end();
+}
 
 template <typename T>
 void Scene::CreateComponentArray()
@@ -159,6 +168,7 @@ void Scene::CreateComponentArray()
 template <typename T>
 std::shared_ptr<ContiguousArray<T>> Scene::GetComponentArray()
 {
+	assert("Component array doesn't exist!" && IsComponentArrayCreated<T>());
 	const auto& type = typeid(T);
 	return std::static_pointer_cast<ContiguousArray<T>>(m_componentArrays[type]);
 }
@@ -167,7 +177,9 @@ template <typename T>
 ComponentID Scene::GetComponentType()
 {
 	const std::type_info& type = typeid(T);
-	return m_componentTypes[type];
+	auto find = m_componentTypes.find(type);
+	assert("Component array doesn't exist!" && find != m_componentTypes.end());
+	return find->second;
 }
 
 template <typename T>
@@ -187,6 +199,9 @@ T& Scene::GetComponent(Entity id)
 template <typename T>
 void Scene::AddComponent(Entity id, T component)
 {
+	if (!IsComponentArrayCreated<T>())
+		CreateComponentArray<T>();
+	
 	GetComponentArray<T>()->Add(id, component);
 	m_signatures.Get(id).set(GetComponentType<T>());
 }
