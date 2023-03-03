@@ -189,6 +189,7 @@
     <ClInclude Include="include\stdafx.h" />
     <ClInclude Include="include\targetver.h" />
     <ClInclude Include="src\Scene\Camera\Camera.h" />
+    <ClInclude Include="src\Scene\Components\Player\Player.h" />
     <ClInclude Include="src\Scene\Components\CircleBounds\CircleBounds.h" />
     <ClInclude Include="src\Scene\Components\BoxBounds\BoxBounds.h" />
     <ClInclude Include="src\Scene\Components\Physics\Physics.h" />
@@ -216,6 +217,7 @@
     <ClCompile Include="include\App\SimpleSprite.cpp" />
     <ClCompile Include="include\App\TextureLoader.cpp" />
     <ClCompile Include="src\Scene\Camera\Camera.cpp" />
+    <ClCompile Include="src\Scene\Components\Player\Player.cpp" />
     <ClCompile Include="src\Scene\Components\BoxBounds\BoxBounds.cpp" />
     <ClCompile Include="src\Scene\Components\CircleBounds\CircleBounds.cpp" />
     <ClCompile Include="src\Scene\Components\Physics\Physics.cpp" />

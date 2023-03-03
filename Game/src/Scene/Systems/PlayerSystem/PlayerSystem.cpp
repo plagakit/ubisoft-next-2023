@@ -3,34 +3,46 @@
 #include "PlayerSystem.h"
 
 #include "Scene/Scene.h"
-#include "Scene/Components/Wireframe/Wireframe.h"
+#include "Utils/Utils.h"
+#include "Scene/Components/Player/Player.h"
 #include "Scene/Components/Transform/Transform.h"
 #include "Scene/Components/Physics/Physics.h"
 
 
-void PlayerSystem::UpdatePlayer(Scene& scene)
+void PlayerSystem::UpdatePlayers(Scene& scene)
 {
-	for (Entity id : scene.GetEntities<Wireframe, Transform, Physics>())
+	for (Entity id : scene.GetEntities<Player>())
 	{
 
 		Transform& tf = scene.GetComponent<Transform>(id);
 		Physics& ph = scene.GetComponent<Physics>(id);
 		
 		if (App::IsKeyPressed('W'))
-			ph.velocity += Vector2(0, 1).Rotated(tf.rotation);
+			ph.velocity.y += ACCELERATION;
 
-		if (App::IsKeyPressed('A'))
-			ph.angularVelocity += 0.25f / 3.14f;
+		if (App::IsKeyPressed('S'))
+			ph.velocity.y -= ACCELERATION;
 
 		if (App::IsKeyPressed('D'))
-			ph.angularVelocity -= 0.25f / 3.14f;
+			ph.velocity.x += ACCELERATION;
 
-		if (ph.angularVelocity > 1.57f)
-			ph.angularVelocity = 1.57f;
-		else if (ph.angularVelocity < -1.57f)
-			ph.angularVelocity = -1.57f;
+		if (App::IsKeyPressed('A'))
+			ph.velocity.x -= ACCELERATION;
+
 		
-		//ph.angularVelocity -= (ph.angularVelocity > 0) - (ph.angularVelocity < 0);aa
+		// Slow down if key not pressed
+		if (!App::IsKeyPressed('W') && !App::IsKeyPressed('S') && abs(ph.velocity.y) > 0.0f)
+			ph.velocity.y -= ACCELERATION * Utils::Sign(ph.velocity.y);
+
+		if (!App::IsKeyPressed('A') && !App::IsKeyPressed('D') && abs(ph.velocity.x) > 0.0f)
+			ph.velocity.x -= ACCELERATION * Utils::Sign(ph.velocity.x);
+
+
+		ph.velocity.x = Utils::Clamp(ph.velocity.x, -WALK_SPEED, WALK_SPEED);
+		ph.velocity.y = Utils::Clamp(ph.velocity.y, -WALK_SPEED, WALK_SPEED);
+
+		if (!ph.velocity.ApproxEqual(Vector2(0, 0)))
+			tf.rotation = ph.velocity.Atan2() - PI/2;
 
 	}
 }

@@ -105,6 +105,12 @@ private:
 	// Misc
 	Camera m_camera;
 
+	// Gameplay
+	Entity m_player;
+
+
+	void CreateBomberman(Entity& player);
+
 };
 
 

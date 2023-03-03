@@ -3,6 +3,7 @@
 #include "Scene.h"
 
 #include "Utils/Utils.h"
+
 #include "Scene/Components/Sprite/Sprite.h"
 #include "Scene/Components/Transform/Transform.h"
 #include "Scene/Components/Timer/Timer.h"
@@ -10,6 +11,7 @@
 #include "Scene/Components/Physics/Physics.h"
 #include "Scene/Components/BoxBounds/BoxBounds.h"
 #include "Scene/Components/CircleBounds/CircleBounds.h"
+#include "Scene/Components/Player/Player.h"
 
 
 // Scene methods
@@ -42,29 +44,10 @@ void Scene::Init()
 	CreateComponentArray<Physics>();
 	CreateComponentArray<BoxBounds>();
 	CreateComponentArray<CircleBounds>();
+	CreateComponentArray<Player>();
 
-	// Create ship
-	for (int i = 0; i < 1; i++) {
-	Entity ent = CreateEntity();
-	
-	Wireframe wf = Wireframe();
-	wf.points = { Vector2(-5, -5), Vector2(0, 10), Vector2(5, -5) };
-	AddComponent<Wireframe>(ent, wf);
-
-	Sprite sp = Sprite("res/shuttle.bmp", 1, 1, 0);
-	AddComponent<Sprite>(ent, sp);
-	
-	Transform tf = Transform();
-	tf.position = Vector2(i*5, 0);
-	tf.scale = Vector2(2, 2);
-	AddComponent<Transform>(ent, tf);
-
-	Physics ph = Physics(Physics::KINEMATIC);
-	AddComponent<Physics>(ent, ph);
-
-	CircleBounds cb = CircleBounds(20);
-	AddComponent<CircleBounds>(ent, cb);
-	}
+	// Create bomberman
+	CreateBomberman(m_player);
 
 	// Create box
 	Entity wall = CreateEntity();
@@ -93,14 +76,13 @@ void Scene::Update(float deltaTime)
 {	
 	m_deltaTime = deltaTime / 1000.0f; // deltaTime is in seconds, we want milliseconds
 	
-	m_camera.position = Utils::Lerp(m_camera.position, GetComponent<Transform>(0).position, 0.05f);
-	float vel = GetComponent<Physics>(0).velocity.Length();
-	m_camera.zoom = Utils::Lerp(1.0f, 0.5f, Utils::Clamp(vel / 300.0f, 0.0f, 1.0f));
+	// Camera follows player w/ slight drag
+	m_camera.position = Utils::Lerp(m_camera.position, GetComponent<Transform>(m_player).position, 0.05f);
 
 	m_timerSystem.UpdateTimers(*this);
-	m_playerSystem.UpdatePlayer(*this);
-	m_physicsSystem.UpdatePosition(*this);
+	m_playerSystem.UpdatePlayers(*this);
 
+	m_physicsSystem.UpdatePosition(*this);
 	m_physicsSystem.UpdateCollision(*this, GetEntities<Physics>(), GetEntities<Physics>());
 
 }
@@ -110,6 +92,29 @@ void Scene::Render()
 	m_renderSystem.Render(*this);
 }
 
+
+void Scene::CreateBomberman(Entity& player)
+{
+	player = CreateEntity();
+
+	Wireframe wf = Wireframe();
+	wf.points = { 
+		Vector2(-20, -20), // bottom left corner
+		Vector2(20, -20), // bottom right corner
+		Vector2(20, 0), // top right corner
+		Vector2(0, 20), // head
+		Vector2(-20, 0) // top left corner
+	};
+	AddComponent<Wireframe>(player, wf);
+
+	AddComponent<Transform>(player, Transform());
+	AddComponent<Physics>(player, Physics(Physics::KINEMATIC));
+	AddComponent<CircleBounds>(player, CircleBounds(20));
+	AddComponent<Player>(player, Player());
+}
+
+
+// START OF ECS METHODS
 
 // Entity methods
 
@@ -180,3 +185,5 @@ Camera& Scene::GetCamera()
 {
 	return m_camera;
 }
+
+// END OF NON-GAMEPLAY METHODS

@@ -7,8 +7,10 @@ class Scene;
 
 class PlayerSystem {
 
-public:
+	const float ACCELERATION = 25.0f;
+	const float WALK_SPEED = 50.0f;
 
-	void UpdatePlayer(Scene& scene);
+public:
+	void UpdatePlayers(Scene& scene);
 
 };
