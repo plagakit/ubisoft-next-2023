@@ -3,7 +3,7 @@
 #include <stdafx.h>
 
 #include "Camera/Camera.h"
-#include "Scene/ContiguousArray/ContiguousArray.h"
+#include "Core/ContiguousArray/ContiguousArray.h"
 
 #include "Systems/RenderSystem/RenderSystem.h"
 #include "Systems/PhysicsSystem/PhysicsSystem.h"
