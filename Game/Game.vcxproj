@@ -231,7 +231,10 @@
     </ClCompile>
     <ClCompile Include="src\Scene\Components\Wireframe\Wireframe.cpp" />
     <ClCompile Include="src\UnitTests\ECSTest.cpp" />
-    <ClCompile Include="src\Scene\Scene.cpp" />
+    <ClCompile Include="src\Scene\Scene.cpp">
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
     <ClCompile Include="src\Scene\Systems\PhysicsSystem\PhysicsSystem.cpp" />
     <ClCompile Include="src\Scene\Systems\PlayerSystem\PlayerSystem.cpp" />
     <ClCompile Include="src\Scene\Systems\RenderSystem\RenderSystem.cpp" />
