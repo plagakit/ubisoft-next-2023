@@ -16,7 +16,7 @@ public:
 	const Entity MAX_ENTITIES = 1000;
 	float m_deltaTime = 0;
 
-	Signal<Entity> s_EntityDeleted;
+	Signal<> s_EntityDeleted;
 
 	// Scene methods
 

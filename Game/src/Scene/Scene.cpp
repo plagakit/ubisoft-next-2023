@@ -74,6 +74,7 @@ void Scene::Init()
 	// Bind systems
 	
 	m_timerSystem.s_TimerDone.Connect<PlayerSystem, &PlayerSystem::OnDoneKick>(&m_playerSystem);
+
 	m_playerSystem.s_Kicked.Connect<RenderSystem, &RenderSystem::Test>(&m_renderSystem);
 	m_playerSystem.s_PlacedBomb.Connect<RenderSystem, &RenderSystem::Test>(&m_renderSystem);
 }
@@ -141,7 +142,7 @@ void Scene::DeleteEntity(Entity id)
 		if (signature.test(i))
 			m_removeComponentFunctions[i](id);
 
-	s_EntityDeleted.Emit(id);
+	s_EntityDeleted.Emit(*this, id);
 }
 
 void Scene::QueueDelete(Entity id)

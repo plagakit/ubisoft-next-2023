@@ -161,10 +161,10 @@ void PhysicsSystem::UpdateCollision(Scene& scene, Entity one, Entity two)
 	if (collision)
 	{
 		if (ph2.isTrigger) 
-			s_onTrigger.Emit(one, two);
+			s_onTrigger.Emit(scene, one, two);
 		else
 		{
-			s_onCollision.Emit(one, two);
+			s_onCollision.Emit(scene, one, two);
 
 			if (ph2.bodyType == Physics::STATIC)
 				tf1.position += resolution;

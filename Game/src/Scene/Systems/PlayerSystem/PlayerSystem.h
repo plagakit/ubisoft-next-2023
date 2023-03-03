@@ -10,16 +10,16 @@ class PlayerSystem {
 
 	const float ACCELERATION = 25.0f;
 	const float WALK_SPEED = 100.0f;
-	const float KICK_TIME = 0.5f;
+	const float KICK_TIME = 0.25f;
 
 public:
 
-	Signal<Entity> s_PlacedBomb;
-	Signal<Entity> s_Kicked;
+	Signal<> s_PlacedBomb;
+	Signal<> s_Kicked;
 
 	void CreatePlayer(Scene& scene, Entity id);
 	void UpdatePlayers(Scene& scene);
 
-	void OnDoneKick(Entity id);
+	void OnDoneKick(Scene& scene, Entity id);
 
 };

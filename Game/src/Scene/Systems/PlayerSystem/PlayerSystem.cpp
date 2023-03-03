@@ -78,19 +78,23 @@ void PlayerSystem::UpdatePlayers(Scene& scene)
 		if (placeBomb && !pl.bombOut) 
 		{ 
 			pl.bombOut = true;
-			s_PlacedBomb.Emit(id); 
+			s_PlacedBomb.Emit(scene, id); 
 		}
 
 		if (kick && !pl.kicking)
 		{
 			pl.kicking = true;
-			s_Kicked.Emit(id);
+			s_Kicked.Emit(scene, id);
 			scene.GetComponent<Timer>(id).Start();
 		}
 	}
 }
 
-void PlayerSystem::OnDoneKick(Entity id)
+void PlayerSystem::OnDoneKick(Scene& scene, Entity id)
 {
-
+	if (scene.HasComponent<Player>(id))
+	{
+		Player& pl = scene.GetComponent<Player>(id);
+		pl.kicking = false;
+	}
 }
