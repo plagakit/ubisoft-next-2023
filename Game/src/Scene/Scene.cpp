@@ -47,7 +47,8 @@ void Scene::Init()
 	CreateComponentArray<Player>();
 
 	// Create bomberman
-	CreateBomberman(m_player);
+	m_player = CreateEntity();
+	m_playerSystem.CreatePlayer(*this, m_player);
 
 	// Create box
 	Entity wall = CreateEntity();
@@ -90,27 +91,6 @@ void Scene::Update(float deltaTime)
 void Scene::Render()
 {
 	m_renderSystem.Render(*this);
-}
-
-
-void Scene::CreateBomberman(Entity& player)
-{
-	player = CreateEntity();
-
-	Wireframe wf = Wireframe();
-	wf.points = { 
-		Vector2(-20, -20), // bottom left corner
-		Vector2(20, -20), // bottom right corner
-		Vector2(20, 0), // top right corner
-		Vector2(0, 20), // head
-		Vector2(-20, 0) // top left corner
-	};
-	AddComponent<Wireframe>(player, wf);
-
-	AddComponent<Transform>(player, Transform());
-	AddComponent<Physics>(player, Physics(Physics::KINEMATIC));
-	AddComponent<CircleBounds>(player, CircleBounds(20));
-	AddComponent<Player>(player, Player());
 }
 
 

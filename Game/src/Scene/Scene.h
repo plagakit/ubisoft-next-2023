@@ -109,8 +109,6 @@ private:
 	Entity m_player;
 
 
-	void CreateBomberman(Entity& player);
-
 };
 
 
