@@ -150,6 +150,8 @@ void Scene::DeleteEntity(Entity id)
 	for (auto i = 0; i < signature.size(); i++)
 		if (signature.test(i))
 			m_removeComponentFunctions[i](id);
+
+	s_EntityDeleted.Emit(id);
 }
 
 void Scene::QueueDelete(Entity id)

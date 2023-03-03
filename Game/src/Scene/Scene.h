@@ -4,7 +4,7 @@
 
 #include "Camera/Camera.h"
 #include "Core/ContiguousArray/ContiguousArray.h"
-
+#include "Core/Signal/Signal.h"
 #include "Systems/RenderSystem/RenderSystem.h"
 #include "Systems/PhysicsSystem/PhysicsSystem.h"
 #include "Systems/TimerSystem/TimerSystem.h"
@@ -16,9 +16,11 @@ public:
 	const Entity MAX_ENTITIES = 1000;
 	float m_deltaTime = 0;
 
-	Scene();
+	Signal<Entity> s_EntityDeleted;
 
 	// Scene methods
+
+	Scene();
 
 	void Init();
 	void Update(float deltaTime);
