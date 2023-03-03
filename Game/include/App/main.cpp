@@ -177,7 +177,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, 	_In_opt_ HINSTANCE hPrevInstanc
 	// Setup glut.
 	glutInit(&argc, &argv);
 	glutInitWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-	glutInitWindowPosition(100, 100);
+	glutInitWindowPosition(250, 0);
 	int glutWind = glutCreateWindow(APP_WINDOW_TITLE);	
 	HDC dc = wglGetCurrentDC();
 	MAIN_WINDOW_HANDLE = WindowFromDC(dc);
