@@ -16,18 +16,16 @@ const Vector2 CENTER = Vector2(APP_VIRTUAL_WIDTH / 2.0f, APP_VIRTUAL_HEIGHT / 2.
 
 void RenderSystem::Render(Scene& scene)
 {
+#ifdef _DEBUG
+    RenderPhysicsBounds(scene);
+    App::Print(0, 250, test.c_str());
+#endif
 
     for (Entity id : scene.GetEntities<Transform, Sprite>())
         RenderSprite(scene, id);
 
     for (Entity id : scene.GetEntities<Transform, Wireframe>())
         RenderWireframe(scene, id);
-
-#ifdef _DEBUG
-    RenderPhysicsBounds(scene);
-    App::Print(0, 250, test.c_str());
-#endif
-    
 }
 
 void RenderSystem::RenderSprite(Scene& scene, Entity id)
