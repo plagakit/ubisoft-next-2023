@@ -5,6 +5,7 @@
 #include "Camera/Camera.h"
 #include "Core/ContiguousArray/ContiguousArray.h"
 #include "Core/Signal/Signal.h"
+#include "UI/UI.h"
 
 #include "Systems/RenderSystem/RenderSystem.h"
 #include "Systems/PhysicsSystem/PhysicsSystem.h"
@@ -114,6 +115,7 @@ private:
 
 	// Misc
 	Camera m_camera;
+	UI m_ui;
 
 	// Gameplay
 	Entity m_player;

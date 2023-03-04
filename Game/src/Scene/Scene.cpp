@@ -53,9 +53,28 @@ void Scene::Init()
 	CreateComponentArray<Wall>();
 	CreateComponentArray<Particle>();
 
+	// Bind systems
+	m_timerSystem.s_TimerDone.Connect<ParticleSystem, &ParticleSystem::OnTimerDone>(&m_particleSystem);
+	m_timerSystem.s_TimerDone.Connect<PlayerSystem, &PlayerSystem::OnTimerDone>(&m_playerSystem);
+	m_timerSystem.s_TimerDone.Connect<BombSystem, &BombSystem::OnTimerDone>(&m_bombSystem);
+
+	m_physicsSystem.s_onCollision.Connect<HealthSystem, &HealthSystem::OnCollision>(&m_healthSystem);
+
+	m_physicsSystem.s_onTrigger.Connect<HealthSystem, &HealthSystem::OnTrigger>(&m_healthSystem);
+	m_physicsSystem.s_onTrigger.Connect<PlayerSystem, &PlayerSystem::OnTrigger>(&m_playerSystem);
+
+	m_playerSystem.s_PlacedBomb.Connect<BombSystem, &BombSystem::CreateBomb>(&m_bombSystem);
+
+	m_bombSystem.s_BombExploded.Connect<PlayerSystem, &PlayerSystem::OnBombExplode>(&m_playerSystem);
+	m_bombSystem.s_BombExploded.Connect<Camera, &Camera::StartShake>(&m_camera);
+
+	// Since entities are unsigned, we can make 0 the "null entity". Any system that needs null entities can use 0!
+	CreateEntity();
+
 	// Create bomberman
 	m_player = CreateEntity();
 	m_playerSystem.CreatePlayer(*this, m_player);
+	m_ui.BindPlayer(*this, m_player);
 
 	// Create box
 	Entity wall = CreateEntity();
@@ -74,25 +93,6 @@ void Scene::Init()
 	AddComponent<Physics>(wall, Physics(Physics::STATIC));
 	AddComponent<Timer>(wall, Timer(5));
 	AddComponent<Wall>(wall, 0);
-
-
-	// Bind systems
-	m_timerSystem.s_TimerDone.Connect<ParticleSystem, &ParticleSystem::OnTimerDone>(&m_particleSystem);
-	m_timerSystem.s_TimerDone.Connect<PlayerSystem, &PlayerSystem::OnTimerDone>(&m_playerSystem);
-	m_timerSystem.s_TimerDone.Connect<BombSystem, &BombSystem::OnTimerDone>(&m_bombSystem);
-
-	m_physicsSystem.s_onCollision.Connect<HealthSystem, &HealthSystem::OnCollision>(&m_healthSystem);
-
-	m_physicsSystem.s_onTrigger.Connect<HealthSystem, &HealthSystem::OnTrigger>(&m_healthSystem);
-	m_physicsSystem.s_onTrigger.Connect<PlayerSystem, &PlayerSystem::OnTrigger>(&m_playerSystem);
-
-	m_playerSystem.s_PlacedBomb.Connect<BombSystem, &BombSystem::CreateBomb>(&m_bombSystem);
-
-	m_bombSystem.s_BombExploded.Connect<PlayerSystem, &PlayerSystem::OnBombExplode>(&m_playerSystem);
-	m_bombSystem.s_BombExploded.Connect<Camera, &Camera::StartShake>(&m_camera);
-
-	//m_playerSystem.s_Kicked.Connect<RenderSystem, &RenderSystem::Test>(&m_renderSystem);
-	//m_playerSystem.s_PlacedBomb.Connect<RenderSystem, &RenderSystem::Test>(&m_renderSystem);
 }
 
 void Scene::Update(float deltaTime)
@@ -108,9 +108,10 @@ void Scene::Update(float deltaTime)
 	m_bombSystem.UpdateBombs(*this);
 
 	m_physicsSystem.UpdatePosition(*this);
+	m_physicsSystem.UpdateCollision(*this, GetEntities<Physics, DamageField>(), GetEntities<Physics, Health>());
 	m_physicsSystem.UpdateCollision(*this, GetEntities<Player>(), GetEntities<Bomb>());
 	m_physicsSystem.UpdateCollision(*this, GetEntities<Player>(), GetEntities<Wall>());
-	m_physicsSystem.UpdateCollision(*this, GetEntities<Physics, DamageField>(), GetEntities<Physics, Health>());
+	
 
 	DeleteQueuedEntities();
 }
@@ -118,6 +119,7 @@ void Scene::Update(float deltaTime)
 void Scene::Render()
 {
 	m_renderSystem.Render(*this);
+	m_ui.Render(*this);
 }
 
 
