@@ -13,7 +13,7 @@ void TimerSystem::UpdateTimers(Scene& scene)
 		Timer& t = scene.GetComponent<Timer>(id);
 
 		if (!t.isRunning)
-			return;
+			continue;
 
 		t.elapsed += scene.m_deltaTime;
 

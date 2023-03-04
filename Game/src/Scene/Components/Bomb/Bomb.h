@@ -7,9 +7,9 @@ struct Bomb {
 	enum Type { CROSS, SINGLE };
 	Type type;
 
-	int damage;
+	Entity creator;
+	bool kicked;
 
-
-	Bomb(Type type = Type::CROSS, int damage = 1);
+	Bomb(Entity creator, Type type = Type::CROSS);
 
 };

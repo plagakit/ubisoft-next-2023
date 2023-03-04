@@ -160,7 +160,7 @@ void PhysicsSystem::UpdateCollision(Scene& scene, Entity one, Entity two)
 
 	if (collision)
 	{
-		if (ph2.isTrigger) 
+		if (ph1.isTrigger || ph2.isTrigger) 
 			s_onTrigger.Emit(scene, one, two);
 		else
 		{

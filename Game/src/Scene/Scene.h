@@ -9,6 +9,7 @@
 #include "Systems/PhysicsSystem/PhysicsSystem.h"
 #include "Systems/TimerSystem/TimerSystem.h"
 #include "Systems/PlayerSystem/PlayerSystem.h"
+#include "Systems/BombSystem/BombSystem.h"
 
 class Scene {
 
@@ -104,6 +105,7 @@ private:
 	PhysicsSystem m_physicsSystem;
 	TimerSystem m_timerSystem;
 	PlayerSystem m_playerSystem;
+	BombSystem m_bombSystem;
 
 	// Misc
 	Camera m_camera;

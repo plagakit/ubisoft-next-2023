@@ -13,6 +13,7 @@
 #include "Scene/Components/CircleBounds/CircleBounds.h"
 #include "Scene/Components/Player/Player.h"
 #include "Scene/Components/Bomb/Bomb.h"
+#include "Scene/Components/PrimitiveComponents.h"
 
 
 // Scene methods
@@ -47,6 +48,8 @@ void Scene::Init()
 	CreateComponentArray<CircleBounds>();
 	CreateComponentArray<Player>();
 	CreateComponentArray<Bomb>();
+	CreateComponentArray<Damage>();
+	CreateComponentArray<Health>();
 
 	// Create bomberman
 	m_player = CreateEntity();
@@ -73,10 +76,17 @@ void Scene::Init()
 
 	// Bind systems
 	
-	m_timerSystem.s_TimerDone.Connect<PlayerSystem, &PlayerSystem::OnDoneKick>(&m_playerSystem);
+	m_timerSystem.s_TimerDone.Connect<PlayerSystem, &PlayerSystem::OnTimerDone>(&m_playerSystem);
+	m_timerSystem.s_TimerDone.Connect<BombSystem, &BombSystem::OnTimerDone>(&m_bombSystem);
 
-	m_playerSystem.s_Kicked.Connect<RenderSystem, &RenderSystem::Test>(&m_renderSystem);
-	m_playerSystem.s_PlacedBomb.Connect<RenderSystem, &RenderSystem::Test>(&m_renderSystem);
+	m_physicsSystem.s_onTrigger.Connect<PlayerSystem, &PlayerSystem::OnTrigger>(&m_playerSystem);
+
+	m_playerSystem.s_PlacedBomb.Connect<BombSystem, &BombSystem::CreateBomb>(&m_bombSystem);
+
+	m_bombSystem.s_BombExploded.Connect<PlayerSystem, &PlayerSystem::OnBombExplode>(&m_playerSystem);
+
+	//m_playerSystem.s_Kicked.Connect<RenderSystem, &RenderSystem::Test>(&m_renderSystem);
+	//m_playerSystem.s_PlacedBomb.Connect<RenderSystem, &RenderSystem::Test>(&m_renderSystem);
 }
 
 void Scene::Update(float deltaTime)
@@ -88,10 +98,13 @@ void Scene::Update(float deltaTime)
 
 	m_timerSystem.UpdateTimers(*this);
 	m_playerSystem.UpdatePlayers(*this);
+	m_bombSystem.UpdateBombs(*this);
 
 	m_physicsSystem.UpdatePosition(*this);
 	m_physicsSystem.UpdateCollision(*this, GetEntities<Physics>(), GetEntities<Physics>());
 
+
+	DeleteQueuedEntities();
 }
 
 void Scene::Render()

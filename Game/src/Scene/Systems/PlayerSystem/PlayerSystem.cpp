@@ -11,6 +11,7 @@
 #include "Scene/Components/Wireframe/Wireframe.h"
 #include "Scene/Components/Timer/Timer.h"
 #include "Scene/Components/CircleBounds/CircleBounds.h"
+#include "Scene/Components/Bomb/Bomb.h"
 
 
 void PlayerSystem::CreatePlayer(Scene& scene, Entity id)
@@ -90,11 +91,38 @@ void PlayerSystem::UpdatePlayers(Scene& scene)
 	}
 }
 
-void PlayerSystem::OnDoneKick(Scene& scene, Entity id)
+void PlayerSystem::KickBomb(Scene& scene, Entity player, Entity bomb)
+{
+	const Transform& ptf = scene.GetComponent<Transform>(player);
+	Physics& bph = scene.GetComponent<Physics>(bomb);
+
+	Vector2 direction = Vector2(cosf(ptf.rotation + PI/2), sinf(ptf.rotation + PI/2));
+	bph.velocity = direction * KICK_SPEED;
+}
+
+
+void PlayerSystem::OnTimerDone(Scene& scene, Entity id)
 {
 	if (scene.HasComponent<Player>(id))
 	{
 		Player& pl = scene.GetComponent<Player>(id);
 		pl.kicking = false;
+	}
+}
+
+void PlayerSystem::OnBombExplode(Scene& scene, Entity id)
+{
+	Entity creator = scene.GetComponent<Bomb>(id).creator;
+	for (Entity player : scene.GetEntities<Player>())
+		if (player == creator)
+			scene.GetComponent<Player>(player).bombOut = false;
+}
+
+void PlayerSystem::OnTrigger(Scene& scene, Entity id1, Entity id2)
+{
+	if (scene.HasComponent<Player>(id1))
+	{
+		if (scene.GetComponent<Player>(id1).kicking && scene.HasComponent<Bomb>(id2))
+			KickBomb(scene, id1, id2);
 	}
 }
