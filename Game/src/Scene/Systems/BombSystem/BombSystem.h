@@ -17,6 +17,7 @@ public:
 	void UpdateBombs(Scene& scene);
 	void CreateBomb(Scene& scene, Entity player);
 	void ExplodeBomb(Scene& scene, Entity bomb);
+	void CreateBombParticle(Scene& scene);
 
 	void OnTimerDone(Scene& scene, Entity id);
 

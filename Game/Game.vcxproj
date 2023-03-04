@@ -203,6 +203,7 @@
     <ClInclude Include="src\Core\ContiguousArray\IContiguousArray.h" />
     <ClInclude Include="src\Scene\Scene.h" />
     <ClInclude Include="src\Scene\Systems\BombSystem\BombSystem.h" />
+    <ClInclude Include="src\Scene\Systems\ParticleSystem\ParticleSystem.h" />
     <ClInclude Include="src\Scene\Systems\PhysicsSystem\PhysicsSystem.h" />
     <ClInclude Include="src\Scene\Systems\PlayerSystem\PlayerSystem.h" />
     <ClInclude Include="src\Scene\Systems\RenderSystem\RenderSystem.h" />
@@ -237,6 +238,7 @@
     </ClCompile>
     <ClCompile Include="src\Scene\Components\Wireframe\Wireframe.cpp" />
     <ClCompile Include="src\Scene\Systems\BombSystem\BombSystem.cpp" />
+    <ClCompile Include="src\Scene\Systems\ParticleSystem\ParticleSystem.cpp" />
     <ClCompile Include="src\UnitTests\ECSTest.cpp" />
     <ClCompile Include="src\Scene\Scene.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>

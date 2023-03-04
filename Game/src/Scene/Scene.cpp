@@ -48,8 +48,8 @@ void Scene::Init()
 	CreateComponentArray<CircleBounds>();
 	CreateComponentArray<Player>();
 	CreateComponentArray<Bomb>();
-	CreateComponentArray<Damage>();
-	CreateComponentArray<Health>();
+	CreateComponentArray<Wall>();
+	CreateComponentArray<Particle>();
 
 	// Create bomberman
 	m_player = CreateEntity();
@@ -66,16 +66,16 @@ void Scene::Init()
 	tf.position = Vector2(-200, 200);
 	AddComponent<Transform>(wall, tf);
 
-	Physics ph = Physics(Physics::STATIC);
-	AddComponent<Physics>(wall, ph);
-
 	BoxBounds bb = BoxBounds(100,100);
 	AddComponent<BoxBounds>(wall, bb);
 
+	AddComponent<Physics>(wall, Physics(Physics::STATIC));
 	AddComponent<Timer>(wall, Timer(5));
+	AddComponent<Wall>(wall, 0);
+
 
 	// Bind systems
-	
+	m_timerSystem.s_TimerDone.Connect<ParticleSystem, &ParticleSystem::OnTimerDone>(&m_particleSystem);
 	m_timerSystem.s_TimerDone.Connect<PlayerSystem, &PlayerSystem::OnTimerDone>(&m_playerSystem);
 	m_timerSystem.s_TimerDone.Connect<BombSystem, &BombSystem::OnTimerDone>(&m_bombSystem);
 
@@ -84,6 +84,7 @@ void Scene::Init()
 	m_playerSystem.s_PlacedBomb.Connect<BombSystem, &BombSystem::CreateBomb>(&m_bombSystem);
 
 	m_bombSystem.s_BombExploded.Connect<PlayerSystem, &PlayerSystem::OnBombExplode>(&m_playerSystem);
+	m_bombSystem.s_BombExploded.Connect<Camera, &Camera::StartShake>(&m_camera);
 
 	//m_playerSystem.s_Kicked.Connect<RenderSystem, &RenderSystem::Test>(&m_renderSystem);
 	//m_playerSystem.s_PlacedBomb.Connect<RenderSystem, &RenderSystem::Test>(&m_renderSystem);
@@ -94,6 +95,7 @@ void Scene::Update(float deltaTime)
 	m_deltaTime = deltaTime / 1000.0f; // deltaTime is in seconds, we want milliseconds
 	
 	// Camera follows player w/ slight drag
+	m_camera.Update(*this);
 	m_camera.position = Utils::Lerp(m_camera.position, GetComponent<Transform>(m_player).position, 0.05f);
 
 	m_timerSystem.UpdateTimers(*this);
@@ -101,8 +103,8 @@ void Scene::Update(float deltaTime)
 	m_bombSystem.UpdateBombs(*this);
 
 	m_physicsSystem.UpdatePosition(*this);
-	m_physicsSystem.UpdateCollision(*this, GetEntities<Physics>(), GetEntities<Physics>());
-
+	m_physicsSystem.UpdateCollision(*this, GetEntities<Player>(), GetEntities<Bomb>());
+	m_physicsSystem.UpdateCollision(*this, GetEntities<Player>(), GetEntities<Wall>());
 
 	DeleteQueuedEntities();
 }

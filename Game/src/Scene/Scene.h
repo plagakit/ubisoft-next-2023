@@ -5,11 +5,13 @@
 #include "Camera/Camera.h"
 #include "Core/ContiguousArray/ContiguousArray.h"
 #include "Core/Signal/Signal.h"
+
 #include "Systems/RenderSystem/RenderSystem.h"
 #include "Systems/PhysicsSystem/PhysicsSystem.h"
 #include "Systems/TimerSystem/TimerSystem.h"
 #include "Systems/PlayerSystem/PlayerSystem.h"
 #include "Systems/BombSystem/BombSystem.h"
+#include "Systems/ParticleSystem/ParticleSystem.h"
 
 class Scene {
 
@@ -104,6 +106,7 @@ private:
 	RenderSystem m_renderSystem;
 	PhysicsSystem m_physicsSystem;
 	TimerSystem m_timerSystem;
+	ParticleSystem m_particleSystem;
 	PlayerSystem m_playerSystem;
 	BombSystem m_bombSystem;
 

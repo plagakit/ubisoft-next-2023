@@ -61,6 +61,11 @@ void BombSystem::ExplodeBomb(Scene& scene, Entity bomb)
 	scene.QueueDelete(bomb);
 }
 
+void BombSystem::CreateBombParticle(Scene& scene)
+{
+	
+}
+
 
 void BombSystem::OnTimerDone(Scene& scene, Entity id)
 {

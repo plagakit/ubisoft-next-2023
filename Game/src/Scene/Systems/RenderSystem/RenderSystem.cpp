@@ -46,8 +46,8 @@ void RenderSystem::RenderSprite(Scene& scene, Entity id)
 #endif
     float x = tf.position.x;
     float y = tf.position.y;
-    float cx = APP_VIRTUAL_WIDTH - cam.position.x;
-    float cy = APP_VIRTUAL_HEIGHT - cam.position.y;
+    float cx = APP_VIRTUAL_WIDTH - (cam.position.x + cam.offset.x);
+    float cy = APP_VIRTUAL_HEIGHT - (cam.position.y + cam.offset.y);
 #if APP_USE_VIRTUAL_RES
     APP_VIRTUAL_TO_NATIVE_COORDS(x, y);
     APP_VIRTUAL_TO_NATIVE_COORDS(cx, cy);
@@ -167,8 +167,8 @@ void RenderSystem::DrawWireframe(Camera& cam, Transform& tf, std::vector<Vector2
         Vector2 v2 = (t2 * tf.scale).Rotated(tf.rotation) + tf.position;
         
         // Translating by CENTER ensures that cam's pos is the middle of the screen
-        v1 = (v1 - cam.position).Rotated(cam.rotation) * cam.zoom + CENTER;
-        v2 = (v2 - cam.position).Rotated(cam.rotation) * cam.zoom + CENTER;
+        v1 = (v1 - (cam.position + cam.offset)).Rotated(cam.rotation) * cam.zoom + CENTER;
+        v2 = (v2 - (cam.position + cam.offset)).Rotated(cam.rotation) * cam.zoom + CENTER;
 
         App::DrawLine(v1.x, v1.y, v2.x, v2.y, r, g, b);
     }
