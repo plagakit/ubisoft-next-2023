@@ -17,7 +17,7 @@ public:
 	static Vector2 Lerp(const Vector2& a, const Vector2& b, float t);
 
 	static float RandFloat(float min, float max);
-	static float RandFloat(const std::pair<float, float>& range);
+	static float RandFloat(std::pair<float, float> range); // note: std::pair is small enough to copy instead of const ref
 	static Vector2 RandUnitCircleVector();
 
 };
