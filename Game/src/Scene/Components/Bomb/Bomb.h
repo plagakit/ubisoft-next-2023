@@ -4,11 +4,10 @@
 
 struct Bomb {
 
-	enum Type { CROSS, SINGLE };
+	enum Type { CROSS, BIG, FAST };
 	Type type;
 
 	Entity creator;
-	bool kicked;
 
 	Bomb(Entity creator, Type type = Type::CROSS);
 

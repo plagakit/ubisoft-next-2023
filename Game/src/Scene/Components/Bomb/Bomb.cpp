@@ -3,5 +3,5 @@
 #include "Bomb.h"
 
 Bomb::Bomb(Entity _creator, Type _type) :
-	creator(_creator), type(_type), kicked(false)
+	creator(_creator), type(_type)
 {}

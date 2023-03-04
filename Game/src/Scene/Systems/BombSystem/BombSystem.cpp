@@ -7,9 +7,11 @@
 #include "Scene/Components/Transform/Transform.h"
 #include "Scene/Components/Physics/Physics.h"
 #include "Scene/Components/CircleBounds/CircleBounds.h"
+#include "Scene/Components/BoxBounds/BoxBounds.h"
 #include "Scene/Components/Timer/Timer.h"
 #include "Scene/Components/Bomb/Bomb.h"
 #include "Scene/Components/Wireframe/Wireframe.h"
+#include "Scene/Components/DamageField/DamageField.h"
 #include "Scene/Components/PrimitiveComponents.h"
 
 
@@ -58,9 +60,41 @@ void BombSystem::CreateBomb(Scene& scene, Entity player)
 
 void BombSystem::ExplodeBomb(Scene& scene, Entity bomb)
 {
-	s_BombExploded.Emit(scene, bomb);
+	const Bomb& bombData = scene.GetComponent<Bomb>(bomb);
+	const Transform& tf = scene.GetComponent<Transform>(bomb);
+
+	switch (bombData.type)
+	{
+	case Bomb::CROSS:
+		Entity vert = scene.CreateEntity();
+		Entity horz = scene.CreateEntity();
+		
+		Transform ctf = Transform(tf.position);
+		scene.AddComponent<Transform>(vert, ctf);
+		scene.AddComponent<Transform>(horz, ctf);
+		scene.AddComponent<Physics>(vert, Physics(Physics::STATIC, true));
+		scene.AddComponent<Physics>(horz, Physics(Physics::STATIC, true));
+
+		scene.AddComponent<BoxBounds>(vert, BoxBounds(40, 200));
+		scene.AddComponent<BoxBounds>(horz, BoxBounds(200, 40));
+
+		scene.AddComponent<Timer>(vert, Timer(DEFAULT_EXPLOSION_DURATION, true, true));
+		scene.AddComponent<Timer>(horz, Timer(DEFAULT_EXPLOSION_DURATION, true, true));
+
+		scene.AddComponent<Particle>(vert, 0);
+		scene.AddComponent<Particle>(horz, 0);
+
+		scene.AddComponent<DamageField>(vert, DamageField(DEFAULT_DAMAGE, DEFAULT_KNOCKBACK));
+		scene.AddComponent<DamageField>(horz, DamageField(DEFAULT_DAMAGE, DEFAULT_KNOCKBACK));
+
+		break;
+	}
+	
+	
 	for (int i = 0; i < 50; i++)
 		CreateExplosionParticle(scene, bomb);
+	
+	s_BombExploded.Emit(scene, bomb);
 	scene.QueueDelete(bomb);
 }
 

@@ -13,6 +13,7 @@
 #include "Scene/Components/CircleBounds/CircleBounds.h"
 #include "Scene/Components/Player/Player.h"
 #include "Scene/Components/Bomb/Bomb.h"
+#include "Scene/Components/DamageField/DamageField.h"
 #include "Scene/Components/PrimitiveComponents.h"
 
 
@@ -48,6 +49,7 @@ void Scene::Init()
 	CreateComponentArray<CircleBounds>();
 	CreateComponentArray<Player>();
 	CreateComponentArray<Bomb>();
+	CreateComponentArray<DamageField>();
 	CreateComponentArray<Wall>();
 	CreateComponentArray<Particle>();
 
