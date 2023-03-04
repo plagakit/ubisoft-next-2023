@@ -6,8 +6,8 @@ Timer::Timer() :
 	elapsed(0.0f), duration(0.0f), isRunning(false), oneFire(true), done(false)
 {}
 
-Timer::Timer(float _duration, bool _oneFire) :
-	elapsed(0.0f), duration(_duration), isRunning(false), oneFire(_oneFire), done(false)
+Timer::Timer(float _duration, bool _oneFire, bool _startInstantly) :
+	elapsed(0.0f), duration(_duration), isRunning(_startInstantly), oneFire(_oneFire), done(false)
 {}
 
 void Timer::Start()

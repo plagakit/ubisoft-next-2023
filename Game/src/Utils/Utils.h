@@ -15,4 +15,8 @@ public:
 
 	static float Lerp(float a, float b, float t);
 	static Vector2 Lerp(const Vector2& a, const Vector2& b, float t);
+
+	static float RandFloat(float min, float max);
+	static Vector2 RandUnitCircleVector();
+
 };

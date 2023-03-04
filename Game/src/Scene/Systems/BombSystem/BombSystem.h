@@ -10,6 +10,10 @@ class BombSystem {
 	const float EXPLODE_TIME = 3.0f;
 	const float DEACCELERATION = 5.0f;
 
+	const std::pair<float, float> BOMB_PARTICLE_SPEED = { 50.0f, 150.0f };
+	const std::pair<float, float> BOMB_PARTICLE_ROTATION_SPEED = { -4.0f, 4.0f };
+	const std::pair<float, float> BOMB_PARTICLE_LIFETIME = { 1.0f, 2.0f };
+
 public:
 
 	Signal<> s_BombExploded;
@@ -17,7 +21,7 @@ public:
 	void UpdateBombs(Scene& scene);
 	void CreateBomb(Scene& scene, Entity player);
 	void ExplodeBomb(Scene& scene, Entity bomb);
-	void CreateBombParticle(Scene& scene);
+	void CreateExplosionParticle(Scene& scene, Entity bomb);
 
 	void OnTimerDone(Scene& scene, Entity id);
 

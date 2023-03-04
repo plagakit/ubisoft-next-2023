@@ -30,3 +30,18 @@ Vector2 Utils::Lerp(const Vector2& a, const Vector2& b, float t)
 {
 	return a + (b - a) * t;
 }
+
+float Utils::RandFloat(float min, float max)
+{
+	static std::mt19937 gen(std::time(nullptr));
+	std::uniform_real_distribution<> dis(min, max);
+	return dis(gen);
+}
+
+Vector2 Utils::RandUnitCircleVector()
+{
+	static std::mt19937 gen(std::time(nullptr));
+	std::uniform_real_distribution<> dis(0, 2 * PI);
+	float angle = dis(gen);
+	return Vector2(cosf(angle), sinf(angle));
+}

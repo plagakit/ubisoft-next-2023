@@ -16,7 +16,7 @@
 class Scene {
 
 public:
-	const Entity MAX_ENTITIES = 1000;
+	const Entity MAX_ENTITIES = 10000;
 	float m_deltaTime = 0;
 
 	Signal<> s_EntityDeleted;

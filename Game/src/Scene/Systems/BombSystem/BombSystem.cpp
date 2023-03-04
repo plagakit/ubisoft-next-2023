@@ -10,6 +10,7 @@
 #include "Scene/Components/Timer/Timer.h"
 #include "Scene/Components/Bomb/Bomb.h"
 #include "Scene/Components/Wireframe/Wireframe.h"
+#include "Scene/Components/PrimitiveComponents.h"
 
 
 void BombSystem::UpdateBombs(Scene& scene)
@@ -58,12 +59,32 @@ void BombSystem::CreateBomb(Scene& scene, Entity player)
 void BombSystem::ExplodeBomb(Scene& scene, Entity bomb)
 {
 	s_BombExploded.Emit(scene, bomb);
+	for (int i = 0; i < 50; i++)
+		CreateExplosionParticle(scene, bomb);
 	scene.QueueDelete(bomb);
 }
 
-void BombSystem::CreateBombParticle(Scene& scene)
+void BombSystem::CreateExplosionParticle(Scene& scene, Entity bomb)
 {
-	
+	const Transform& btf = scene.GetComponent<Transform>(bomb);
+	Entity id = scene.CreateEntity();
+
+	Transform tf = Transform();
+	tf.position = btf.position;
+	scene.AddComponent<Transform>(id, tf);
+
+	Physics ph = Physics(Physics::KINEMATIC);
+	ph.velocity = Utils::RandUnitCircleVector() * Utils::RandFloat(BOMB_PARTICLE_SPEED.first, BOMB_PARTICLE_SPEED.second);
+	ph.angularVelocity = Utils::RandFloat(BOMB_PARTICLE_ROTATION_SPEED.first, BOMB_PARTICLE_ROTATION_SPEED.second);
+	scene.AddComponent<Physics>(id, ph);
+
+	Wireframe wf = Wireframe();
+	wf.r = 255; wf.b = 0; wf.g = 0;
+	wf.points = { Vector2(0, -4.0f), Vector2(0, 4.0f) };
+	scene.AddComponent<Wireframe>(id, wf);
+
+	scene.AddComponent<Timer>(id, Timer(Utils::RandFloat(BOMB_PARTICLE_LIFETIME.first, BOMB_PARTICLE_LIFETIME.second), true, true));
+	scene.AddComponent<Particle>(id, 0);
 }
 
 

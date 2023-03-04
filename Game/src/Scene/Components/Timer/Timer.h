@@ -11,7 +11,7 @@ struct Timer {
 	bool oneFire;
 
 	Timer();
-	Timer(float duration, bool oneFire = true);
+	Timer(float duration, bool oneFire = true, bool startInstantly = false);
 
 	void Start();
 	float PercentElapsed() const;
