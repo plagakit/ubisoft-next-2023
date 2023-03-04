@@ -103,8 +103,8 @@ void BombSystem::CreateExplosionParticle(Scene& scene, Entity bomb)
 	scene.AddComponent<Transform>(id, tf);
 
 	Physics ph = Physics(Physics::KINEMATIC);
-	ph.velocity = Utils::RandUnitCircleVector() * Utils::RandFloat(BOMB_PARTICLE_SPEED.first, BOMB_PARTICLE_SPEED.second);
-	ph.angularVelocity = Utils::RandFloat(BOMB_PARTICLE_ROTATION_SPEED.first, BOMB_PARTICLE_ROTATION_SPEED.second);
+	ph.velocity = Utils::RandUnitCircleVector() * Utils::RandFloat(BOMB_PARTICLE_SPEED);
+	ph.angularVelocity = Utils::RandFloat(BOMB_PARTICLE_ROTATION_SPEED);
 	scene.AddComponent<Physics>(id, ph);
 
 	Wireframe wf = Wireframe();
@@ -112,7 +112,7 @@ void BombSystem::CreateExplosionParticle(Scene& scene, Entity bomb)
 	wf.points = { Vector2(0, -4.0f), Vector2(0, 4.0f) };
 	scene.AddComponent<Wireframe>(id, wf);
 
-	scene.AddComponent<Timer>(id, Timer(Utils::RandFloat(BOMB_PARTICLE_LIFETIME.first, BOMB_PARTICLE_LIFETIME.second), true, true));
+	scene.AddComponent<Timer>(id, Timer(Utils::RandFloat(BOMB_PARTICLE_LIFETIME), true, true));
 	scene.AddComponent<Particle>(id, 0);
 }
 

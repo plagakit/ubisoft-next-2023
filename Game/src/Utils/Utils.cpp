@@ -38,6 +38,11 @@ float Utils::RandFloat(float min, float max)
 	return dis(gen);
 }
 
+float Utils::RandFloat(const std::pair<float, float>& range)
+{
+	return RandFloat(range.first, range.second);
+}
+
 Vector2 Utils::RandUnitCircleVector()
 {
 	static std::mt19937 gen(std::time(nullptr));

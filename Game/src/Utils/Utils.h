@@ -17,6 +17,7 @@ public:
 	static Vector2 Lerp(const Vector2& a, const Vector2& b, float t);
 
 	static float RandFloat(float min, float max);
+	static float RandFloat(const std::pair<float, float>& range);
 	static Vector2 RandUnitCircleVector();
 
 };
