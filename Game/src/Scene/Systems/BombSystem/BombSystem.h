@@ -4,6 +4,8 @@
 
 #include "Core/Signal/Signal.h"
 class Scene;
+struct Vector2;
+struct DamageField;
 
 class BombSystem {
 
@@ -26,6 +28,7 @@ public:
 	void CreateBomb(Scene& scene, Entity player);
 	void ExplodeBomb(Scene& scene, Entity bomb);
 	void CreateExplosionParticle(Scene& scene, Entity bomb);
+	void CreateExplosionHitbox(Scene& scene, int width, int height, Vector2 pos, const DamageField& damage);
 
 	void OnTimerDone(Scene& scene, Entity id);
 

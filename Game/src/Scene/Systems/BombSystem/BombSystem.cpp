@@ -57,31 +57,13 @@ void BombSystem::ExplodeBomb(Scene& scene, Entity bomb)
 {
 	const Bomb& bombData = scene.GetComponent<Bomb>(bomb);
 	const Transform& tf = scene.GetComponent<Transform>(bomb);
+	Vector2 bombPos = tf.position;
 
 	switch (bombData.type)
 	{
 	case Bomb::CROSS:
-		Entity vert = scene.CreateEntity();
-		Entity horz = scene.CreateEntity();
-		
-		Transform ctf = Transform(tf.position);
-		scene.AddComponent<Transform>(vert, ctf);
-		scene.AddComponent<Transform>(horz, ctf);
-		scene.AddComponent<Physics>(vert, Physics(Physics::STATIC, true));
-		scene.AddComponent<Physics>(horz, Physics(Physics::STATIC, true));
-
-		scene.AddComponent<BoxBounds>(vert, BoxBounds(40, 200));
-		scene.AddComponent<BoxBounds>(horz, BoxBounds(200, 40));
-
-		scene.AddComponent<Timer>(vert, Timer(DEFAULT_EXPLOSION_DURATION, true, true));
-		scene.AddComponent<Timer>(horz, Timer(DEFAULT_EXPLOSION_DURATION, true, true));
-
-		scene.AddComponent<Particle>(vert, 0);
-		scene.AddComponent<Particle>(horz, 0);
-
-		scene.AddComponent<DamageField>(vert, DamageField(DEFAULT_DAMAGE, DEFAULT_KNOCKBACK));
-		scene.AddComponent<DamageField>(horz, DamageField(DEFAULT_DAMAGE, DEFAULT_KNOCKBACK));
-
+		CreateExplosionHitbox(scene, 40, 240, bombPos, DamageField(DEFAULT_DAMAGE));
+		CreateExplosionHitbox(scene, 240, 40, bombPos, DamageField(DEFAULT_DAMAGE));
 		break;
 	}
 	
@@ -114,6 +96,17 @@ void BombSystem::CreateExplosionParticle(Scene& scene, Entity bomb)
 
 	scene.AddComponent<Timer>(id, Timer(Utils::RandFloat(BOMB_PARTICLE_LIFETIME), true, true));
 	scene.AddComponent<Particle>(id, 0);
+}
+
+void BombSystem::CreateExplosionHitbox(Scene& scene, int width, int height, Vector2 pos, const DamageField& damage)
+{
+	Entity hitbox = scene.CreateEntity();
+	scene.AddComponent<Transform>(hitbox, Transform(pos));
+	scene.AddComponent<Physics>(hitbox, Physics(Physics::STATIC, true));
+	scene.AddComponent<BoxBounds>(hitbox, BoxBounds(width, height));
+	scene.AddComponent<Timer>(hitbox, Timer(DEFAULT_EXPLOSION_DURATION, true, true));
+	scene.AddComponent<Particle>(hitbox, 0);
+	scene.AddComponent<DamageField>(hitbox, damage);
 }
 
 

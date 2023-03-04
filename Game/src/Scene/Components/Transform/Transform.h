@@ -11,6 +11,6 @@ struct Transform {
 	float rotation;
 
 	Transform();
-	Transform(Vector2 position);
+	Transform(Vector2 pos);
 
 };
