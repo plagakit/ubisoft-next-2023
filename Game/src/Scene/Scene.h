@@ -161,13 +161,14 @@ void Scene::CreateComponentArray()
 {
 	const std::type_info& type = typeid(T);
 
-	m_componentArrays.insert({ type, std::make_shared<ContiguousArray<T>>() });
-	m_componentTypes.insert({ type, m_typeCount });
+	// If there already was a shared pointer here, it goes out of scope and the contiguous array is deleted! :D
+	m_componentArrays[type] = std::make_shared<ContiguousArray<T>>();
+	m_componentTypes[type] = m_typeCount;
 
 	// Add the remove component function to map so that it can be used @ runtime w/ ComponentID
 	auto rmFunc = Delegate<Entity>();
 	rmFunc.Bind<Scene, &Scene::RemoveComponent<T>>(this);
-	m_removeComponentFunctions.insert({ m_typeCount, rmFunc });
+	m_removeComponentFunctions[m_typeCount] = rmFunc;
 
 	m_typeCount++;
 }
