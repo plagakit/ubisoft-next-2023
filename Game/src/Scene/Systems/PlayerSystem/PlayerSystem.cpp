@@ -15,9 +15,11 @@
 #include "Scene/Components/PrimitiveComponents.h"
 
 
-void PlayerSystem::CreatePlayer(Scene& scene, Entity id)
+Entity PlayerSystem::CreatePlayer(Scene& scene, Vector2 pos)
 {
-	Wireframe wf = Wireframe();
+	Entity id = scene.CreateEntity();
+	
+	Wireframe wf = Wireframe(Color(Colors::LIGHT_BLUE));
 	wf.points = {
 		Vector2(-20, -20), // bottom left corner
 		Vector2(20, -20), // bottom right corner
@@ -27,12 +29,14 @@ void PlayerSystem::CreatePlayer(Scene& scene, Entity id)
 	};
 	scene.AddComponent<Wireframe>(id, wf);
 
-	scene.AddComponent<Transform>(id, Transform());
+	scene.AddComponent<Transform>(id, Transform(pos));
 	scene.AddComponent<Physics>(id, Physics(Physics::KINEMATIC));
 	scene.AddComponent<CircleBounds>(id, CircleBounds(20));
 	scene.AddComponent<Timer>(id, Timer(KICK_TIME));
 	scene.AddComponent<Player>(id, Player());
 	scene.AddComponent<Health>(id, DEFAULT_HEALTH);
+
+	return id;
 }
 
 void PlayerSystem::UpdatePlayers(Scene& scene)

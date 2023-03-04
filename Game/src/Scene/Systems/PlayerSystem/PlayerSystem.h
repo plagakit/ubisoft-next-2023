@@ -4,10 +4,11 @@
 
 #include "Core/Signal/Signal.h"
 class Scene;
+struct Vector2;
 
 class PlayerSystem {
 
-	const int DEFAULT_HEALTH = 1; // dies instantly
+	const int DEFAULT_HEALTH = 2; // dies instantly
 	const float ACCELERATION = 25.0f;
 	const float WALK_SPEED = 100.0f;
 	const float KICK_TIME = 0.25f;
@@ -19,7 +20,7 @@ public:
 	Signal<> s_Kicked;
 
 	void UpdatePlayers(Scene& scene);
-	void CreatePlayer(Scene& scene, Entity id);
+	Entity CreatePlayer(Scene& scene, Vector2 pos);
 	void KickBomb(Scene& scene, Entity player, Entity bomb);
 
 	void OnTimerDone(Scene& scene, Entity id);

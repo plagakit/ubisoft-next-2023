@@ -18,7 +18,7 @@ public:
 
 	void UpdatePosition(Scene& scene);
 	void UpdateCollision(Scene& scene, Entity one, Entity two);
-	void UpdateCollision(Scene& scene, std::vector<Entity> group1, std::vector<Entity> group2);
+	void UpdateCollision(Scene& scene, const std::vector<Entity>& group1, const std::vector<Entity>& group2);
 
 private:
 	bool IsColliding(Transform& tf1, Transform& tf2, CircleBounds& cb1, CircleBounds& cb2);

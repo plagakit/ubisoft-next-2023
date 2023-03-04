@@ -20,6 +20,7 @@ void PhysicsSystem::UpdatePosition(Scene& scene)
 		// Update movement and rotation
 		if (ph.bodyType == Physics::KINEMATIC)
 		{
+			ph.velocity += ph.acceleration * scene.m_deltaTime;
 			tf.position += ph.velocity * scene.m_deltaTime;
 			tf.rotation += ph.angularVelocity * scene.m_deltaTime;
 		}
@@ -179,7 +180,7 @@ void PhysicsSystem::UpdateCollision(Scene& scene, Entity one, Entity two)
 
 // Detects collision between two groups of entities and moves them according to their 
 // Physics parameters.Ensure that every entity has a Transform & Physics component.
-void PhysicsSystem::UpdateCollision(Scene& scene, std::vector<Entity> group1, std::vector<Entity> group2)
+void PhysicsSystem::UpdateCollision(Scene& scene, const std::vector<Entity>& group1, const std::vector<Entity>& group2)
 {
 	for (Entity i : group1)
 		for (Entity j : group2)

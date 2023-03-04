@@ -203,6 +203,7 @@
     <ClInclude Include="src\Scene\Components\Wireframe\Wireframe.h" />
     <ClInclude Include="src\Core\ContiguousArray\ContiguousArray.h" />
     <ClInclude Include="src\Core\ContiguousArray\IContiguousArray.h" />
+    <ClInclude Include="src\Scene\Components\Zombie\Zombie.h" />
     <ClInclude Include="src\Scene\Scene.h" />
     <ClInclude Include="src\Scene\Systems\BombSystem\BombSystem.h" />
     <ClInclude Include="src\Scene\Systems\HealthSystem\HealthSystem.h" />
@@ -214,6 +215,7 @@
     <ClInclude Include="src\Scene\Systems\TimerSystem\TimerSystem.h" />
     <ClInclude Include="src\Core\Vector2\Vector2.h" />
     <ClInclude Include="src\Core\Delegate\Delegate.h" />
+    <ClInclude Include="src\Scene\Systems\ZombieSystem\ZombieSystem.h" />
     <ClInclude Include="src\Scene\UI\UI.h" />
     <ClInclude Include="src\Utils\Utils.h" />
   </ItemGroup>
@@ -243,9 +245,11 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\Scene\Components\Wireframe\Wireframe.cpp" />
+    <ClCompile Include="src\Scene\Components\Zombie\Zombie.cpp" />
     <ClCompile Include="src\Scene\Systems\BombSystem\BombSystem.cpp" />
     <ClCompile Include="src\Scene\Systems\HealthSystem\HealthSystem.cpp" />
     <ClCompile Include="src\Scene\Systems\ParticleSystem\ParticleSystem.cpp" />
+    <ClCompile Include="src\Scene\Systems\ZombieSystem\ZombieSystem.cpp" />
     <ClCompile Include="src\Scene\UI\UI.cpp" />
     <ClCompile Include="src\UnitTests\ECSTest.cpp" />
     <ClCompile Include="src\Scene\Scene.cpp">

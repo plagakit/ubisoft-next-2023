@@ -14,6 +14,7 @@
 #include "Scene/Components/Player/Player.h"
 #include "Scene/Components/Bomb/Bomb.h"
 #include "Scene/Components/DamageField/DamageField.h"
+#include "Scene/Components/Zombie/Zombie.h"
 #include "Scene/Components/PrimitiveComponents.h"
 
 
@@ -42,6 +43,7 @@ Scene::Scene()
 	CreateComponentArray<Player>();
 	CreateComponentArray<Bomb>();
 	CreateComponentArray<DamageField>();
+	CreateComponentArray<Zombie>();
 	CreateComponentArray<Wall>();
 	CreateComponentArray<Particle>();
 
@@ -61,6 +63,7 @@ Scene::Scene()
 	m_bombSystem.s_BombExploded.Connect<Camera, &Camera::StartShake>(&m_camera);
 
 	m_healthSystem.s_Died.Connect<PlayerSystem, &PlayerSystem::OnDied>(&m_playerSystem);
+	m_healthSystem.s_Died.Connect<ZombieSystem, &ZombieSystem::OnDied>(&m_zombieSystem);
 }
 
 
@@ -86,8 +89,7 @@ void Scene::Init()
 	CreateEntity();
 
 	// Create bomberman
-	m_player = CreateEntity();
-	m_playerSystem.CreatePlayer(*this, m_player);
+	m_player = m_playerSystem.CreatePlayer(*this, Vector2(0, 0));
 	m_ui.BindPlayer(*this, m_player);
 
 	// Create box
@@ -107,25 +109,34 @@ void Scene::Init()
 	AddComponent<Physics>(wall, Physics(Physics::STATIC));
 	AddComponent<Timer>(wall, Timer(5));
 	AddComponent<Wall>(wall, 0);
+
+	m_zombieSystem.CreateZombie(*this, Vector2(0, 500));
 }
 
 void Scene::Update(float deltaTime)
 {	
 	m_deltaTime = deltaTime / 1000.0f; // deltaTime is in seconds, we want milliseconds
 	
-	// Camera follows player w/ slight drag
-	m_camera.Update(*this);
-	m_camera.position = Utils::Lerp(m_camera.position, GetComponent<Transform>(m_player).position, 0.05f);
+	auto const& players = GetEntities<Player>();
+	auto const& zombies = GetEntities<Zombie>();
+	auto const& walls = GetEntities<Wall>();
 
+	// Camera follows player w/ slight drag
+	if (players.size() > 0)
+		m_camera.position = Utils::Lerp(m_camera.position, GetComponent<Transform>(players[0]).position, 0.05f);
+	m_camera.Update(*this);
+	
 	m_timerSystem.UpdateTimers(*this);
 	m_playerSystem.UpdatePlayers(*this);
+	m_zombieSystem.UpdateZombies(*this);
 	m_bombSystem.UpdateBombs(*this);
 
 	m_physicsSystem.UpdatePosition(*this);
 	m_physicsSystem.UpdateCollision(*this, GetEntities<Physics, DamageField>(), GetEntities<Physics, Health>());
-	m_physicsSystem.UpdateCollision(*this, GetEntities<Player>(), GetEntities<Bomb>());
-	m_physicsSystem.UpdateCollision(*this, GetEntities<Player>(), GetEntities<Wall>());
-	
+	m_physicsSystem.UpdateCollision(*this, players, walls);
+	m_physicsSystem.UpdateCollision(*this, zombies, walls);
+	m_physicsSystem.UpdateCollision(*this, players, GetEntities<Bomb>());
+	m_physicsSystem.UpdateCollision(*this, players, zombies);
 
 	DeleteQueuedEntities();
 

@@ -9,15 +9,12 @@
 
 void UI::Render(Scene& scene)
 {
-	//const Health& playerHealth = scene.GetComponent<Health>(m_player);
-	//App::Print(20, 730, ("Health: " + std::to_string(playerHealth)).c_str());
-	std::string s = "";
-	for (Entity e : scene.GetEntities<>()) { s += std::to_string(e) + " "; };
-	App::Print(20, 700, s.c_str());
+	const Health& playerHealth = scene.GetComponent<Health>(m_player);
+	App::Print(20, 730, ("Health: " + std::to_string(playerHealth)).c_str());
 }
 
 void UI::BindPlayer(Scene& scene, Entity player)
 {
-	//m_player = player;
+	m_player = player;
 }
 
