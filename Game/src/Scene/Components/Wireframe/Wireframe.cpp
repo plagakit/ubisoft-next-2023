@@ -3,5 +3,9 @@
 #include "Wireframe.h"
 
 Wireframe::Wireframe() :
-	r(255), g(255), b(255)
+	color(Colors::WHITE)
+{}
+
+Wireframe::Wireframe(Color _color) :
+	color(_color)
 {}

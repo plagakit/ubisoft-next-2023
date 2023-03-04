@@ -188,6 +188,7 @@
     <ClInclude Include="include\App\TextureLoader.h" />
     <ClInclude Include="include\stdafx.h" />
     <ClInclude Include="include\targetver.h" />
+    <ClInclude Include="src\Core\Color\Color.h" />
     <ClInclude Include="src\Scene\Camera\Camera.h" />
     <ClInclude Include="src\Scene\Components\Bomb\Bomb.h" />
     <ClInclude Include="src\Scene\Components\DamageField\DamageField.h" />
@@ -221,6 +222,7 @@
     <ClCompile Include="include\App\SimpleSound.cpp" />
     <ClCompile Include="include\App\SimpleSprite.cpp" />
     <ClCompile Include="include\App\TextureLoader.cpp" />
+    <ClCompile Include="src\Core\Color\Color.cpp" />
     <ClCompile Include="src\Scene\Camera\Camera.cpp" />
     <ClCompile Include="src\Scene\Components\Bomb\Bomb.cpp" />
     <ClCompile Include="src\Scene\Components\DamageField\DamageField.cpp" />

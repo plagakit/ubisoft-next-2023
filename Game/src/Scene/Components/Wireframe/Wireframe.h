@@ -3,12 +3,14 @@
 #include <stdafx.h>
 
 #include "Core/Vector2/Vector2.h"
+#include "Core/Color/Color.h"
 
 struct Wireframe {
 
 	std::vector<Vector2> points;
-	unsigned char r, g, b;
+	Color color;
 
 	Wireframe();
+	Wireframe(Color col);
 
 };

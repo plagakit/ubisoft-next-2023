@@ -40,8 +40,7 @@ void BombSystem::CreateBomb(Scene& scene, Entity player)
 	scene.AddComponent<Timer>(id, Timer(EXPLODE_TIME, true, true));
 
 	// Red wireframe circle w/ radius 30 and 16 segments
-	Wireframe wf = Wireframe();
-	wf.r = 255; wf.b = 0; wf.g = 0;
+	Wireframe wf = Wireframe(Color(Colors::RED));
 	std::vector<Vector2> points;
 	for (float a = 0; a <= 2 * PI; a += 2 * PI / 16)
 		points.push_back(Vector2(cosf(a) * 25, sinf(a) * 25));
@@ -91,8 +90,7 @@ void BombSystem::CreateExplosionParticle(Scene& scene, Vector2 pos)
 	ph.angularVelocity = Utils::RandFloat(BOMB_PARTICLE_ROTATION_SPEED);
 	scene.AddComponent<Physics>(id, ph);
 
-	Wireframe wf = Wireframe();
-	wf.r = 255; wf.b = 0; wf.g = 0;
+	Wireframe wf = Wireframe(Color(Colors::RED));
 	wf.points = { Vector2(0, -4.0f), Vector2(0, 4.0f) };
 	scene.AddComponent<Wireframe>(id, wf);
 
@@ -112,8 +110,7 @@ void BombSystem::CreateExplosionHitbox(Scene& scene, float width, float height, 
 
 	float w = width / 2;
 	float h = height / 2;
-	Wireframe wf = Wireframe();
-	wf.r = 255; wf.g = 0; wf.b = 0;
+	Wireframe wf = Wireframe(Color(Colors::RED));
 	wf.points = { Vector2(-w, -h), Vector2(w, -h), Vector2(w, h), Vector2(-w, h) };
 	scene.AddComponent<Wireframe>(hitbox, wf);
 }

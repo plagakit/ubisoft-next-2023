@@ -92,7 +92,7 @@ void RenderSystem::RenderWireframe(Scene& scene, Entity id)
     Transform& tf = scene.GetComponent<Transform>(id);
     Wireframe& wf = scene.GetComponent<Wireframe>(id);
 
-    DrawWireframe(scene.GetCamera(), tf, wf.points, wf.r, wf.g, wf.b);
+    DrawWireframe(scene.GetCamera(), tf, wf.points, wf.color.r, wf.color.g, wf.color.b);
 
 }
 
