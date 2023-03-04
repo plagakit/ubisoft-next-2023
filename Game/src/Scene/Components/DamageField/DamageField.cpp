@@ -10,8 +10,10 @@ DamageField::DamageField(int _damage) :
 // If already hit or max hits reached, returns false
 bool DamageField::TryHit(Entity id)
 {
-	return std::find(alreadyHit.begin(), alreadyHit.end(), id) != alreadyHit.end()
-		|| AddHit(id); 
+	if (std::find(alreadyHit.begin(), alreadyHit.end(), id) == alreadyHit.end())
+		return AddHit(id);
+	else
+		return false;
 }
 
 // Adds the entity to the hit list, returning false if the hit list is full

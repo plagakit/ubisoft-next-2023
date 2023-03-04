@@ -214,6 +214,7 @@
     <ClInclude Include="src\Scene\Systems\TimerSystem\TimerSystem.h" />
     <ClInclude Include="src\Core\Vector2\Vector2.h" />
     <ClInclude Include="src\Core\Delegate\Delegate.h" />
+    <ClInclude Include="src\Scene\UI\UI.h" />
     <ClInclude Include="src\Utils\Utils.h" />
   </ItemGroup>
   <ItemGroup>
@@ -245,6 +246,7 @@
     <ClCompile Include="src\Scene\Systems\BombSystem\BombSystem.cpp" />
     <ClCompile Include="src\Scene\Systems\HealthSystem\HealthSystem.cpp" />
     <ClCompile Include="src\Scene\Systems\ParticleSystem\ParticleSystem.cpp" />
+    <ClCompile Include="src\Scene\UI\UI.cpp" />
     <ClCompile Include="src\UnitTests\ECSTest.cpp" />
     <ClCompile Include="src\Scene\Scene.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>

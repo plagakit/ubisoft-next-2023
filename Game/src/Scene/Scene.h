@@ -5,6 +5,7 @@
 #include "Camera/Camera.h"
 #include "Core/ContiguousArray/ContiguousArray.h"
 #include "Core/Signal/Signal.h"
+#include "UI/UI.h"
 
 #include "Systems/RenderSystem/RenderSystem.h"
 #include "Systems/PhysicsSystem/PhysicsSystem.h"
@@ -18,6 +19,7 @@ class Scene {
 
 public:
 	const Entity MAX_ENTITIES = 10000;
+	const Entity NULL_ENTITY = 0;
 	float m_deltaTime = 0;
 
 	Signal<> s_EntityDeleted;
@@ -114,6 +116,7 @@ private:
 
 	// Misc
 	Camera m_camera;
+	UI m_ui;
 
 	// Gameplay
 	Entity m_player;
