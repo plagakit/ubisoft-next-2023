@@ -26,6 +26,8 @@ void RenderSystem::Render(Scene& scene)
 
     for (Entity id : scene.GetEntities<Transform, Wireframe>())
         RenderWireframe(scene, id);
+
+    App::Print(10, 50, std::to_string(scene.GetCount()).c_str());
 }
 
 void RenderSystem::RenderSprite(Scene& scene, Entity id)
