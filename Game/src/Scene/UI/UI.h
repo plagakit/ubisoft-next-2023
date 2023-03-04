@@ -10,6 +10,7 @@ public:
 	void Render(Scene& scene);
 
 	void BindPlayer(Scene& scene, Entity player);
+	void OnEntityDeleted(Scene& scene, Entity player);
 
 private:
 	Entity m_player;

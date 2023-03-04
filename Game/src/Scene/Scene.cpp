@@ -26,20 +26,12 @@ Scene::Scene()
 
 	for (Entity i = 0; i < MAX_ENTITIES; i++)
 		m_availableEntities.push_back(i);
-}
 
-
-void Scene::Init()
-{
-	// Initialize entities
-	m_count = 0;
-	m_entities.clear();
-	m_availableEntities.clear();
-
-	for (Entity i = 0; i < MAX_ENTITIES; i++)
-		m_availableEntities.push_back(i);
-	
 	// Initialize components
+	m_typeCount = 0;
+	m_componentArrays.clear();
+	m_componentTypes.clear();
+	m_removeComponentFunctions.clear();
 	CreateComponentArray<Transform>();
 	CreateComponentArray<Sprite>();
 	CreateComponentArray<Timer>();
@@ -67,6 +59,28 @@ void Scene::Init()
 
 	m_bombSystem.s_BombExploded.Connect<PlayerSystem, &PlayerSystem::OnBombExplode>(&m_playerSystem);
 	m_bombSystem.s_BombExploded.Connect<Camera, &Camera::StartShake>(&m_camera);
+
+	m_healthSystem.s_Died.Connect<PlayerSystem, &PlayerSystem::OnDied>(&m_playerSystem);
+}
+
+
+void Scene::Init()
+{
+	// Initialize entities
+	for (Entity id : m_entities)
+		QueueDelete(id);
+	DeleteQueuedEntities();
+
+	m_count = 0;
+	m_entities.clear();
+	m_availableEntities.clear();
+	m_deleteQueue.clear();
+
+	for (Entity i = 0; i < MAX_ENTITIES; i++)
+		m_availableEntities.push_back(i);
+
+	// Initialize misc
+	m_camera = Camera();
 
 	// Since entities are unsigned, we can make 0 the "null entity". Any system that needs null entities can use 0!
 	CreateEntity();
@@ -114,6 +128,10 @@ void Scene::Update(float deltaTime)
 	
 
 	DeleteQueuedEntities();
+
+	// If player(s) are dead, restart scene
+	if (GetEntities<Player>().size() <= 0)
+		Init();
 }
 
 void Scene::Render()

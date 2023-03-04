@@ -7,7 +7,7 @@
 #include "UnitTests/ECSTest.cpp"
 #include "UnitTests/Vector2Test.cpp"
 
-std::shared_ptr<Scene> current_scene;
+std::shared_ptr<Scene> current_scene = nullptr;
 
 void Init() 
 {
@@ -21,18 +21,6 @@ void Init()
 void Update(float deltaTime)
 {
 	current_scene->Update(deltaTime);
-
-	/*
-	if (App::GetController().GetLeftThumbStickX() > 0.5f)
-	if (App::GetController().GetLeftThumbStickX() < -0.5f)
-	if (App::GetController().GetLeftThumbStickY() > 0.5f)
-	if (App::GetController().GetLeftThumbStickY() < -0.5f)
-	if (App::GetController().CheckButton(XINPUT_GAMEPAD_DPAD_UP, false))
-	if (App::GetController().CheckButton(XINPUT_GAMEPAD_DPAD_DOWN, false))
-	if (App::GetController().CheckButton(XINPUT_GAMEPAD_DPAD_LEFT, false))
-	if (App::GetController().CheckButton(XINPUT_GAMEPAD_DPAD_RIGHT, false))
-	if (App::GetController().CheckButton(XINPUT_GAMEPAD_A, true))
-	*/
 }
 
 

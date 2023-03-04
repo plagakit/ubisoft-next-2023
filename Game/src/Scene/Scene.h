@@ -32,7 +32,6 @@ public:
 	void Update(float deltaTime);
 	void Render();
 
-
 	// Entity methods
 
 	Entity GetCount();
@@ -164,7 +163,6 @@ void Scene::CreateComponentArray()
 {
 	const std::type_info& type = typeid(T);
 
-	// If there already was a shared pointer here, it goes out of scope and the contiguous array is deleted! :D
 	m_componentArrays[type] = std::make_shared<ContiguousArray<T>>();
 	m_componentTypes[type] = m_typeCount;
 

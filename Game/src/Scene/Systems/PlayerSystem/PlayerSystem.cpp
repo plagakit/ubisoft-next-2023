@@ -128,3 +128,11 @@ void PlayerSystem::OnTrigger(Scene& scene, Entity id1, Entity id2)
 			KickBomb(scene, id1, id2);
 	}
 }
+
+void PlayerSystem::OnDied(Scene& scene, Entity id)
+{
+	if (scene.HasComponent<Player>(id))
+	{
+		scene.QueueDelete(id);
+	}
+}
