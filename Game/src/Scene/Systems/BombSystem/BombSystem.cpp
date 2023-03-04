@@ -36,13 +36,8 @@ void BombSystem::CreateBomb(Scene& scene, Entity player)
 {
 	Entity id = scene.CreateEntity();
 
-	Transform tf = Transform();
-	tf.position = scene.GetComponent<Transform>(player).position;
-	scene.AddComponent<Transform>(id, tf);
-
-	Timer tm = Timer(EXPLODE_TIME);
-	tm.Start();
-	scene.AddComponent<Timer>(id, tm);
+	scene.AddComponent<Transform>(id, Transform(scene.GetComponent<Transform>(player).position));
+	scene.AddComponent<Timer>(id, Timer(EXPLODE_TIME, true, true));
 
 	// Red wireframe circle w/ radius 30 and 16 segments
 	Wireframe wf = Wireframe();
