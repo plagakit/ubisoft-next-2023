@@ -61,10 +61,16 @@ void BombSystem::ExplodeBomb(Scene& scene, Entity bomb)
 
 	switch (bombData.type)
 	{
+
 	case Bomb::CROSS:
-		CreateExplosionHitbox(scene, EXPLOSION_SIZE, EXPLOSION_SIZE*5, bombPos, DamageField(DEFAULT_DAMAGE));
-		CreateExplosionHitbox(scene, EXPLOSION_SIZE*5, EXPLOSION_SIZE, bombPos, DamageField(DEFAULT_DAMAGE));
+		CreateExplosionHitbox(scene, EXPLOSION_SIZE, EXPLOSION_SIZE * 5, bombPos, DamageField(DEFAULT_DAMAGE));
+		CreateExplosionHitbox(scene, EXPLOSION_SIZE * 5, EXPLOSION_SIZE, bombPos, DamageField(DEFAULT_DAMAGE));
 		break;
+
+	case Bomb::BIG:
+		CreateExplosionHitbox(scene, EXPLOSION_SIZE * 4, EXPLOSION_SIZE * 4, bombPos, DamageField(DEFAULT_DAMAGE * 3));
+		break;
+
 	}
 	
 	for (int i = 0; i < BOMB_PARTICLE_COUNT; i++)
