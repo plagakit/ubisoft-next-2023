@@ -44,7 +44,7 @@ void BombSystem::CreateBomb(Scene& scene, Entity player)
 	wf.r = 255; wf.b = 0; wf.g = 0;
 	std::vector<Vector2> points;
 	for (float a = 0; a <= 2 * PI; a += 2 * PI / 16)
-		points.push_back(Vector2(cosf(a) * 30, sinf(a) * 30));
+		points.push_back(Vector2(cosf(a) * 25, sinf(a) * 25));
 	wf.points = points;
 	scene.AddComponent<Wireframe>(id, wf);
 	
@@ -62,27 +62,23 @@ void BombSystem::ExplodeBomb(Scene& scene, Entity bomb)
 	switch (bombData.type)
 	{
 	case Bomb::CROSS:
-		CreateExplosionHitbox(scene, 40, 240, bombPos, DamageField(DEFAULT_DAMAGE));
-		CreateExplosionHitbox(scene, 240, 40, bombPos, DamageField(DEFAULT_DAMAGE));
+		CreateExplosionHitbox(scene, EXPLOSION_SIZE, EXPLOSION_SIZE*5, bombPos, DamageField(DEFAULT_DAMAGE));
+		CreateExplosionHitbox(scene, EXPLOSION_SIZE*5, EXPLOSION_SIZE, bombPos, DamageField(DEFAULT_DAMAGE));
 		break;
 	}
 	
-	
-	for (int i = 0; i < 50; i++)
-		CreateExplosionParticle(scene, bomb);
+	for (int i = 0; i < BOMB_PARTICLE_COUNT; i++)
+		CreateExplosionParticle(scene, bombPos);
 	
 	s_BombExploded.Emit(scene, bomb);
 	scene.QueueDelete(bomb);
 }
 
-void BombSystem::CreateExplosionParticle(Scene& scene, Entity bomb)
+void BombSystem::CreateExplosionParticle(Scene& scene, Vector2 pos)
 {
-	const Transform& btf = scene.GetComponent<Transform>(bomb);
 	Entity id = scene.CreateEntity();
 
-	Transform tf = Transform();
-	tf.position = btf.position;
-	scene.AddComponent<Transform>(id, tf);
+	scene.AddComponent<Transform>(id, Transform(pos));
 
 	Physics ph = Physics(Physics::KINEMATIC);
 	ph.velocity = Utils::RandUnitCircleVector() * Utils::RandFloat(BOMB_PARTICLE_SPEED);
@@ -98,7 +94,7 @@ void BombSystem::CreateExplosionParticle(Scene& scene, Entity bomb)
 	scene.AddComponent<Particle>(id, 0);
 }
 
-void BombSystem::CreateExplosionHitbox(Scene& scene, int width, int height, Vector2 pos, const DamageField& damage)
+void BombSystem::CreateExplosionHitbox(Scene& scene, float width, float height, Vector2 pos, const DamageField& damage)
 {
 	Entity hitbox = scene.CreateEntity();
 	scene.AddComponent<Transform>(hitbox, Transform(pos));
@@ -107,6 +103,13 @@ void BombSystem::CreateExplosionHitbox(Scene& scene, int width, int height, Vect
 	scene.AddComponent<Timer>(hitbox, Timer(DEFAULT_EXPLOSION_DURATION, true, true));
 	scene.AddComponent<Particle>(hitbox, 0);
 	scene.AddComponent<DamageField>(hitbox, damage);
+
+	float w = width / 2;
+	float h = height / 2;
+	Wireframe wf = Wireframe();
+	wf.r = 255; wf.g = 0; wf.b = 0;
+	wf.points = { Vector2(-w, -h), Vector2(w, -h), Vector2(w, h), Vector2(-w, h) };
+	scene.AddComponent<Wireframe>(hitbox, wf);
 }
 
 
