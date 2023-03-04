@@ -12,6 +12,7 @@
 #include "Systems/PlayerSystem/PlayerSystem.h"
 #include "Systems/BombSystem/BombSystem.h"
 #include "Systems/ParticleSystem/ParticleSystem.h"
+#include "Systems/HealthSystem/HealthSystem.h"
 
 class Scene {
 
@@ -109,6 +110,7 @@ private:
 	ParticleSystem m_particleSystem;
 	PlayerSystem m_playerSystem;
 	BombSystem m_bombSystem;
+	HealthSystem m_healthSystem;
 
 	// Misc
 	Camera m_camera;

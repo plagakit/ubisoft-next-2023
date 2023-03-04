@@ -81,6 +81,9 @@ void Scene::Init()
 	m_timerSystem.s_TimerDone.Connect<PlayerSystem, &PlayerSystem::OnTimerDone>(&m_playerSystem);
 	m_timerSystem.s_TimerDone.Connect<BombSystem, &BombSystem::OnTimerDone>(&m_bombSystem);
 
+	m_physicsSystem.s_onCollision.Connect<HealthSystem, &HealthSystem::OnCollision>(&m_healthSystem);
+
+	m_physicsSystem.s_onTrigger.Connect<HealthSystem, &HealthSystem::OnTrigger>(&m_healthSystem);
 	m_physicsSystem.s_onTrigger.Connect<PlayerSystem, &PlayerSystem::OnTrigger>(&m_playerSystem);
 
 	m_playerSystem.s_PlacedBomb.Connect<BombSystem, &BombSystem::CreateBomb>(&m_bombSystem);
@@ -107,6 +110,7 @@ void Scene::Update(float deltaTime)
 	m_physicsSystem.UpdatePosition(*this);
 	m_physicsSystem.UpdateCollision(*this, GetEntities<Player>(), GetEntities<Bomb>());
 	m_physicsSystem.UpdateCollision(*this, GetEntities<Player>(), GetEntities<Wall>());
+	m_physicsSystem.UpdateCollision(*this, GetEntities<Physics, DamageField>(), GetEntities<Physics, Health>());
 
 	DeleteQueuedEntities();
 }

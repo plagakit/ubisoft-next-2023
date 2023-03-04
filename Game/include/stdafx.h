@@ -12,16 +12,22 @@
 
 
 // TODO: reference additional headers your program requires here
+// essential
 #include <string>
 #include <math.h>
-#include <unordered_map>
 #include <assert.h>
-#include <bitset>
-#include <typeindex>
-#include <queue>
-#include <memory>
-#include <algorithm>
 #include <random>
+
+// containers
+#include <unordered_map>
+#include <array>
+#include <bitset>
+#include <queue>
+
+// ecs
+#include <memory>
+#include <typeindex>
+#include <algorithm>
 
 #include "App\app.h"
 

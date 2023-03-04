@@ -12,6 +12,7 @@
 #include "Scene/Components/Timer/Timer.h"
 #include "Scene/Components/CircleBounds/CircleBounds.h"
 #include "Scene/Components/Bomb/Bomb.h"
+#include "Scene/Components/PrimitiveComponents.h"
 
 
 void PlayerSystem::CreatePlayer(Scene& scene, Entity id)
@@ -31,6 +32,7 @@ void PlayerSystem::CreatePlayer(Scene& scene, Entity id)
 	scene.AddComponent<CircleBounds>(id, CircleBounds(20));
 	scene.AddComponent<Timer>(id, Timer(KICK_TIME));
 	scene.AddComponent<Player>(id, Player());
+	scene.AddComponent<Health>(id, DEFAULT_HEALTH);
 }
 
 void PlayerSystem::UpdatePlayers(Scene& scene)

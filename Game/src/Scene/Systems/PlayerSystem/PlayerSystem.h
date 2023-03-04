@@ -7,6 +7,7 @@ class Scene;
 
 class PlayerSystem {
 
+	const int DEFAULT_HEALTH = 1; // dies instantly
 	const float ACCELERATION = 25.0f;
 	const float WALK_SPEED = 100.0f;
 	const float KICK_TIME = 0.25f;

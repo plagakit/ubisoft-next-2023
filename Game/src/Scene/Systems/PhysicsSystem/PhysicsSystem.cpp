@@ -27,9 +27,9 @@ void PhysicsSystem::UpdatePosition(Scene& scene)
 }
 
 // Detects collision between two entities and moves them according to their 
-// Physics parameters. Both objects are modified, and the onCollision and
-// onTrigger signal is emitted twice. Ensure that both entities has a Transform 
-// & Physics component.
+// Physics parameters. Both objects are modified, and the onCollision or
+// onTrigger signal is emitted if there is a collision. Ensure that both entities 
+// have a Transform & Physics component.
 void PhysicsSystem::UpdateCollision(Scene& scene, Entity one, Entity two)
 {
 	bool collision = false;
@@ -178,9 +178,7 @@ void PhysicsSystem::UpdateCollision(Scene& scene, Entity one, Entity two)
 }
 
 // Detects collision between two groups of entities and moves them according to their 
-// Physics parameters. Modifies both entities, and so the onCollision/onTrigger signal 
-// is emitted twice for each pair of entities. Ensure that every entity has a Transform 
-// & Physics component.
+// Physics parameters.Ensure that every entity has a Transform & Physics component.
 void PhysicsSystem::UpdateCollision(Scene& scene, std::vector<Entity> group1, std::vector<Entity> group2)
 {
 	for (Entity i : group1)
