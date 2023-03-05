@@ -122,7 +122,9 @@ void Scene::Init()
 
 	m_spawnZombieTimer = CreateEntity();
 	AddComponent<Timer>(m_spawnZombieTimer, Timer(ZOMBIE_SPAWN_TIME, false));
+	m_zombieWalkSpeed = ZombieSystem::DEFAULT_WALK_SPEED;
 
+	m_combo = 0;
 	m_comboTimer = CreateEntity();
 	AddComponent<Timer>(m_comboTimer, Timer(COMBO_TIME));
 
@@ -298,16 +300,13 @@ void Scene::IncrementWave()
 {
 	m_waveNum++;
 
-	// # of zombies per wave = 10 + x + 1/4*x^2
-	m_zombiesSpawnCount = 10 + m_waveNum + (m_waveNum * m_waveNum) / 4;
+	// # of zombies per wave = 10 + x + 1/2*x^2
+	m_zombiesSpawnCount = 10 + m_waveNum + (m_waveNum * m_waveNum) / 2;
 	m_zombiesLeftToSpawn = m_zombiesSpawnCount;
 
 	Timer tm = GetComponent<Timer>(m_spawnZombieTimer);
 	tm.Start();
 	SetComponent<Timer>(m_spawnZombieTimer, tm);
-
-	// Test spawn 1 zombie
-	m_zombieSystem.CreateZombie(*this, Vector2(-200, 500));
 }
 
 void Scene::TrySpawnZombie()

@@ -44,7 +44,7 @@ public:
 	static constexpr float RESTART_SCENE_TIME = 3.0f;
 	Entity m_restartSceneTimer;
 	
-	static constexpr float ZOMBIE_WALK_SPEED_INCREMENT = 1.0f;
+	static constexpr float ZOMBIE_WALK_SPEED_INCREMENT = 3.0f;
 	static constexpr float ZOMBIE_SPAWN_RADIUS = 1000.0f;
 	static constexpr float ZOMBIE_SPAWN_TIME = 0.25f;
 	int m_zombiesSpawnCount = 0;
