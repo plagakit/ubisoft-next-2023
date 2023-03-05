@@ -30,9 +30,6 @@ Scene::Scene()
 
 	// Initialize components
 	m_typeCount = 0;
-	m_componentArrays.clear();
-	m_componentTypes.clear();
-	m_removeComponentFunctions.clear();
 	CreateComponentArray<Transform>();
 	CreateComponentArray<Sprite>();
 	CreateComponentArray<Timer>();
@@ -48,6 +45,9 @@ Scene::Scene()
 	CreateComponentArray<Particle>();
 
 	// Bind systems
+	s_EntityDeleted.Connect<UI, &UI::OnEntityDeleted>(&m_ui);
+
+	m_timerSystem.s_TimerDone.Connect<Scene, &Scene::OnTimerDone>(this);
 	m_timerSystem.s_TimerDone.Connect<ParticleSystem, &ParticleSystem::OnTimerDone>(&m_particleSystem);
 	m_timerSystem.s_TimerDone.Connect<PlayerSystem, &PlayerSystem::OnTimerDone>(&m_playerSystem);
 	m_timerSystem.s_TimerDone.Connect<BombSystem, &BombSystem::OnTimerDone>(&m_bombSystem);
@@ -59,6 +59,8 @@ Scene::Scene()
 	m_physicsSystem.s_Trigger.Connect<BombSystem, &BombSystem::OnTrigger>(&m_bombSystem);
 
 	m_playerSystem.s_PlacedBomb.Connect<BombSystem, &BombSystem::CreateBomb>(&m_bombSystem);
+
+	m_zombieSystem.s_ZombieDied.Connect<Scene, &Scene::OnZombieDied>(this);
 
 	m_bombSystem.s_BombExploded.Connect<PlayerSystem, &PlayerSystem::OnBombExplode>(&m_playerSystem);
 	m_bombSystem.s_BombExploded.Connect<Camera, &Camera::StartShake>(&m_camera);
@@ -110,16 +112,26 @@ void Scene::Init()
 	CreateWall(Vector2(0, -300), 300, 100);
 	CreateWall(Vector2(0, 300), 300, 100);
 
-	restartSceneTimer = Timer(RESTART_SCENE_TIME);
+	m_points = 0;
+	m_waveNum = 0;
 
+	restartSceneTimer = CreateEntity();
+	AddComponent<Timer>(restartSceneTimer, Timer(RESTART_SCENE_TIME));
+
+	spawnZombieTimer = CreateEntity();
+	AddComponent<Timer>(spawnZombieTimer, Timer(ZOMBIE_SPAWN_TIME, false));
+
+	IncrementWave();
 	//for (float i = 0; i < 100; i++)
-	//	m_zombieSystem.CreateZombie(*this, Vector2(i, 500));
+	//	m_zombieSystem.CreateZombie(*this, Utils::RandUnitCircleVector() * 1000.0f);
+	//m_zombieSystem.CreateZombie(*this, Vector2(0, 100));
 }
 
 void Scene::Update(float deltaTime)
 {	
-	m_deltaTime = deltaTime / 1000.0f; // deltaTime is in seconds, we want milliseconds
-	
+	m_rawDeltaTime = deltaTime / 1000.0f; // deltaTime is in seconds, we want milliseconds
+	m_smoothDeltaTime = Utils::Lerp(m_smoothDeltaTime, m_rawDeltaTime, DT_SMOOTHING);
+
 	auto const& players = GetEntities<Player>();
 	auto const& zombies = GetEntities<Zombie>();
 	auto const& walls = GetEntities<Wall>();
@@ -128,12 +140,12 @@ void Scene::Update(float deltaTime)
 	// If player(s) are dead, restart scene
 	if (players.size() <= 0)
 	{
-		if (restartSceneTimer.isRunning)
-		{
-			if (restartSceneTimer.elapsed > RESTART_SCENE_TIME) { Init(); }
-			else { restartSceneTimer.elapsed += m_deltaTime; }
-		}
-		else { restartSceneTimer.Start(); }
+		Timer tm = GetComponent<Timer>(restartSceneTimer);
+		if (tm.done)
+			Init();
+		else if (!tm.isRunning)
+			tm.Start();
+		SetComponent<Timer>(restartSceneTimer, tm);
 	}
 	else
 	{
@@ -141,6 +153,13 @@ void Scene::Update(float deltaTime)
 		m_camera.position = Utils::Lerp(m_camera.position, GetComponent<Transform>(players[0]).position, 0.05f);
 		m_camera.Update(*this);
 	}
+
+	// Check if all zombies are defeated and theres none left to spawn
+	if (m_zombiesLeftToSpawn <= 0 && zombies.size() <= 0)
+	{
+		IncrementWave();
+	}
+
 
 	m_timerSystem.UpdateTimers(*this);
 	m_playerSystem.UpdatePlayers(*this);
@@ -152,7 +171,8 @@ void Scene::Update(float deltaTime)
 	m_physicsSystem.UpdateCollision(*this, zombies, walls);
 	m_physicsSystem.UpdateCollision(*this, bombs, walls);
 	m_physicsSystem.UpdateCollision(*this, players, bombs);
-	m_physicsSystem.UpdateCollision(*this, GetEntities<Physics, DamageField>(), GetEntities<Physics, Health>());
+	m_physicsSystem.UpdateCollision(*this, zombies, players);
+	m_physicsSystem.UpdateCollision(*this, GetEntities<Physics, DamageField, Particle>(), GetEntities<Physics, Health>());
 
 	DeleteQueuedEntities();
 }
@@ -231,11 +251,6 @@ void Scene::DeleteQueuedEntities()
 	}
 }
 
-float Scene::AvailableEntitiesPercent()
-{
-	return 1 - float(m_count) / MAX_ENTITIES;
-}
-
 
 // Component methods
 
@@ -267,4 +282,45 @@ Entity Scene::CreateWall(Vector2 pos, float width, float height)
 	AddComponent<Wall>(wall, 0);
 
 	return wall;
+}
+
+void Scene::AwardPoints(long amount)
+{
+	m_points += amount;
+}
+
+void Scene::IncrementWave()
+{
+	m_waveNum++;
+
+	// # of zombies per wave = 10 + x + 1/4*x^2
+	m_zombiesSpawnCount = 10 + m_waveNum + (m_waveNum * m_waveNum) / 4;
+	m_zombiesLeftToSpawn = m_zombiesSpawnCount;
+
+	Timer tm = GetComponent<Timer>(spawnZombieTimer);
+	tm.Start();
+	SetComponent<Timer>(spawnZombieTimer, tm);
+}
+
+void Scene::TrySpawnZombie()
+{
+	if (m_zombiesLeftToSpawn > 0)
+	{
+		Vector2 randomPos = Utils::RandUnitCircleVector() * ZOMBIE_SPAWN_RADIUS;
+		m_zombieSystem.CreateZombie(*this, randomPos, m_zombieWalkSpeed);
+		m_zombiesLeftToSpawn--;
+	}
+}
+
+
+
+void Scene::OnTimerDone(Scene& _self, Entity timer)
+{
+	if (timer == spawnZombieTimer)
+		TrySpawnZombie();
+}
+
+void Scene::OnZombieDied(Scene& _self, Entity zombie)
+{
+	AwardPoints((m_waveNum + 1) * (100 + Utils::RandInt(-20, 50)));
 }

@@ -11,6 +11,6 @@ struct Zombie {
 
 	float danceAnim;
 
-	Zombie();
+	Zombie(float walkSpeed);
 
 };

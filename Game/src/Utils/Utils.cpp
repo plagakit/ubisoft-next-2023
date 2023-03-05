@@ -31,6 +31,18 @@ Vector2 Utils::Lerp(const Vector2& a, const Vector2& b, float t)
 	return a + (b - a) * t;
 }
 
+int Utils::RandInt(int min, int max)
+{
+	static std::mt19937 gen((unsigned int)std::time(nullptr));
+	std::uniform_int_distribution<> dis(min, max);
+	return dis(gen);
+}
+
+int Utils::RandInt(std::pair<int, int> range)
+{
+	return RandInt(range.first, range.second);
+}
+
 float Utils::RandFloat(float min, float max)
 {
 	static std::mt19937 gen((unsigned int)std::time(nullptr));

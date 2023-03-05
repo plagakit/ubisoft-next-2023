@@ -11,7 +11,7 @@ void HealthSystem::ExecuteDamage(Scene& scene, Entity attacker, Entity target)
 	DamageField df = scene.GetComponent<DamageField>(attacker);
 	Health hp = scene.GetComponent<Health>(target);
 
-	Signature sig = scene.GetSignature(target);
+	const Signature sig = scene.GetSignature(target);
 	if (df.TryHit(target, sig))
 	{
 		hp -= df.damage;
@@ -20,7 +20,7 @@ void HealthSystem::ExecuteDamage(Scene& scene, Entity attacker, Entity target)
 			s_Died.Emit(scene, target);
 	}
 
-	scene.SetComponent<DamageField>(target, df);
+	scene.SetComponent<DamageField>(attacker, df);
 	scene.SetComponent<Health>(target, hp);
 }
 

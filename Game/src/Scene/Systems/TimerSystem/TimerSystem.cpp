@@ -15,7 +15,7 @@ void TimerSystem::UpdateTimers(Scene& scene)
 		if (!t.isRunning)
 			continue;
 
-		t.elapsed += scene.m_deltaTime;
+		t.elapsed += scene.m_smoothDeltaTime;
 
 		if (t.elapsed > t.duration)
 		{

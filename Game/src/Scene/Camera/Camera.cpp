@@ -16,7 +16,7 @@ void Camera::Update(Scene& scene)
 {
 	if (shaking)
 	{
-		shakeTimer.elapsed += scene.m_deltaTime;
+		shakeTimer.elapsed += scene.m_smoothDeltaTime;
 
 		if (shakeTimer.elapsed > shakeTimer.duration)
 		{

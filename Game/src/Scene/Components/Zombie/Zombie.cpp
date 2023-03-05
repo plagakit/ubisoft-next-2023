@@ -2,6 +2,6 @@
 
 #include "Zombie.h"
 
-Zombie::Zombie() :
-	walkSpeed(40.0f), danceAnim(0.0f)
+Zombie::Zombie(float _walkSpeed) :
+	walkSpeed(_walkSpeed), danceAnim(0.0f)
 {}

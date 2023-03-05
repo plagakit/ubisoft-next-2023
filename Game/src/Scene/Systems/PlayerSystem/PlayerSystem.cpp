@@ -26,10 +26,10 @@ void PlayerSystem::UpdatePlayers(Scene& scene)
 		Timer kickTimer = scene.GetComponent<Timer>(id);
 
 		// Input
-		bool up = App::GetController().CheckButton(XINPUT_GAMEPAD_DPAD_UP, false);
-		bool down = App::GetController().CheckButton(XINPUT_GAMEPAD_DPAD_DOWN, false);
-		bool left = App::GetController().CheckButton(XINPUT_GAMEPAD_DPAD_LEFT, false);
-		bool right = App::GetController().CheckButton(XINPUT_GAMEPAD_DPAD_RIGHT, false);
+		bool up = App::GetController().CheckButton(XINPUT_GAMEPAD_DPAD_UP, false) || App::IsKeyPressed('I');
+		bool down = App::GetController().CheckButton(XINPUT_GAMEPAD_DPAD_DOWN, false) || App::IsKeyPressed('K');
+		bool left = App::GetController().CheckButton(XINPUT_GAMEPAD_DPAD_LEFT, false) || App::IsKeyPressed('J');
+		bool right = App::GetController().CheckButton(XINPUT_GAMEPAD_DPAD_RIGHT, false) || App::IsKeyPressed('L');
 		
 		// For some reason, XINPUT_GAMEPAD_A/B can't be triggered on my keyboard, so I check for Z and X instead
 		bool placeBomb = App::GetController().CheckButton(XINPUT_GAMEPAD_A, true) || App::IsKeyPressed('Z');
@@ -90,17 +90,17 @@ Entity PlayerSystem::CreatePlayer(Scene& scene, Vector2 pos)
 
 	Wireframe wf = Wireframe(Color(Colors::LIGHT_BLUE));
 	wf.points = {
-		Vector2(-20, -20), // bottom left corner
-		Vector2(20, -20), // bottom right corner
-		Vector2(20, 0), // top right corner
-		Vector2(0, 20), // head
-		Vector2(-20, 0) // top left corner
+		Vector2(-20, -16), // bottom left corner
+		Vector2(20, -16), // bottom right corner
+		Vector2(20, 4), // top right corner
+		Vector2(0, 24), // head
+		Vector2(-20, 4) // top left corner
 	};
 	scene.AddComponent<Wireframe>(id, wf);
 
 	scene.AddComponent<Transform>(id, Transform(pos));
 	scene.AddComponent<Physics>(id, Physics(Physics::KINEMATIC));
-	scene.AddComponent<CircleBounds>(id, CircleBounds(20));
+	scene.AddComponent<CircleBounds>(id, CircleBounds(17));
 	scene.AddComponent<Timer>(id, Timer(KICK_TIME));
 	scene.AddComponent<Player>(id, Player());
 	scene.AddComponent<Health>(id, DEFAULT_HEALTH);

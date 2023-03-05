@@ -2,6 +2,8 @@
 
 #include "DamageField.h"
 
+#include "Scene/Scene.h"
+
 DamageField::DamageField(int _damage, bool keepTrack) :
 	damage(_damage), keepTrackOfAlreadyHit(keepTrack),
 	hitCount(0), alreadyHit(std::array<Entity, MAX_HIT>())
@@ -9,6 +11,7 @@ DamageField::DamageField(int _damage, bool keepTrack) :
 	// Set it to hit all types of components
 	for (int i = 0; i < MAX_COMPONENT_TYPES; i++)
 		hitSignature.set(i);
+	alreadyHit.fill(Scene::NULL_ENTITY);
 }
 
 // Will check if signatures match, then if the entity is already hit, if not add it to hit list and return true

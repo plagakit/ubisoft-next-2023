@@ -20,9 +20,9 @@ void PhysicsSystem::UpdatePosition(Scene& scene)
 		{
 			Transform tf = scene.GetComponent<Transform>(id);
 			
-			ph.velocity += ph.acceleration * scene.m_deltaTime;
-			tf.position += ph.velocity * scene.m_deltaTime;
-			tf.rotation += ph.angularVelocity * scene.m_deltaTime;
+			ph.velocity += ph.acceleration * scene.m_smoothDeltaTime;
+			tf.position += ph.velocity * scene.m_smoothDeltaTime;
+			tf.rotation += ph.angularVelocity * scene.m_smoothDeltaTime;
 
 			// Reset the collision normal to be updated during UpdateCollision steps
 			ph.collisionNormal = Vector2(0, 0);
@@ -41,10 +41,10 @@ void PhysicsSystem::UpdateCollision(Scene& scene, Entity one, Entity two)
 {
 	
 	bool collision = false;
-	Transform& tf1 = scene.GetComponent<Transform>(one);
-	Physics& ph1 = scene.GetComponent<Physics>(one);
-	Transform& tf2 = scene.GetComponent<Transform>(two);
-	Physics& ph2 = scene.GetComponent<Physics>(two);
+	Transform tf1 = scene.GetComponent<Transform>(one);
+	Transform tf2 = scene.GetComponent<Transform>(two);
+	Physics ph1 = scene.GetComponent<Physics>(one);
+	Physics ph2 = scene.GetComponent<Physics>(two);
 	Vector2 resolution;
 	
 	
@@ -172,9 +172,17 @@ void PhysicsSystem::UpdateCollision(Scene& scene, Entity one, Entity two)
 		if (ph1.isTrigger || ph2.isTrigger) 
 			s_Trigger.Emit(scene, one, two, resolution);
 		else
-		{
 			s_Collision.Emit(scene, one, two, resolution);
 
+		// Update components if they changed during signal emission
+		tf1 = scene.GetComponent<Transform>(one);
+		tf2 = scene.GetComponent<Transform>(two);
+		ph1 = scene.GetComponent<Physics>(one);
+		ph2 = scene.GetComponent<Physics>(two);
+
+
+		if (!ph1.isTrigger && !ph2.isTrigger)
+		{
 			if (ph2.bodyType == Physics::STATIC)
 			{
 				tf1.position += resolution;
@@ -186,6 +194,11 @@ void PhysicsSystem::UpdateCollision(Scene& scene, Entity one, Entity two)
 				tf2.position -= resolution / 2.0f;
 			}
 		}
+
+		scene.SetComponent<Transform>(one, tf1);
+		scene.SetComponent<Transform>(two, tf2);
+		scene.SetComponent<Physics>(one, ph1);
+		scene.SetComponent<Physics>(two, ph2);
 	}
 	
 }

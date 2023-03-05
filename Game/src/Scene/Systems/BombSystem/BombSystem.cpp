@@ -75,7 +75,7 @@ void BombSystem::ExplodeBomb(Scene& scene, Entity bomb)
 
 	}
 	
-	for (int i = 0; i < BOMB_PARTICLE_COUNT * scene.AvailableEntitiesPercent(); i++)
+	for (int i = 0; i < BOMB_PARTICLE_COUNT; i++)
 		CreateExplosionParticle(scene, bombPos);
 	
 	s_BombExploded.Emit(scene, bomb);

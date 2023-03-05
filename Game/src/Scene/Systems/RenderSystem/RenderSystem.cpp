@@ -99,6 +99,7 @@ void RenderSystem::RenderWireframe(Scene& scene, Entity id)
 
 }
 
+#ifdef _DEBUG
 void RenderSystem::RenderPhysicsBounds(Scene& scene)
 {
     for (Entity id : scene.GetEntities<Transform, CircleBounds>())
@@ -150,6 +151,7 @@ void RenderSystem::RenderPhysicsBounds(Scene& scene)
         DrawWireframe(scene.GetCamera(), tf, points, 0, 0, 1.0f);
     }
 }
+#endif
 
 
 void RenderSystem::DrawWireframe(const Camera cam, const Transform tf, const std::vector<Vector2>& points, float r, float g, float b)

@@ -26,8 +26,8 @@ void ZombieSystem::UpdateZombies(Scene& scene)
 			Physics ph = scene.GetComponent<Physics>(id);
 			Zombie zm = scene.GetComponent<Zombie>(id);
 
-			zm.danceAnim += scene.m_deltaTime;
-			tf.rotation += scene.m_deltaTime * 2.0f;
+			zm.danceAnim += scene.m_smoothDeltaTime;
+			tf.rotation += scene.m_smoothDeltaTime * 2.0f;
 			ph.velocity = Vector2(sinf(zm.danceAnim * 5.0f) * 30.0f, -cosf(zm.danceAnim * 5.0f) * 30.0f);
 
 			scene.SetComponent<Transform>(id, tf);
@@ -107,7 +107,7 @@ void ZombieSystem::UpdateZombies(Scene& scene)
 	}
 }
 
-Entity ZombieSystem::CreateZombie(Scene& scene, Vector2 pos)
+Entity ZombieSystem::CreateZombie(Scene& scene, Vector2 pos, float walkSpeed)
 {
 	Entity zomb = scene.CreateEntity();
 
@@ -131,7 +131,7 @@ Entity ZombieSystem::CreateZombie(Scene& scene, Vector2 pos)
 	scene.AddComponent<Physics>(zomb, Physics(Physics::KINEMATIC));
 	scene.AddComponent<BoxBounds>(zomb, BoxBounds(30, 30));
 	scene.AddComponent<Health>(zomb, DEFAULT_HEALTH);
-	scene.AddComponent<Zombie>(zomb, Zombie());
+	scene.AddComponent<Zombie>(zomb, Zombie(walkSpeed));
 
 	return zomb;
 }
@@ -163,10 +163,11 @@ void ZombieSystem::OnDied(Scene& scene, Entity id)
 {
 	if (scene.HasComponent<Zombie>(id))
 	{
-		Vector2 pos = scene.GetComponent<Transform>(id).position;
-		for (int i = 0; i < GUTS_COUNT * scene.AvailableEntitiesPercent(); i++)
-			CreateZombieGutsParticle(scene, pos);
-
+		// Becomes too laggy too quickly :(
+		//Vector2 pos = scene.GetComponent<Transform>(id).position;
+		//for (int i = 0; i < GUTS_COUNT * scene.AvailableEntitiesPercent(); i++)
+		//	CreateZombieGutsParticle(scene, pos);
+		s_ZombieDied.Emit(scene, id);
 		scene.QueueDelete(id);
 	}
 }

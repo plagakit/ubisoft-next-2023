@@ -19,11 +19,48 @@
 class Scene {
 
 public:
-	static const Entity MAX_ENTITIES = 10000;
-	static const Entity NULL_ENTITY = 0;
-	float m_deltaTime = 0;
 
+	// Gameplay
+	
 	Signal<> s_EntityDeleted;
+
+	static constexpr Entity MAX_ENTITIES = 10000;
+	static constexpr Entity NULL_ENTITY = 0;
+
+	static constexpr float DT_SMOOTHING = 0.5f;
+	float m_rawDeltaTime = 0;
+	float m_smoothDeltaTime = 0;
+
+	static constexpr float MAP_BOUNDS_X = 1000.0f;
+	static constexpr float MAP_BOUNDS_Y = 1000.0f;
+	static constexpr float MAP_BOUND_WIDTH = 300.0f;
+	static constexpr float MAP_LONG_WIDTH = MAP_BOUND_WIDTH + MAP_BOUNDS_X * 2;
+	static constexpr float MAP_LONG_HEIGHT = MAP_BOUND_WIDTH + MAP_BOUNDS_Y * 2;
+
+	Entity m_player;
+	long m_points;
+	unsigned int m_waveNum;
+
+	static constexpr float RESTART_SCENE_TIME = 3.0f;
+	Entity restartSceneTimer;
+	
+	static constexpr float ZOMBIE_WALK_SPEED_INCREMENT = 1.0f;
+	static constexpr float ZOMBIE_SPAWN_RADIUS = 1000.0f;
+	static constexpr float ZOMBIE_SPAWN_TIME = 0.25f;
+	int m_zombiesSpawnCount = 0;
+	int m_zombiesLeftToSpawn = 0;
+	float m_zombieWalkSpeed = ZombieSystem::DEFAULT_WALK_SPEED;
+	Entity spawnZombieTimer;
+
+
+	Entity CreateWall(Vector2 pos, float width, float height);
+	void AwardPoints(long amount);
+	void IncrementWave();
+	void TrySpawnZombie();
+
+	void OnTimerDone(Scene& scene, Entity timer);
+	void OnZombieDied(Scene& scene, Entity zombie);
+
 
 	// Scene methods
 
@@ -32,6 +69,7 @@ public:
 	void Init();
 	void Update(float deltaTime);
 	void Render();
+
 
 	// Entity methods
 
@@ -51,9 +89,6 @@ public:
 	void QueueDelete(Entity id);
 
 	void DeleteQueuedEntities();
-
-	// TODO: Remove this method! (replace with something better)
-	float AvailableEntitiesPercent();
 
 
 	// Component methods
@@ -84,6 +119,7 @@ public:
 
 	template <typename T>
 	void RemoveComponent(Entity id);
+
 
 	// Misc methods
 
@@ -125,20 +161,6 @@ private:
 	// Misc
 	Camera m_camera;
 	UI m_ui;
-
-	// Gameplay
-	const float MAP_BOUNDS_X = 1000.0f;
-	const float MAP_BOUNDS_Y = 1000.0f;
-	const float MAP_BOUND_WIDTH = 300.0f;
-	const float MAP_LONG_WIDTH = MAP_BOUND_WIDTH + MAP_BOUNDS_X * 2;
-	const float MAP_LONG_HEIGHT = MAP_BOUND_WIDTH + MAP_BOUNDS_Y * 2;
-
-	Entity m_player;
-
-	const float RESTART_SCENE_TIME = 3.0f;
-	Timer restartSceneTimer;
-
-	Entity CreateWall(Vector2 pos, float width, float height);
 
 };
 
