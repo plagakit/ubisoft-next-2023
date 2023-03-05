@@ -11,21 +11,24 @@
 
 void PhysicsSystem::UpdatePosition(Scene& scene)
 {
-	std::vector<Entity> bodies = scene.GetEntities<Transform, Physics>();
-	for (Entity id : bodies)
+	for (Entity id : scene.GetEntities<Transform, Physics>())
 	{
-		Transform& tf = scene.GetComponent<Transform>(id);
-		Physics& ph = scene.GetComponent<Physics>(id);
+		Physics ph = scene.GetComponent<Physics>(id);
 
 		// Update movement and rotation
 		if (ph.bodyType == Physics::KINEMATIC)
 		{
+			Transform tf = scene.GetComponent<Transform>(id);
+			
 			ph.velocity += ph.acceleration * scene.m_deltaTime;
 			tf.position += ph.velocity * scene.m_deltaTime;
 			tf.rotation += ph.angularVelocity * scene.m_deltaTime;
 
 			// Reset the collision normal to be updated during UpdateCollision steps
 			ph.collisionNormal = Vector2(0, 0);
+
+			scene.SetComponent<Transform>(id, tf);
+			scene.SetComponent<Physics>(id, ph);
 		}
 	}
 }
@@ -199,7 +202,7 @@ void PhysicsSystem::UpdateCollision(Scene& scene, const std::vector<Entity>& gro
 
 
 // Circle & circle
-bool PhysicsSystem::IsColliding(Transform& tf1, Transform& tf2, CircleBounds& cb1, CircleBounds& cb2)
+bool PhysicsSystem::IsColliding(Transform tf1, Transform tf2, CircleBounds cb1, CircleBounds cb2)
 {
 	float distSquared = (tf1.position + cb1.offset).DistanceSquared(tf2.position + cb2.offset);
 	float collisionDistance = cb1.radius + cb2.radius;
@@ -208,7 +211,7 @@ bool PhysicsSystem::IsColliding(Transform& tf1, Transform& tf2, CircleBounds& cb
 }
 
 // Box & box
-bool PhysicsSystem::IsColliding(Transform& tf1, Transform& tf2, BoxBounds& bb1, BoxBounds& bb2)
+bool PhysicsSystem::IsColliding(Transform tf1, Transform tf2, BoxBounds bb1, BoxBounds bb2)
 {
 	Vector2 p1 = tf1.position + bb1.offset;
 	Vector2 p2 = tf2.position + bb2.offset;
@@ -220,7 +223,7 @@ bool PhysicsSystem::IsColliding(Transform& tf1, Transform& tf2, BoxBounds& bb1, 
 }
 
 // Circle & box
-bool PhysicsSystem::IsColliding(Transform& tf1, Transform& tf2, CircleBounds& cb, BoxBounds& bb)
+bool PhysicsSystem::IsColliding(Transform tf1, Transform tf2, CircleBounds cb, BoxBounds bb)
 {
 	Vector2 dist = (tf2.position + bb.offset) - (tf1.position + cb.offset);
 	dist.x = abs(dist.x);

@@ -32,9 +32,9 @@ void RenderSystem::Render(Scene& scene)
 
 void RenderSystem::RenderSprite(Scene& scene, Entity id)
 {	
-    const Transform& tf = scene.GetComponent<Transform>(id);
-    const Sprite& sp = scene.GetComponent<Sprite>(id);
-    const Camera& cam = scene.GetCamera();
+    const Transform tf = scene.GetComponent<Transform>(id);
+    const Sprite sp = scene.GetComponent<Sprite>(id);
+    const Camera cam = scene.GetCamera();
 
 	// Code copied & modified from SimpleSprite.cpp
 #if APP_USE_VIRTUAL_RES
@@ -91,8 +91,8 @@ void RenderSystem::RenderSprite(Scene& scene, Entity id)
 
 void RenderSystem::RenderWireframe(Scene& scene, Entity id)
 {
-    Transform& tf = scene.GetComponent<Transform>(id);
-    Wireframe& wf = scene.GetComponent<Wireframe>(id);
+    const Transform tf = scene.GetComponent<Transform>(id);
+    const Wireframe wf = scene.GetComponent<Wireframe>(id);
 
     DrawWireframe(scene.GetCamera(), tf, wf.points, 
         wf.color.r/255.0f, wf.color.g/255.0f, wf.color.b/255.0f);
@@ -101,10 +101,10 @@ void RenderSystem::RenderWireframe(Scene& scene, Entity id)
 
 void RenderSystem::RenderPhysicsBounds(Scene& scene)
 {
-    for (Entity id : scene.GetEntities<CircleBounds>())
+    for (Entity id : scene.GetEntities<Transform, CircleBounds>())
     {
-        Transform& tf = scene.GetComponent<Transform>(id);
-        CircleBounds& cb = scene.GetComponent<CircleBounds>(id);
+        const Transform tf = scene.GetComponent<Transform>(id);
+        const CircleBounds cb = scene.GetComponent<CircleBounds>(id);
 
         int numLines = 16;
         float angleStep = 2.0f * PI / numLines;
@@ -126,10 +126,10 @@ void RenderSystem::RenderPhysicsBounds(Scene& scene)
         DrawWireframe(scene.GetCamera(), tf, points, 0, 0, 1.0f);
     }
 
-    for (Entity id : scene.GetEntities<BoxBounds>())
+    for (Entity id : scene.GetEntities<Transform, BoxBounds>())
     {
-        Transform& tf = scene.GetComponent<Transform>(id);
-        BoxBounds& b = scene.GetComponent<BoxBounds>(id);
+        const Transform tf = scene.GetComponent<Transform>(id);
+        const BoxBounds b = scene.GetComponent<BoxBounds>(id);
 
         float w = b.width / 2;
         float h = b.height / 2;
@@ -152,7 +152,7 @@ void RenderSystem::RenderPhysicsBounds(Scene& scene)
 }
 
 
-void RenderSystem::DrawWireframe(Camera& cam, Transform& tf, std::vector<Vector2>& points, float r, float g, float b)
+void RenderSystem::DrawWireframe(const Camera cam, const Transform tf, const std::vector<Vector2>& points, float r, float g, float b)
 {
     auto numPoints = points.size();
     for (int i = 0; i < numPoints + 1; i++)

@@ -20,15 +20,18 @@ void BombSystem::UpdateBombs(Scene& scene)
 	for (Entity id : scene.GetEntities<Bomb>())
 	{
 		// Deaccelerate from kick/other movements
-		Physics& ph = scene.GetComponent<Physics>(id);
+		Physics ph = scene.GetComponent<Physics>(id);
 		ph.velocity.x -= DEACCELERATION * Utils::Sign(ph.velocity.x);
 		ph.velocity.y -= DEACCELERATION * Utils::Sign(ph.velocity.y);
 
 		// Pulse scale faster and faster
-		Transform& tf = scene.GetComponent<Transform>(id);
-		const Timer& tm = scene.GetComponent<Timer>(id);
+		Transform tf = scene.GetComponent<Transform>(id);
+		const Timer tm = scene.GetComponent<Timer>(id);
 		float pulse = Utils::Lerp(1.0f, 1.25f, abs(sinf(tm.elapsed * tm.PercentElapsed() * 10.0f)));
 		tf.scale = Vector2(pulse, pulse);
+
+		scene.SetComponent<Physics>(id, ph);
+		scene.SetComponent<Transform>(id, tf);
 	}
 }
 
@@ -54,8 +57,8 @@ void BombSystem::CreateBomb(Scene& scene, Entity player)
 
 void BombSystem::ExplodeBomb(Scene& scene, Entity bomb)
 {
-	const Bomb& bombData = scene.GetComponent<Bomb>(bomb);
-	const Transform& tf = scene.GetComponent<Transform>(bomb);
+	const Bomb bombData = scene.GetComponent<Bomb>(bomb);
+	const Transform tf = scene.GetComponent<Transform>(bomb);
 	Vector2 bombPos = tf.position;
 
 	switch (bombData.type)
@@ -117,7 +120,7 @@ void BombSystem::CreateExplosionHitbox(Scene& scene, float width, float height, 
 
 void BombSystem::BounceOffWall(Scene& scene, Entity bomb, Entity wall, Vector2 normal)
 {
-	Physics& ph = scene.GetComponent<Physics>(bomb);
+	Physics ph = scene.GetComponent<Physics>(bomb);
 
 	// Bounce horizontally
 	if (abs(normal.x) > 0)
@@ -126,6 +129,8 @@ void BombSystem::BounceOffWall(Scene& scene, Entity bomb, Entity wall, Vector2 n
 	// Bounce vertically
 	else if (abs(normal.y) > 0)
 		ph.velocity.y *= -1;
+
+	scene.SetComponent<Physics>(bomb, ph);
 }
 
 

@@ -8,16 +8,20 @@
 
 void HealthSystem::ExecuteDamage(Scene& scene, Entity attacker, Entity target)
 {
-	DamageField& df = scene.GetComponent<DamageField>(attacker);
-	Health& h = scene.GetComponent<Health>(target);
+	DamageField df = scene.GetComponent<DamageField>(attacker);
+	Health hp = scene.GetComponent<Health>(target);
 
-	if (df.TryHit(target, scene.GetSignature(target)))
+	Signature sig = scene.GetSignature(target);
+	if (df.TryHit(target, sig))
 	{
-		h -= df.damage;
+		hp -= df.damage;
 		s_DamagedBy.Emit(scene, target, attacker);
-		if (h <= 0)
+		if (hp <= 0)
 			s_Died.Emit(scene, target);
 	}
+
+	scene.SetComponent<DamageField>(target, df);
+	scene.SetComponent<Health>(target, hp);
 }
 
 

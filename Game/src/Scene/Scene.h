@@ -37,7 +37,7 @@ public:
 
 	Entity GetCount();
 
-	Signature& GetSignature(Entity id);
+	Signature GetSignature(Entity id);
 
 	bool DoesEntityExist(Entity id);
 
@@ -52,6 +52,7 @@ public:
 
 	void DeleteQueuedEntities();
 
+	// TODO: Remove this method! (replace with something better)
 	float AvailableEntitiesPercent();
 
 
@@ -73,7 +74,10 @@ public:
 	bool HasComponent(Entity id);
 
 	template <typename T>
-	T& GetComponent(Entity id);
+	T GetComponent(Entity id);
+
+	template <typename T>
+	void SetComponent(Entity id, T component);
 
 	template <typename T>
 	void AddComponent(Entity id, T component);
@@ -83,7 +87,7 @@ public:
 
 	// Misc methods
 
-	Camera& GetCamera();
+	Camera GetCamera();
 
 
 private:
@@ -156,10 +160,14 @@ std::vector<Entity> Scene::GetEntities()
 	for (int i = 1; i < (sizeof...(Components) + 1); i++)
 		mask.set(types[i]);
 
+
 	// Copy any signature that has at least the component mask's bits (has required components) into a vector
+	auto matchPred = [this, mask](Entity id) { 
+		return (m_signatures.Get(id) & mask) == mask;
+	};
+
 	std::vector<Entity> matches;
-	std::copy_if(m_entities.begin(), m_entities.end(), std::back_inserter(matches),
-		[this, &mask](Entity id) { return (m_signatures.Get(id) & mask) == mask; });
+	std::copy_if(m_entities.begin(), m_entities.end(), std::back_inserter(matches), matchPred);
 
 	return matches;
 }
@@ -201,9 +209,10 @@ template <typename T>
 ComponentID Scene::GetComponentType()
 {
 	const std::type_info& type = typeid(T);
-	auto find = m_componentTypes.find(type);
+	//auto find = m_componentTypes.find(type);
 	//assert("Component array doesn't exist!" && find != m_componentTypes.end());
-	return find->second;
+	//return find->second;
+	return m_componentTypes[type];
 }
 
 template <typename T>
@@ -215,9 +224,15 @@ bool Scene::HasComponent(Entity id)
 }
 
 template <typename T>
-T& Scene::GetComponent(Entity id)
+T Scene::GetComponent(Entity id)
 {
 	return GetComponentArray<T>()->Get(id);
+}
+
+template <typename T>
+void Scene::SetComponent(Entity id, T component)
+{
+	GetComponentArray<T>()->Set(id, component);
 }
 
 template <typename T>
@@ -227,12 +242,12 @@ void Scene::AddComponent(Entity id, T component)
 		CreateComponentArray<T>();
 	
 	GetComponentArray<T>()->Add(id, component);
-	m_signatures.Get(id).set(GetComponentType<T>());
+	m_signatures.Set(id, m_signatures.Get(id).set(GetComponentType<T>()));
 }
 
 template <typename T>
 void Scene::RemoveComponent(Entity id)
 {
 	GetComponentArray<T>()->Remove(id);
-	m_signatures.Get(id).reset(GetComponentType<T>());
+	m_signatures.Set(id, m_signatures.Get(id).reset(GetComponentType<T>()));
 }

@@ -22,22 +22,26 @@ void ZombieSystem::UpdateZombies(Scene& scene)
 		// Make the zombies do a lil dance when all players are dead
 		for (Entity id : scene.GetEntities<Zombie>())
 		{
-			Transform& tf = scene.GetComponent<Transform>(id);
-			Physics& ph = scene.GetComponent<Physics>(id);
-			Zombie& zm = scene.GetComponent<Zombie>(id);
+			Transform tf = scene.GetComponent<Transform>(id);
+			Physics ph = scene.GetComponent<Physics>(id);
+			Zombie zm = scene.GetComponent<Zombie>(id);
 
 			zm.danceAnim += scene.m_deltaTime;
 			tf.rotation += scene.m_deltaTime * 2.0f;
 			ph.velocity = Vector2(sinf(zm.danceAnim * 5.0f) * 30.0f, -cosf(zm.danceAnim * 5.0f) * 30.0f);
+
+			scene.SetComponent<Transform>(id, tf);
+			scene.SetComponent<Physics>(id, ph);
+			scene.SetComponent<Zombie>(id, zm);
 		}
 	}
 	else
 	{
 		for (Entity id : scene.GetEntities<Zombie>())
 		{
-			Transform& tf = scene.GetComponent<Transform>(id);
-			Physics& ph = scene.GetComponent<Physics>(id);
-			Zombie& zm = scene.GetComponent<Zombie>(id);
+			Transform tf = scene.GetComponent<Transform>(id);
+			Physics ph = scene.GetComponent<Physics>(id);
+			Zombie zm = scene.GetComponent<Zombie>(id);
 			
 			float closestDist = 1e+020f; // pretty far!
 			Vector2 closestPos;
@@ -96,6 +100,9 @@ void ZombieSystem::UpdateZombies(Scene& scene)
 			
 			tf.rotation = ph.velocity.Atan2() + PI / 2;
 
+			scene.SetComponent<Transform>(id, tf);
+			scene.SetComponent<Physics>(id, ph);
+			scene.SetComponent<Zombie>(id, zm);
 		}
 	}
 }

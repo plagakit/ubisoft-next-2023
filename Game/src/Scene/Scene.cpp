@@ -112,8 +112,8 @@ void Scene::Init()
 
 	restartSceneTimer = Timer(RESTART_SCENE_TIME);
 
-	for (float i = 0; i < 100; i++)
-		m_zombieSystem.CreateZombie(*this, Vector2(i, 500));
+	//for (float i = 0; i < 100; i++)
+	//	m_zombieSystem.CreateZombie(*this, Vector2(i, 500));
 }
 
 void Scene::Update(float deltaTime)
@@ -173,7 +173,7 @@ Entity Scene::GetCount()
 	return m_count;
 }
 
-Signature& Scene::GetSignature(Entity id)
+Signature Scene::GetSignature(Entity id)
 {
 	return m_signatures.Get(id);
 }
@@ -206,7 +206,7 @@ void Scene::DeleteEntity(Entity id)
 	m_availableEntities.push_back(id);
 
 	// For each component type in the signature, call its remove function!
-	Signature& signature = m_signatures.Get(id);
+	const Signature signature = m_signatures.Get(id);
 	for (auto i = 0; i < signature.size(); i++)
 		if (signature.test(i))
 			m_removeComponentFunctions[i](id);
@@ -244,7 +244,7 @@ float Scene::AvailableEntitiesPercent()
 
 // Misc methods
 
-Camera& Scene::GetCamera()
+Camera Scene::GetCamera()
 {
 	return m_camera;
 }

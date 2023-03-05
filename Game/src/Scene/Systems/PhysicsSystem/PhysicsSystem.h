@@ -23,8 +23,8 @@ public:
 
 
 private:
-	bool IsColliding(Transform& tf1, Transform& tf2, CircleBounds& cb1, CircleBounds& cb2);
-	bool IsColliding(Transform& tf1, Transform& tf2, BoxBounds& bb1, BoxBounds& bb2);
-	bool IsColliding(Transform& tf1, Transform& tf2, CircleBounds& cb, BoxBounds& bb);
+	bool IsColliding(Transform tf1, Transform tf2, CircleBounds cb1, CircleBounds cb2);
+	bool IsColliding(Transform tf1, Transform tf2, BoxBounds bb1, BoxBounds bb2);
+	bool IsColliding(Transform tf1, Transform tf2, CircleBounds cb, BoxBounds bb);
 
 };

@@ -19,7 +19,8 @@ private:
 	void RenderWireframe(Scene& scene, Entity id);
 	void RenderPhysicsBounds(Scene& scene);
 
-	void DrawWireframe(Camera& camera, Transform& transform, std::vector<Vector2>& points, float r = 1.0f, float g = 1.0f, float b = 1.0f);
+	void DrawWireframe(const Camera camera, const Transform transform, const std::vector<Vector2>& points, 
+		float r = 1.0f, float g = 1.0f, float b = 1.0f);
 
 	std::string test = "";
 };

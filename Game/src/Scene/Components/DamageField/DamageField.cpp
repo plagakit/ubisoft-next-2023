@@ -13,7 +13,7 @@ DamageField::DamageField(int _damage, bool keepTrack) :
 
 // Will check if signatures match, then if the entity is already hit, if not add it to hit list and return true
 // If already hit or max hits reached, returns false
-bool DamageField::TryHit(Entity id, Signature signature)
+bool DamageField::TryHit(Entity id, const Signature signature)
 {
 	if ((hitSignature & signature) == signature)
 	{

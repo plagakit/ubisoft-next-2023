@@ -10,11 +10,12 @@ class ContiguousArray : public IContiguousArray {
 public:
 	ContiguousArray();
 
-	T& Get(Entity id);
+	T Get(Entity id);
+	void Set(Entity id, T item);
 	//int GetSize() const;
 
-	void Add(Entity id, T component);
-	void Remove(Entity id);	
+	void Add(Entity id, T item);
+	void Remove(Entity id);	 
 
 	std::string ToString();
 	
@@ -33,11 +34,19 @@ ContiguousArray<T>::ContiguousArray()
 {}
 
 template<typename T>
-T& ContiguousArray<T>::Get(Entity id)
+T ContiguousArray<T>::Get(Entity id)
 {
-	auto itemIndex = m_entityMap.find(id);
-	assert("Get: entity not found in map." && itemIndex != m_entityMap.end());
-	return m_items[m_entityMap[id]]; // Entity indexes start at 1
+	//auto itemIndex = m_entityMap.find(id);
+	//assert("Get: entity not found in map." && itemIndex != m_entityMap.end());
+	return m_items[m_entityMap[id]]; 
+}
+
+template <typename T>
+void ContiguousArray<T>::Set(Entity id, T item)
+{
+	//auto itemIndex = m_entityMap.find(id);
+	//assert("Get: entity not found in map." && itemIndex != m_entityMap.end());
+	m_items[m_entityMap[id]] = item;
 }
 
 template<typename T>

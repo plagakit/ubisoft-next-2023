@@ -22,7 +22,7 @@ struct DamageField {
 	std::array<Entity, MAX_HIT> alreadyHit;
 
 	DamageField(int damage, bool keepTrackOfAlreadyHit = true);
-	bool TryHit(Entity id, Signature signature);
+	bool TryHit(Entity id, const Signature signature);
 	bool AddHit(Entity id);
 	void DontHitComponentID(ComponentID id);
 	void HitComponentID(ComponentID id);

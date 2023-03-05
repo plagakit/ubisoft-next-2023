@@ -16,38 +16,15 @@
 #include "Scene/Components/Zombie/Zombie.h"
 
 
-Entity PlayerSystem::CreatePlayer(Scene& scene, Vector2 pos)
-{
-	Entity id = scene.CreateEntity();
-	
-	Wireframe wf = Wireframe(Color(Colors::LIGHT_BLUE));
-	wf.points = {
-		Vector2(-20, -20), // bottom left corner
-		Vector2(20, -20), // bottom right corner
-		Vector2(20, 0), // top right corner
-		Vector2(0, 20), // head
-		Vector2(-20, 0) // top left corner
-	};
-	scene.AddComponent<Wireframe>(id, wf);
-
-	scene.AddComponent<Transform>(id, Transform(pos));
-	scene.AddComponent<Physics>(id, Physics(Physics::KINEMATIC));
-	scene.AddComponent<CircleBounds>(id, CircleBounds(20));
-	scene.AddComponent<Timer>(id, Timer(KICK_TIME));
-	scene.AddComponent<Player>(id, Player());
-	scene.AddComponent<Health>(id, DEFAULT_HEALTH);
-
-	return id;
-}
-
 void PlayerSystem::UpdatePlayers(Scene& scene)
 {
 	for (Entity id : scene.GetEntities<Player>())
 	{
-		Transform& tf = scene.GetComponent<Transform>(id);
-		Physics& ph = scene.GetComponent<Physics>(id);
-		Player& pl = scene.GetComponent<Player>(id);
-		
+		Transform tf = scene.GetComponent<Transform>(id);
+		Physics ph = scene.GetComponent<Physics>(id);
+		Player pl = scene.GetComponent<Player>(id);
+		Timer kickTimer = scene.GetComponent<Timer>(id);
+
 		// Input
 		bool up = App::GetController().CheckButton(XINPUT_GAMEPAD_DPAD_UP, false);
 		bool down = App::GetController().CheckButton(XINPUT_GAMEPAD_DPAD_DOWN, false);
@@ -97,30 +74,67 @@ void PlayerSystem::UpdatePlayers(Scene& scene)
 		{
 			pl.actionState = Player::KICKING;
 			s_Kicked.Emit(scene, id);
-			scene.GetComponent<Timer>(id).Start();
+			kickTimer.Start();
 		}
+
+		scene.SetComponent<Transform>(id, tf);
+		scene.SetComponent<Physics>(id, ph);
+		scene.SetComponent<Player>(id, pl);
+		scene.SetComponent<Timer>(id, kickTimer);
 	}
+}
+
+Entity PlayerSystem::CreatePlayer(Scene& scene, Vector2 pos)
+{
+	Entity id = scene.CreateEntity();
+
+	Wireframe wf = Wireframe(Color(Colors::LIGHT_BLUE));
+	wf.points = {
+		Vector2(-20, -20), // bottom left corner
+		Vector2(20, -20), // bottom right corner
+		Vector2(20, 0), // top right corner
+		Vector2(0, 20), // head
+		Vector2(-20, 0) // top left corner
+	};
+	scene.AddComponent<Wireframe>(id, wf);
+
+	scene.AddComponent<Transform>(id, Transform(pos));
+	scene.AddComponent<Physics>(id, Physics(Physics::KINEMATIC));
+	scene.AddComponent<CircleBounds>(id, CircleBounds(20));
+	scene.AddComponent<Timer>(id, Timer(KICK_TIME));
+	scene.AddComponent<Player>(id, Player());
+	scene.AddComponent<Health>(id, DEFAULT_HEALTH);
+
+	return id;
 }
 
 void PlayerSystem::KickBomb(Scene& scene, Entity player, Entity bomb)
 {
-	const Transform& ptf = scene.GetComponent<Transform>(player);
-	Physics& bph = scene.GetComponent<Physics>(bomb);
+	const Transform ptf = scene.GetComponent<Transform>(player);
+	Physics bph = scene.GetComponent<Physics>(bomb);
 
 	Vector2 direction = Vector2(cosf(ptf.rotation + PI/2), sinf(ptf.rotation + PI/2));
 	bph.velocity = direction * KICK_SPEED;
+
+	scene.SetComponent<Physics>(bomb, bph);
 }
 
 void PlayerSystem::GetHit(Scene& scene, Entity player, Entity zombie)
 {
-	const Transform& ptf = scene.GetComponent<Transform>(player);
-	const Transform& ztf = scene.GetComponent<Transform>(zombie);
-	Physics& ph = scene.GetComponent<Physics>(player);
+	const Transform ptf = scene.GetComponent<Transform>(player);
+	const Transform ztf = scene.GetComponent<Transform>(zombie);
+	Physics ph = scene.GetComponent<Physics>(player);
+	Timer tm = scene.GetComponent<Timer>(player);
+	Player pl = scene.GetComponent<Player>(player);
 
 	Vector2 dir = (ptf.position - ztf.position).Normalized();
 	ph.velocity = dir * ZOMBIE_KNOCKBACK;
-	scene.GetComponent<Timer>(player).Start();
-	scene.GetComponent<Player>(player).actionState = Player::BEING_KNOCKED_BACK;
+	tm.Start();
+	pl.actionState = Player::BEING_KNOCKED_BACK;
+
+	scene.SetComponent<Physics>(player, ph);
+	scene.SetComponent<Timer>(player, tm);
+	scene.SetComponent<Player>(player, pl);
 }
 
 void PlayerSystem::CreatePlayerDeathParticle(Scene& scene, Vector2 pos)
@@ -146,8 +160,9 @@ void PlayerSystem::OnTimerDone(Scene& scene, Entity id)
 {
 	if (scene.HasComponent<Player>(id))
 	{
-		Player& pl = scene.GetComponent<Player>(id);
+		Player pl = scene.GetComponent<Player>(id);
 		pl.actionState = Player::IDLE;
+		scene.SetComponent<Player>(id, pl);
 	}
 }
 
@@ -155,8 +170,15 @@ void PlayerSystem::OnBombExplode(Scene& scene, Entity id)
 {
 	Entity creator = scene.GetComponent<Bomb>(id).creator;
 	for (Entity player : scene.GetEntities<Player>())
+	{
 		if (player == creator)
-			scene.GetComponent<Player>(player).bombOut = false;
+		{
+			Player pl = scene.GetComponent<Player>(player);
+			pl.bombOut = false;
+			scene.SetComponent<Player>(id, pl);
+		}
+	}
+		
 }
 
 void PlayerSystem::OnTrigger(Scene& scene, Entity id1, Entity id2, Vector2 normal)
