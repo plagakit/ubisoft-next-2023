@@ -113,6 +113,8 @@ void Scene::Init()
 	AddComponent<Wall>(wall, 0);
 
 	m_zombieSystem.CreateZombie(*this, Vector2(0, 500));
+
+	restartSceneTimer = Timer(RESTART_SCENE_TIME);
 }
 
 void Scene::Update(float deltaTime)
@@ -123,10 +125,22 @@ void Scene::Update(float deltaTime)
 	auto const& zombies = GetEntities<Zombie>();
 	auto const& walls = GetEntities<Wall>();
 
-	// Camera follows player w/ slight drag
-	if (players.size() > 0)
+	// If player(s) are dead, restart scene
+	if (players.size() <= 0)
+	{
+		if (restartSceneTimer.isRunning)
+		{
+			if (restartSceneTimer.elapsed > RESTART_SCENE_TIME) { Init(); }
+			else { restartSceneTimer.elapsed += m_deltaTime; }
+		}
+		else { restartSceneTimer.Start(); }
+	}
+	else
+	{
+		// Camera follows player w/ slight drag
 		m_camera.position = Utils::Lerp(m_camera.position, GetComponent<Transform>(players[0]).position, 0.05f);
-	m_camera.Update(*this);
+		m_camera.Update(*this);
+	}
 	
 	m_timerSystem.UpdateTimers(*this);
 	m_playerSystem.UpdatePlayers(*this);
@@ -141,10 +155,6 @@ void Scene::Update(float deltaTime)
 	m_physicsSystem.UpdateCollision(*this, players, zombies);
 
 	DeleteQueuedEntities();
-
-	// If player(s) are dead, restart scene
-	//if (GetEntities<Player>().size() <= 0)
-		//Init();
 }
 
 void Scene::Render()

@@ -29,7 +29,6 @@ void ZombieSystem::UpdateZombies(Scene& scene)
 			zm.danceAnim += scene.m_deltaTime;
 			tf.rotation += scene.m_deltaTime * 2.0f;
 			ph.velocity = Vector2(sinf(zm.danceAnim * 5.0f) * 30.0f, -cosf(zm.danceAnim * 5.0f) * 30.0f);
-			
 		}
 	}
 	else

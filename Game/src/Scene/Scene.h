@@ -121,6 +121,8 @@ private:
 	// Gameplay
 	Entity m_player;
 
+	const float RESTART_SCENE_TIME = 3.0f;
+	Timer restartSceneTimer;
 
 };
 
