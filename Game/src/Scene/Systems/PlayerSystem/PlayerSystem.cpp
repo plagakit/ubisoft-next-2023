@@ -119,21 +119,29 @@ void PlayerSystem::KickBomb(Scene& scene, Entity player, Entity bomb)
 	scene.SetComponent<Physics>(bomb, bph);
 }
 
-void PlayerSystem::GetHit(Scene& scene, Entity player, Entity zombie)
+void PlayerSystem::GetHit(Scene& scene, Entity player, Entity attacker)
 {
 	const Transform ptf = scene.GetComponent<Transform>(player);
-	const Transform ztf = scene.GetComponent<Transform>(zombie);
+	const Transform atf = scene.GetComponent<Transform>(attacker);
+	const Health hp = scene.GetComponent<Health>(player);
 	Physics ph = scene.GetComponent<Physics>(player);
 	Timer tm = scene.GetComponent<Timer>(player);
+	Wireframe wf = scene.GetComponent<Wireframe>(player);
 	Player pl = scene.GetComponent<Player>(player);
 
-	Vector2 dir = (ptf.position - ztf.position).Normalized();
+	Vector2 dir = (ptf.position - atf.position).Normalized();
 	ph.velocity = dir * ZOMBIE_KNOCKBACK;
 	tm.Start();
 	pl.actionState = Player::BEING_KNOCKED_BACK;
 
+	if (hp <= 2)
+		wf.color = REALLY_HURT_COLOR;
+	else
+		wf.color = HURT_COLOR;
+
 	scene.SetComponent<Physics>(player, ph);
 	scene.SetComponent<Timer>(player, tm);
+	scene.SetComponent<Wireframe>(player, wf);
 	scene.SetComponent<Player>(player, pl);
 }
 
@@ -147,7 +155,7 @@ void PlayerSystem::CreatePlayerDeathParticle(Scene& scene, Vector2 pos)
 	ph.velocity = Utils::RandUnitCircleVector() * Utils::RandFloat(DEATH_PARTICLE_SPEED);
 	scene.AddComponent<Physics>(id, ph);
 
-	Wireframe wf = Wireframe(Color(Colors::LIGHT_BLUE));
+	Wireframe wf = Wireframe(PLAYER_COLOR);
 	wf.points = { Vector2(-2, -2), Vector2(0, 2), Vector2(2, -2) };
 	scene.AddComponent<Wireframe>(id, wf);
 
@@ -193,8 +201,10 @@ void PlayerSystem::OnTrigger(Scene& scene, Entity id1, Entity id2, Vector2 norma
 
 void PlayerSystem::OnDamagedBy(Scene& scene, Entity id1, Entity id2)
 {
-	if (scene.HasComponent<Player>(id1) && scene.HasComponent<Zombie>(id2))
+	if (scene.HasComponent<Player>(id1) && scene.HasComponent<Transform>(id2))
+	{
 		GetHit(scene, id1, id2);
+	}
 }
 
 void PlayerSystem::OnDied(Scene& scene, Entity id)

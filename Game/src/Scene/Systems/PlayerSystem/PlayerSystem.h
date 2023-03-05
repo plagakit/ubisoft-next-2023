@@ -3,21 +3,26 @@
 #include <stdafx.h>
 
 #include "Core/Signal/Signal.h"
+#include "Core/Color/Color.h"
 class Scene;
 struct Vector2;
 
 class PlayerSystem {
 
-	const int DEFAULT_HEALTH = 2; // dies instantly
-	const float ACCELERATION = 25.0f;
-	const float WALK_SPEED = 100.0f;
-	const float ZOMBIE_KNOCKBACK = 1000.0f;
-	const float KICK_TIME = 0.25f;
-	const float KICK_SPEED = 400.0f;
+	static const int DEFAULT_HEALTH = 3;
+	Color PLAYER_COLOR = Color(Colors::LIGHT_BLUE);
+	Color HURT_COLOR = Color(85, 158, 170);			// slight darker light blue with a twinge of red
+	Color REALLY_HURT_COLOR = Color(128, 119, 128); // ouch!
 
-	const int DEATH_PARTICLE_COUNT = 20;
-	const std::pair<float, float> DEATH_PARTICLE_SPEED = { 0.0f, 200.0f };
-	const std::pair<float, float> DEATH_PARTICLE_LIFETIME = { 1.0f, 1.5f };
+	static constexpr float ACCELERATION = 25.0f;
+	static constexpr float WALK_SPEED = 100.0f;
+	static constexpr float ZOMBIE_KNOCKBACK = 1000.0f;
+	static constexpr float KICK_TIME = 0.25f;
+	static constexpr float KICK_SPEED = 400.0f;
+
+	static const int DEATH_PARTICLE_COUNT = 20;
+	static constexpr std::pair<float, float> DEATH_PARTICLE_SPEED = { 0.0f, 200.0f };
+	static constexpr std::pair<float, float> DEATH_PARTICLE_LIFETIME = { 1.0f, 1.5f };
 
 public:
 

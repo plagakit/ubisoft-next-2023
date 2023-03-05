@@ -9,13 +9,12 @@ struct DamageField;
 
 class BombSystem {
 
-	const float EXPLODE_TIME = 3.0f;
-	const float DEACCELERATION = 5.0f;
+	static constexpr float EXPLODE_TIME = 3.0f;
+	static constexpr float DEACCELERATION = 5.0f;
 
-	const float EXPLOSION_SIZE = 40.0f;
-	const float DEFAULT_EXPLOSION_DURATION = 0.5f;
-	const int DEFAULT_DAMAGE = 1;
-	const float DEFAULT_KNOCKBACK = 0.0f;
+	static constexpr float EXPLOSION_SIZE = 40.0f;
+	static constexpr float DEFAULT_EXPLOSION_DURATION = 0.5f;
+	static const int DEFAULT_DAMAGE = 1;
 
 	// Defining the particle emission info feels wrong - what if I want it to change
 	// during the game, or be controlled by something else? If I had more time, I
@@ -24,10 +23,10 @@ class BombSystem {
 	// said ParticleEmitter, but I didn't have enough time. Hardcoding values like this
 	// works for this game and its small scope, but had I more time I would account for
 	// expansion.
-	const int BOMB_PARTICLE_COUNT = 50;
-	const std::pair<float, float> BOMB_PARTICLE_SPEED = { 50.0f, 150.0f };
-	const std::pair<float, float> BOMB_PARTICLE_ROTATION_SPEED = { -4.0f, 4.0f };
-	const std::pair<float, float> BOMB_PARTICLE_LIFETIME = { 1.0f, 2.0f };
+	static const int BOMB_PARTICLE_COUNT = 50;
+	static constexpr std::pair<float, float> BOMB_PARTICLE_SPEED = { 50.0f, 150.0f };
+	static constexpr std::pair<float, float> BOMB_PARTICLE_ROTATION_SPEED = { -4.0f, 4.0f };
+	static constexpr std::pair<float, float> BOMB_PARTICLE_LIFETIME = { 1.0f, 2.0f };
 
 public:
 
