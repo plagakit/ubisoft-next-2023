@@ -7,7 +7,7 @@
 #include "Scene/Components/Transform/Transform.h"
 #include "Scene/Components/Physics/Physics.h"
 #include "Scene/Components/Wireframe/Wireframe.h"
-#include "Scene/Components/CircleBounds/CircleBounds.h"
+#include "Scene/Components/BoxBounds/BoxBounds.h"
 #include "Scene/Components/DamageField/DamageField.h"
 #include "Scene/Components/PrimitiveComponents.h"
 #include "Scene/Components/Zombie/Zombie.h"
@@ -52,7 +52,37 @@ void ZombieSystem::UpdateZombies(Scene& scene)
 				}
 			}
 
-			ph.velocity = (closestPos - tf.position).Normalized() * zm.walkSpeed;
+			// Walk around walls to not get stuck
+			// Simple sol'n to avoid walls without complex pathfinding
+			// I *could've* implemented pathfinding with a grid of sorts -> spatial partioning! :D
+
+			// Hugging left/right wall
+			if (abs(ph.collisionNormal.x) == 1)
+			{
+				// If not already avoiding a wall
+				if (zm.wallAvoidDir == Vector2(0, 0))
+				{
+					// Avoid wall by walking adjacent to it in the direction of player	
+					zm.wallAvoidDir = Vector2(-ph.collisionNormal.x, (float)Utils::Sign(closestPos.y - tf.position.y));
+					ph.velocity = zm.wallAvoidDir * zm.walkSpeed;
+				}
+			}
+			// Hugging top/bottom wall
+			else if (abs(ph.collisionNormal.y) == 1)
+			{
+				if (zm.wallAvoidDir == Vector2(0, 0))
+				{
+					zm.wallAvoidDir = Vector2((float)Utils::Sign(closestPos.x - tf.position.x), -ph.collisionNormal.y);
+					ph.velocity = zm.wallAvoidDir * zm.walkSpeed;
+				}
+			}
+			// If not stuck on a wall, just home in
+			else
+			{
+				zm.wallAvoidDir = Vector2(0, 0);
+				ph.velocity = (closestPos - tf.position).Normalized() * zm.walkSpeed;
+			}
+			
 			tf.rotation = ph.velocity.Atan2() + PI / 2;
 
 		}
@@ -77,7 +107,7 @@ Entity ZombieSystem::CreateZombie(Scene& scene, Vector2 pos)
 	scene.AddComponent<Wireframe>(zomb, wf);
 
 	scene.AddComponent<Physics>(zomb, Physics(Physics::KINEMATIC));
-	scene.AddComponent<CircleBounds>(zomb, CircleBounds(25));
+	scene.AddComponent<BoxBounds>(zomb, BoxBounds(30, 30));
 	scene.AddComponent<Health>(zomb, DEFAULT_HEALTH);
 	scene.AddComponent<DamageField>(zomb, DamageField(1, false));
 	scene.AddComponent<Zombie>(zomb, Zombie());

@@ -23,6 +23,9 @@ void PhysicsSystem::UpdatePosition(Scene& scene)
 			ph.velocity += ph.acceleration * scene.m_deltaTime;
 			tf.position += ph.velocity * scene.m_deltaTime;
 			tf.rotation += ph.angularVelocity * scene.m_deltaTime;
+
+			// Reset the collision normal to be updated during UpdateCollision steps
+			ph.collisionNormal = Vector2(0, 0);
 		}
 	}
 }
@@ -168,7 +171,10 @@ void PhysicsSystem::UpdateCollision(Scene& scene, Entity one, Entity two)
 			s_onCollision.Emit(scene, one, two);
 
 			if (ph2.bodyType == Physics::STATIC)
+			{
 				tf1.position += resolution;
+				ph1.collisionNormal += resolution.Normalized();
+			}
 			else
 			{
 				tf1.position += resolution / 2.0f;

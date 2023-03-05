@@ -14,6 +14,8 @@ struct Physics {
 	Vector2 acceleration;
 	float angularVelocity;
 
+	Vector2 collisionNormal;
+
 	Physics(BodyType bodyType, bool isTrigger = false);
 
 };
