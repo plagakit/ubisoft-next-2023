@@ -77,7 +77,6 @@ public:
 	template <typename T>
 	void RemoveComponent(Entity id);
 
-
 	// Misc methods
 
 	Camera& GetCamera();

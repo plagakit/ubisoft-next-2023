@@ -62,6 +62,8 @@ Scene::Scene()
 	m_bombSystem.s_BombExploded.Connect<PlayerSystem, &PlayerSystem::OnBombExplode>(&m_playerSystem);
 	m_bombSystem.s_BombExploded.Connect<Camera, &Camera::StartShake>(&m_camera);
 
+	m_healthSystem.s_DamagedBy.Connect<PlayerSystem, &PlayerSystem::OnDamagedBy>(&m_playerSystem);
+
 	m_healthSystem.s_Died.Connect<PlayerSystem, &PlayerSystem::OnDied>(&m_playerSystem);
 	m_healthSystem.s_Died.Connect<ZombieSystem, &ZombieSystem::OnDied>(&m_zombieSystem);
 }
@@ -141,8 +143,8 @@ void Scene::Update(float deltaTime)
 	DeleteQueuedEntities();
 
 	// If player(s) are dead, restart scene
-	if (GetEntities<Player>().size() <= 0)
-		Init();
+	//if (GetEntities<Player>().size() <= 0)
+		//Init();
 }
 
 void Scene::Render()

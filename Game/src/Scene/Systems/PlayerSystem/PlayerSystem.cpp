@@ -13,6 +13,7 @@
 #include "Scene/Components/CircleBounds/CircleBounds.h"
 #include "Scene/Components/Bomb/Bomb.h"
 #include "Scene/Components/PrimitiveComponents.h"
+#include "Scene/Components/Zombie/Zombie.h"
 
 
 Entity PlayerSystem::CreatePlayer(Scene& scene, Vector2 pos)
@@ -69,17 +70,21 @@ void PlayerSystem::UpdatePlayers(Scene& scene)
 		if (!left && !right && abs(ph.velocity.x) > 0.0f)
 			ph.velocity.x -= ACCELERATION * Utils::Sign(ph.velocity.x);
 
-		if (pl.kicking)
-			ph.velocity = Vector2(0, 0);
-		else
+		switch (pl.actionState)
 		{
+		case Player::IDLE:
 			ph.velocity.x = Utils::Clamp(ph.velocity.x, -WALK_SPEED, WALK_SPEED);
 			ph.velocity.y = Utils::Clamp(ph.velocity.y, -WALK_SPEED, WALK_SPEED);
+			break;
+
+		case Player::KICKING:
+			ph.velocity = Vector2(0, 0);
+			break;
 		}
 
 		// Rotate towards movement direction
 		if (!ph.velocity.ApproxEqual(Vector2(0, 0)))
-			tf.rotation = ph.velocity.Atan2() - PI/2;
+			tf.rotation = ph.velocity.Atan2() - PI / 2;
 
 		// Actions
 		if (placeBomb && !pl.bombOut) 
@@ -88,9 +93,9 @@ void PlayerSystem::UpdatePlayers(Scene& scene)
 			s_PlacedBomb.Emit(scene, id); 
 		}
 
-		if (kick && !pl.kicking)
+		if (kick && pl.actionState == Player::IDLE)
 		{
-			pl.kicking = true;
+			pl.actionState = Player::KICKING;
 			s_Kicked.Emit(scene, id);
 			scene.GetComponent<Timer>(id).Start();
 		}
@@ -106,13 +111,43 @@ void PlayerSystem::KickBomb(Scene& scene, Entity player, Entity bomb)
 	bph.velocity = direction * KICK_SPEED;
 }
 
+void PlayerSystem::GetHit(Scene& scene, Entity player, Entity zombie)
+{
+	const Transform& ptf = scene.GetComponent<Transform>(player);
+	const Transform& ztf = scene.GetComponent<Transform>(zombie);
+	Physics& ph = scene.GetComponent<Physics>(player);
+
+	Vector2 dir = (ptf.position - ztf.position).Normalized();
+	ph.velocity = dir * ZOMBIE_KNOCKBACK;
+	scene.GetComponent<Timer>(player).Start();
+	scene.GetComponent<Player>(player).actionState = Player::BEING_KNOCKED_BACK;
+}
+
+void PlayerSystem::CreatePlayerDeathParticle(Scene& scene, Vector2 pos)
+{
+	Entity id = scene.CreateEntity();
+
+	scene.AddComponent<Transform>(id, Transform(pos));
+
+	Physics ph = Physics(Physics::KINEMATIC);
+	ph.velocity = Utils::RandUnitCircleVector() * Utils::RandFloat(DEATH_PARTICLE_SPEED);
+	scene.AddComponent<Physics>(id, ph);
+
+	Wireframe wf = Wireframe(Color(Colors::LIGHT_BLUE));
+	wf.points = { Vector2(-2, -2), Vector2(0, 2), Vector2(2, -2) };
+	scene.AddComponent<Wireframe>(id, wf);
+
+	scene.AddComponent<Timer>(id, Timer(Utils::RandFloat(DEATH_PARTICLE_LIFETIME), true, true));
+	scene.AddComponent<Particle>(id, 0);
+}
+
 
 void PlayerSystem::OnTimerDone(Scene& scene, Entity id)
 {
 	if (scene.HasComponent<Player>(id))
 	{
 		Player& pl = scene.GetComponent<Player>(id);
-		pl.kicking = false;
+		pl.actionState = Player::IDLE;
 	}
 }
 
@@ -126,17 +161,28 @@ void PlayerSystem::OnBombExplode(Scene& scene, Entity id)
 
 void PlayerSystem::OnTrigger(Scene& scene, Entity id1, Entity id2)
 {
-	if (scene.HasComponent<Player>(id1))
+	if (scene.HasComponent<Player>(id1) && 
+		scene.GetComponent<Player>(id1).actionState == Player::KICKING
+		&& scene.HasComponent<Bomb>(id2))
 	{
-		if (scene.GetComponent<Player>(id1).kicking && scene.HasComponent<Bomb>(id2))
-			KickBomb(scene, id1, id2);
+		KickBomb(scene, id1, id2);
 	}
+}
+
+void PlayerSystem::OnDamagedBy(Scene& scene, Entity id1, Entity id2)
+{
+	if (scene.HasComponent<Player>(id1) && scene.HasComponent<Zombie>(id2))
+		GetHit(scene, id1, id2);
 }
 
 void PlayerSystem::OnDied(Scene& scene, Entity id)
 {
 	if (scene.HasComponent<Player>(id))
 	{
+		Vector2 pos = scene.GetComponent<Transform>(id).position;
+		for (int i = 0; i < DEATH_PARTICLE_COUNT; i++)
+			CreatePlayerDeathParticle(scene, pos);
+
 		scene.QueueDelete(id);
 	}
 }

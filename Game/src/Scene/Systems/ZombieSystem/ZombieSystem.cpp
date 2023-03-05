@@ -19,7 +19,18 @@ void ZombieSystem::UpdateZombies(Scene& scene)
 
 	if (players.size() == 0)
 	{
+		// Make the zombies do a lil dance when all players are dead
+		for (Entity id : scene.GetEntities<Zombie>())
+		{
+			Transform& tf = scene.GetComponent<Transform>(id);
+			Physics& ph = scene.GetComponent<Physics>(id);
+			Zombie& zm = scene.GetComponent<Zombie>(id);
 
+			zm.danceAnim += scene.m_deltaTime;
+			tf.rotation += scene.m_deltaTime * 2.0f;
+			ph.velocity = Vector2(sinf(zm.danceAnim * 5.0f) * 30.0f, -cosf(zm.danceAnim * 5.0f) * 30.0f);
+			
+		}
 	}
 	else
 	{
@@ -69,6 +80,7 @@ Entity ZombieSystem::CreateZombie(Scene& scene, Vector2 pos)
 	scene.AddComponent<Physics>(zomb, Physics(Physics::KINEMATIC));
 	scene.AddComponent<CircleBounds>(zomb, CircleBounds(25));
 	scene.AddComponent<Health>(zomb, DEFAULT_HEALTH);
+	scene.AddComponent<DamageField>(zomb, DamageField(1, false));
 	scene.AddComponent<Zombie>(zomb, Zombie());
 
 	return zomb;

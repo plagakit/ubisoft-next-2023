@@ -3,5 +3,5 @@
 #include "Player.h"
 
 Player::Player() :
-	kicking(false), bombOut(false)
+	actionState(ActionState::IDLE), bombOut(false)
 {}

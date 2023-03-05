@@ -5,6 +5,7 @@
 struct Zombie {
 
 	float walkSpeed;
+	float danceAnim;
 
 	Zombie();
 

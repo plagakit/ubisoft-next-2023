@@ -16,10 +16,11 @@ struct DamageField {
 	// Could pose a problem if hypothetically there was a type of enemy that spawns new enemies upon death, 
 	// so that these new enemies instantly take the already-hit id of the old enemies and don't get hit as 
 	// a result, but that's just a big hypothetical that is very much out of the scope of the project.
+	bool keepTrackOfAlreadyHit;
 	int hitCount;
 	std::array<Entity, MAX_HIT> alreadyHit;
 
-	DamageField(int damage);
+	DamageField(int damage, bool keepTrackOfAlreadyHit = true);
 	bool TryHit(Entity id);
 	bool AddHit(Entity id);
 

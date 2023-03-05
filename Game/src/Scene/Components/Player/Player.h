@@ -4,8 +4,9 @@
 
 struct Player {
 
-	bool kicking;
 	bool bombOut;
+	enum ActionState { IDLE, KICKING, BEING_KNOCKED_BACK };
+	ActionState actionState;
 
 	Player();
 
