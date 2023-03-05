@@ -134,10 +134,8 @@ void PlayerSystem::GetHit(Scene& scene, Entity player, Entity attacker)
 	tm.Start();
 	pl.actionState = Player::BEING_KNOCKED_BACK;
 
-	if (hp <= 2)
-		wf.color = REALLY_HURT_COLOR;
-	else
-		wf.color = HURT_COLOR;
+	if (hp <= 2) { wf.color = REALLY_HURT_COLOR; }
+	else		 { wf.color = HURT_COLOR; }
 
 	scene.SetComponent<Physics>(player, ph);
 	scene.SetComponent<Timer>(player, tm);
