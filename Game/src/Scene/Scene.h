@@ -37,6 +37,8 @@ public:
 
 	Entity GetCount();
 
+	Signature& GetSignature(Entity id);
+
 	bool DoesEntityExist(Entity id);
 
 	template <typename... Components>
@@ -49,6 +51,8 @@ public:
 	void QueueDelete(Entity id);
 
 	void DeleteQueuedEntities();
+
+	float AvailableEntitiesPercent();
 
 
 	// Component methods
@@ -119,10 +123,18 @@ private:
 	UI m_ui;
 
 	// Gameplay
+	const float MAP_BOUNDS_X = 1000.0f;
+	const float MAP_BOUNDS_Y = 1000.0f;
+	const float MAP_BOUND_WIDTH = 300.0f;
+	const float MAP_LONG_WIDTH = MAP_BOUND_WIDTH + MAP_BOUNDS_X * 2;
+	const float MAP_LONG_HEIGHT = MAP_BOUND_WIDTH + MAP_BOUNDS_Y * 2;
+
 	Entity m_player;
 
 	const float RESTART_SCENE_TIME = 3.0f;
 	Timer restartSceneTimer;
+
+	Entity CreateWall(Vector2 pos, float width, float height);
 
 };
 

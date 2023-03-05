@@ -13,8 +13,8 @@ struct CircleBounds;
 class PhysicsSystem {
 
 public:
-	Signal<Entity> s_onCollision;
-	Signal<Entity> s_onTrigger;
+	Signal<Entity, Vector2> s_onCollision;
+	Signal<Entity, Vector2> s_onTrigger;
 
 	void UpdatePosition(Scene& scene);
 	void UpdateCollision(Scene& scene, Entity one, Entity two);

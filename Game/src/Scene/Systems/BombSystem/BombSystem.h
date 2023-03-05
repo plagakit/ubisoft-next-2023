@@ -38,7 +38,9 @@ public:
 	void ExplodeBomb(Scene& scene, Entity bomb);
 	void CreateExplosionParticle(Scene& scene, Vector2 pos);
 	void CreateExplosionHitbox(Scene& scene, float width, float height, Vector2 pos, const DamageField& damage);
+	void BounceOffWall(Scene& scene, Entity bomb, Entity wall, Vector2 normal);
 
 	void OnTimerDone(Scene& scene, Entity id);
+	void OnTrigger(Scene& scene, Entity id1, Entity id2, Vector2 normal);
 
 };

@@ -72,7 +72,7 @@ void BombSystem::ExplodeBomb(Scene& scene, Entity bomb)
 
 	}
 	
-	for (int i = 0; i < BOMB_PARTICLE_COUNT; i++)
+	for (int i = 0; i < BOMB_PARTICLE_COUNT * scene.AvailableEntitiesPercent(); i++)
 		CreateExplosionParticle(scene, bombPos);
 	
 	s_BombExploded.Emit(scene, bomb);
@@ -115,9 +115,28 @@ void BombSystem::CreateExplosionHitbox(Scene& scene, float width, float height, 
 	scene.AddComponent<Wireframe>(hitbox, wf);
 }
 
+void BombSystem::BounceOffWall(Scene& scene, Entity bomb, Entity wall, Vector2 normal)
+{
+	Physics& ph = scene.GetComponent<Physics>(bomb);
+
+	// Bounce horizontally
+	if (abs(normal.x) > 0)
+		ph.velocity.x *= -1;
+
+	// Bounce vertically
+	else if (abs(normal.y) > 0)
+		ph.velocity.y *= -1;
+}
+
 
 void BombSystem::OnTimerDone(Scene& scene, Entity id)
 {
 	if (scene.HasComponent<Bomb>(id))
 		ExplodeBomb(scene, id);
+}
+
+void BombSystem::OnTrigger(Scene& scene, Entity id1, Entity id2, Vector2 normal)
+{
+	if (scene.HasComponent<Bomb>(id1) && scene.HasComponent<Wall>(id2))
+		BounceOffWall(scene, id1, id2, normal);
 }

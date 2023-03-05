@@ -21,13 +21,13 @@ void HealthSystem::ExecuteDamage(Scene& scene, Entity attacker, Entity target)
 }
 
 
-void HealthSystem::OnCollision(Scene& scene, Entity id1, Entity id2)
+void HealthSystem::OnCollision(Scene& scene, Entity id1, Entity id2, Vector2 _unused)
 {
 	if (scene.HasComponent<DamageField>(id1) && scene.HasComponent<Health>(id2))
 		ExecuteDamage(scene, id1, id2);
 }
 
-void HealthSystem::OnTrigger(Scene& scene, Entity id1, Entity id2)
+void HealthSystem::OnTrigger(Scene& scene, Entity id1, Entity id2, Vector2 _unused)
 {
 	if (scene.HasComponent<DamageField>(id1) && scene.HasComponent<Health>(id2))
 		ExecuteDamage(scene, id1, id2);

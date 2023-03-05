@@ -32,7 +32,7 @@ public:
 
 	void OnTimerDone(Scene& scene, Entity id);
 	void OnBombExplode(Scene& scene, Entity id);
-	void OnTrigger(Scene& scene, Entity id1, Entity id2);
+	void OnTrigger(Scene& scene, Entity id1, Entity id2, Vector2 normal);
 	void OnDamagedBy(Scene& scene, Entity id1, Entity id2);
 	void OnDied(Scene& scene, Entity id);
 

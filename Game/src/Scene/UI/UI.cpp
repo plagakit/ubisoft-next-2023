@@ -15,7 +15,8 @@ void UI::Render(Scene& scene)
 	{
 		const Health& playerHealth = scene.GetComponent<Health>(m_player);
 		App::Print(20, 730, ("Health: " + std::to_string(playerHealth)).c_str());
-		App::Print(20, 710, scene.GetComponent<Physics>(m_player).collisionNormal.ToString().c_str());
+		App::Print(20, 710, std::to_string(scene.m_deltaTime).c_str());
+		App::Print(20, 690, std::to_string(scene.AvailableEntitiesPercent()).c_str());
 	}
 }
 

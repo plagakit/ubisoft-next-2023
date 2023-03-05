@@ -22,7 +22,7 @@ bool DamageField::TryHit(Entity id)
 // Adds the entity to the hit list, returning false if the hit list is full
 bool DamageField::AddHit(Entity id)
 {
-	if (hitCount > MAX_HIT)
+	if (hitCount >= MAX_HIT)
 		return false;
 
 	alreadyHit[hitCount] = id;

@@ -56,6 +56,7 @@ Scene::Scene()
 
 	m_physicsSystem.s_onTrigger.Connect<HealthSystem, &HealthSystem::OnTrigger>(&m_healthSystem);
 	m_physicsSystem.s_onTrigger.Connect<PlayerSystem, &PlayerSystem::OnTrigger>(&m_playerSystem);
+	m_physicsSystem.s_onTrigger.Connect<BombSystem, &BombSystem::OnTrigger>(&m_bombSystem);
 
 	m_playerSystem.s_PlacedBomb.Connect<BombSystem, &BombSystem::CreateBomb>(&m_bombSystem);
 
@@ -94,27 +95,25 @@ void Scene::Init()
 	m_player = m_playerSystem.CreatePlayer(*this, Vector2(0, 0));
 	m_ui.BindPlayer(*this, m_player);
 
-	// Create box
-	Entity wall = CreateEntity();
+	// Create map
+	CreateWall(Vector2(-MAP_BOUNDS_X, 0), MAP_BOUND_WIDTH, MAP_LONG_HEIGHT);
+	CreateWall(Vector2(MAP_BOUNDS_X, 0), MAP_BOUND_WIDTH, MAP_LONG_HEIGHT);
+	CreateWall(Vector2(0, -MAP_BOUNDS_Y), MAP_LONG_WIDTH, MAP_BOUND_WIDTH);
+	CreateWall(Vector2(0, MAP_BOUNDS_Y), MAP_LONG_WIDTH, MAP_BOUND_WIDTH);
 
-	Wireframe wf = Wireframe();
-	wf.points = { Vector2(-50, -50), Vector2(50, -50), Vector2(50, 50), Vector2(-50, 50) };
-	AddComponent<Wireframe>(wall, wf);
-
-	Transform tf = Transform();
-	tf.position = Vector2(-200, 200);
-	AddComponent<Transform>(wall, tf);
-
-	BoxBounds bb = BoxBounds(100,100);
-	AddComponent<BoxBounds>(wall, bb);
-
-	AddComponent<Physics>(wall, Physics(Physics::STATIC));
-	AddComponent<Timer>(wall, Timer(5));
-	AddComponent<Wall>(wall, 0);
-
-	m_zombieSystem.CreateZombie(*this, Vector2(0, 500));
+	CreateWall(Vector2(-500, -250), 100, 300);
+	CreateWall(Vector2(-500, 250), 100, 300);
+	CreateWall(Vector2(500, -250), 100, 300);
+	CreateWall(Vector2(500, 250), 100, 300);
+	CreateWall(Vector2(0, -700), 100, 300);
+	CreateWall(Vector2(0, 700), 100, 300);
+	CreateWall(Vector2(0, -300), 300, 100);
+	CreateWall(Vector2(0, 300), 300, 100);
 
 	restartSceneTimer = Timer(RESTART_SCENE_TIME);
+
+	for (int i = 0; i < 100; i++)
+		m_zombieSystem.CreateZombie(*this, Vector2(i, 500));
 }
 
 void Scene::Update(float deltaTime)
@@ -124,6 +123,7 @@ void Scene::Update(float deltaTime)
 	auto const& players = GetEntities<Player>();
 	auto const& zombies = GetEntities<Zombie>();
 	auto const& walls = GetEntities<Wall>();
+	auto const& bombs = GetEntities<Bomb>();
 
 	// If player(s) are dead, restart scene
 	if (players.size() <= 0)
@@ -141,17 +141,18 @@ void Scene::Update(float deltaTime)
 		m_camera.position = Utils::Lerp(m_camera.position, GetComponent<Transform>(players[0]).position, 0.05f);
 		m_camera.Update(*this);
 	}
-	
+
 	m_timerSystem.UpdateTimers(*this);
 	m_playerSystem.UpdatePlayers(*this);
 	m_zombieSystem.UpdateZombies(*this);
 	m_bombSystem.UpdateBombs(*this);
 
 	m_physicsSystem.UpdatePosition(*this);
-	m_physicsSystem.UpdateCollision(*this, GetEntities<Physics, DamageField>(), GetEntities<Physics, Health>());
+	m_physicsSystem.UpdateCollision(*this, GetEntities<Physics, DamageField, Particle>(), GetEntities<Physics, Health>());
 	m_physicsSystem.UpdateCollision(*this, players, walls);
 	m_physicsSystem.UpdateCollision(*this, zombies, walls);
-	m_physicsSystem.UpdateCollision(*this, players, GetEntities<Bomb>());
+	m_physicsSystem.UpdateCollision(*this, bombs, walls);
+	m_physicsSystem.UpdateCollision(*this, players, bombs);
 	m_physicsSystem.UpdateCollision(*this, players, zombies);
 
 	DeleteQueuedEntities();
@@ -171,6 +172,11 @@ void Scene::Render()
 Entity Scene::GetCount()
 {
 	return m_count;
+}
+
+Signature& Scene::GetSignature(Entity id)
+{
+	return m_signatures.Get(id);
 }
 
 bool Scene::DoesEntityExist(Entity id)
@@ -226,6 +232,12 @@ void Scene::DeleteQueuedEntities()
 	}
 }
 
+float Scene::AvailableEntitiesPercent()
+{
+	return 1 - float(m_count) / MAX_ENTITIES;
+}
+
+
 // Component methods
 
 // ...which there are none of cuz they're all templated :P
@@ -238,4 +250,22 @@ Camera& Scene::GetCamera()
 	return m_camera;
 }
 
-// END OF NON-GAMEPLAY METHODS
+// END OF ECS METHODS
+
+
+Entity Scene::CreateWall(Vector2 pos, float width, float height)
+{
+	Entity wall = CreateEntity();
+
+	Wireframe wf = Wireframe(Color(Colors::WHITE));
+	wf.points = { Vector2(-width/2, -height/2), Vector2(width/2, -height/2), 
+		Vector2(width/2, height/2), Vector2(-width/2, height/2)};
+	AddComponent<Wireframe>(wall, wf);
+
+	AddComponent<Transform>(wall, Transform(pos));
+	AddComponent<BoxBounds>(wall, BoxBounds(width, height));
+	AddComponent<Physics>(wall, Physics(Physics::STATIC));
+	AddComponent<Wall>(wall, 0);
+
+	return wall;
+}

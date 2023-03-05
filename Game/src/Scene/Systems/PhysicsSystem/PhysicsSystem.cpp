@@ -165,10 +165,10 @@ void PhysicsSystem::UpdateCollision(Scene& scene, Entity one, Entity two)
 	if (collision)
 	{
 		if (ph1.isTrigger || ph2.isTrigger) 
-			s_onTrigger.Emit(scene, one, two);
+			s_onTrigger.Emit(scene, one, two, resolution);
 		else
 		{
-			s_onCollision.Emit(scene, one, two);
+			s_onCollision.Emit(scene, one, two, resolution);
 
 			if (ph2.bodyType == Physics::STATIC)
 			{

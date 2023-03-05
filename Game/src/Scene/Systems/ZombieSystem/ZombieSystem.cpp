@@ -66,6 +66,12 @@ void ZombieSystem::UpdateZombies(Scene& scene)
 					zm.wallAvoidDir = Vector2(-ph.collisionNormal.x, (float)Utils::Sign(closestPos.y - tf.position.y));
 					ph.velocity = zm.wallAvoidDir * zm.walkSpeed;
 				}
+				// If the collision normal is pointing towards player, we can just unstick
+				else if (Utils::Sign(ph.collisionNormal.x) == Utils::Sign(closestPos.x - tf.position.x))
+				{
+					zm.wallAvoidDir = Vector2(0, 0);
+					ph.velocity = (closestPos - tf.position).Normalized() * zm.walkSpeed;
+				}
 			}
 			// Hugging top/bottom wall
 			else if (abs(ph.collisionNormal.y) == 1)
@@ -74,6 +80,11 @@ void ZombieSystem::UpdateZombies(Scene& scene)
 				{
 					zm.wallAvoidDir = Vector2((float)Utils::Sign(closestPos.x - tf.position.x), -ph.collisionNormal.y);
 					ph.velocity = zm.wallAvoidDir * zm.walkSpeed;
+				}
+				else if (Utils::Sign(ph.collisionNormal.y) == Utils::Sign(closestPos.y - tf.position.y))
+				{
+					zm.wallAvoidDir = Vector2(0, 0);
+					ph.velocity = (closestPos - tf.position).Normalized() * zm.walkSpeed;
 				}
 			}
 			// If not stuck on a wall, just home in
@@ -105,7 +116,7 @@ Entity ZombieSystem::CreateZombie(Scene& scene, Vector2 pos)
 		Vector2(30, 10), Vector2(40, 10), Vector2(36, -10), Vector2(30, 10), // right arm
 	};
 	scene.AddComponent<Wireframe>(zomb, wf);
-
+	
 	scene.AddComponent<Physics>(zomb, Physics(Physics::KINEMATIC));
 	scene.AddComponent<BoxBounds>(zomb, BoxBounds(30, 30));
 	scene.AddComponent<Health>(zomb, DEFAULT_HEALTH);
@@ -143,7 +154,7 @@ void ZombieSystem::OnDied(Scene& scene, Entity id)
 	if (scene.HasComponent<Zombie>(id))
 	{
 		Vector2 pos = scene.GetComponent<Transform>(id).position;
-		for (int i = 0; i < GUTS_COUNT; i++)
+		for (int i = 0; i < GUTS_COUNT * scene.AvailableEntitiesPercent(); i++)
 			CreateZombieGutsParticle(scene, pos);
 
 		scene.QueueDelete(id);

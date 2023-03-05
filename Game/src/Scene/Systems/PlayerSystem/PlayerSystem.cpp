@@ -159,7 +159,7 @@ void PlayerSystem::OnBombExplode(Scene& scene, Entity id)
 			scene.GetComponent<Player>(player).bombOut = false;
 }
 
-void PlayerSystem::OnTrigger(Scene& scene, Entity id1, Entity id2)
+void PlayerSystem::OnTrigger(Scene& scene, Entity id1, Entity id2, Vector2 normal)
 {
 	if (scene.HasComponent<Player>(id1) && 
 		scene.GetComponent<Player>(id1).actionState == Player::KICKING
