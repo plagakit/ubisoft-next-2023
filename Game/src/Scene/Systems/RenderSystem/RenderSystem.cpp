@@ -12,7 +12,7 @@
 #include "Scene/Components/CircleBounds/CircleBounds.h"
 #endif
 
-const Vector2 CENTER = Vector2(APP_VIRTUAL_WIDTH / 2.0f, APP_VIRTUAL_HEIGHT / 2.0f);
+const Vector2 RenderSystem::CENTER = Vector2(APP_VIRTUAL_WIDTH / 2.0f, APP_VIRTUAL_HEIGHT / 2.0f);
 
 void RenderSystem::Render(Scene& scene)
 {
@@ -21,20 +21,20 @@ void RenderSystem::Render(Scene& scene)
     App::Print(0, 250, test.c_str());
 #endif
 
+    Camera cam = scene.GetCamera();
+
     for (Entity id : scene.GetEntities<Transform, Sprite>())
-        RenderSprite(scene, id);
+        RenderSprite(scene, id, cam);
 
     for (Entity id : scene.GetEntities<Transform, Wireframe>())
-        RenderWireframe(scene, id);
-
-    App::Print(10, 50, std::to_string(scene.GetCount()).c_str());
+        RenderWireframe(scene, id, cam);
 }
 
-void RenderSystem::RenderSprite(Scene& scene, Entity id)
+void RenderSystem::RenderSprite(Scene& scene, Entity id, Camera cam)
 {	
     const Transform tf = scene.GetComponent<Transform>(id);
     const Sprite sp = scene.GetComponent<Sprite>(id);
-    const Camera cam = scene.GetCamera();
+    //const Camera cam = scene.GetCamera();
 
 	// Code copied & modified from SimpleSprite.cpp
 #if APP_USE_VIRTUAL_RES
@@ -89,12 +89,12 @@ void RenderSystem::RenderSprite(Scene& scene, Entity id)
 
 }
 
-void RenderSystem::RenderWireframe(Scene& scene, Entity id)
+void RenderSystem::RenderWireframe(Scene& scene, Entity id, Camera cam)
 {
     const Transform tf = scene.GetComponent<Transform>(id);
     const Wireframe wf = scene.GetComponent<Wireframe>(id);
 
-    DrawWireframe(scene.GetCamera(), tf, wf.points, 
+    DrawWireframe(cam, tf, wf.points, 
         wf.color.r/255.0f, wf.color.g/255.0f, wf.color.b/255.0f);
 
 }
@@ -156,7 +156,10 @@ void RenderSystem::RenderPhysicsBounds(Scene& scene)
 
 void RenderSystem::DrawWireframe(const Camera cam, const Transform tf, const std::vector<Vector2>& points, float r, float g, float b)
 {
+    
     auto numPoints = points.size();
+    if (numPoints == 0) return;
+
     for (int i = 0; i < numPoints + 1; i++)
     {
         // i % numpoints means i wraps around numpoints

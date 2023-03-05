@@ -3,6 +3,7 @@
 #include "Utils.h"
 
 #include "Core/Vector2/Vector2.h"
+#include "Core/Color/Color.h"
 
 bool Utils::Equalf(float f1, float f2, float epsilon)
 {
@@ -26,9 +27,18 @@ float Utils::Lerp(float a, float b, float t)
 	return a + (b - a) * t;
 }
 
-Vector2 Utils::Lerp(const Vector2& a, const Vector2& b, float t)
+Vector2 Utils::Lerp(const Vector2 a, const Vector2 b, float t)
 {
 	return a + (b - a) * t;
+}
+
+Color Utils::Lerp(Color c1, Color c2, float t)
+{
+	return Color(
+		static_cast<unsigned char>(Lerp(c1.r, c2.r, t)),
+		static_cast<unsigned char>(Lerp(c1.g, c2.g, t)),
+		static_cast<unsigned char>(Lerp(c1.b, c2.b, t))
+	);
 }
 
 int Utils::RandInt(int min, int max)

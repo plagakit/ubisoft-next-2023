@@ -42,7 +42,7 @@ public:
 	unsigned int m_waveNum;
 
 	static constexpr float RESTART_SCENE_TIME = 3.0f;
-	Entity restartSceneTimer;
+	Entity m_restartSceneTimer;
 	
 	static constexpr float ZOMBIE_WALK_SPEED_INCREMENT = 1.0f;
 	static constexpr float ZOMBIE_SPAWN_RADIUS = 1000.0f;
@@ -50,9 +50,14 @@ public:
 	int m_zombiesSpawnCount = 0;
 	int m_zombiesLeftToSpawn = 0;
 	float m_zombieWalkSpeed = ZombieSystem::DEFAULT_WALK_SPEED;
-	Entity spawnZombieTimer;
+	Entity m_spawnZombieTimer;
 
+	static constexpr float COMBO_TIME = 3.7f;
+	unsigned int m_combo = 0;
+	Entity m_comboTimer;
 
+	void ExtendCombo();
+	void EndCombo();
 	Entity CreateWall(Vector2 pos, float width, float height);
 	void AwardPoints(long amount);
 	void IncrementWave();
@@ -123,10 +128,10 @@ public:
 
 	// Misc methods
 
-	Camera GetCamera();
+	Camera GetCamera() const;
 
 
-private:
+//private:
 	// Entities
 	Entity m_count;
 	std::vector<Entity> m_entities;

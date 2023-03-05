@@ -113,18 +113,20 @@ void Scene::Init()
 	CreateWall(Vector2(0, 300), 300, 100);
 
 	m_points = 0;
-	m_waveNum = 0;
+	m_waveNum = 19;
 
-	restartSceneTimer = CreateEntity();
-	AddComponent<Timer>(restartSceneTimer, Timer(RESTART_SCENE_TIME));
+	m_restartSceneTimer = CreateEntity();
+	AddComponent<Timer>(m_restartSceneTimer, Timer(RESTART_SCENE_TIME));
 
-	spawnZombieTimer = CreateEntity();
-	AddComponent<Timer>(spawnZombieTimer, Timer(ZOMBIE_SPAWN_TIME, false));
+	m_spawnZombieTimer = CreateEntity();
+	AddComponent<Timer>(m_spawnZombieTimer, Timer(ZOMBIE_SPAWN_TIME, false));
+
+	m_comboTimer = CreateEntity();
+	AddComponent<Timer>(m_comboTimer, Timer(COMBO_TIME));
+	//AddComponent<Wireframe>(m_comboTimer, Wireframe(Color(Colors::BLACK)));
+	//AddComponent<Transform>(m_comboTimer, Transform());
 
 	IncrementWave();
-	//for (float i = 0; i < 100; i++)
-	//	m_zombieSystem.CreateZombie(*this, Utils::RandUnitCircleVector() * 1000.0f);
-	//m_zombieSystem.CreateZombie(*this, Vector2(0, 100));
 }
 
 void Scene::Update(float deltaTime)
@@ -140,12 +142,12 @@ void Scene::Update(float deltaTime)
 	// If player(s) are dead, restart scene
 	if (players.size() <= 0)
 	{
-		Timer tm = GetComponent<Timer>(restartSceneTimer);
+		Timer tm = GetComponent<Timer>(m_restartSceneTimer);
 		if (tm.done)
 			Init();
 		else if (!tm.isRunning)
 			tm.Start();
-		SetComponent<Timer>(restartSceneTimer, tm);
+		SetComponent<Timer>(m_restartSceneTimer, tm);
 	}
 	else
 	{
@@ -259,7 +261,7 @@ void Scene::DeleteQueuedEntities()
 
 // Misc methods
 
-Camera Scene::GetCamera()
+Camera Scene::GetCamera() const
 {
 	return m_camera;
 }
@@ -297,9 +299,9 @@ void Scene::IncrementWave()
 	m_zombiesSpawnCount = 10 + m_waveNum + (m_waveNum * m_waveNum) / 4;
 	m_zombiesLeftToSpawn = m_zombiesSpawnCount;
 
-	Timer tm = GetComponent<Timer>(spawnZombieTimer);
+	Timer tm = GetComponent<Timer>(m_spawnZombieTimer);
 	tm.Start();
-	SetComponent<Timer>(spawnZombieTimer, tm);
+	SetComponent<Timer>(m_spawnZombieTimer, tm);
 }
 
 void Scene::TrySpawnZombie()
@@ -312,15 +314,36 @@ void Scene::TrySpawnZombie()
 	}
 }
 
+void Scene::ExtendCombo()
+{
+	m_combo++;
+
+	Timer tm = GetComponent<Timer>(m_comboTimer);
+	tm.Start();
+	SetComponent<Timer>(m_comboTimer, tm);
+}
+
+void Scene::EndCombo()
+{
+	m_combo = 0;
+}
+
 
 
 void Scene::OnTimerDone(Scene& _self, Entity timer)
 {
-	if (timer == spawnZombieTimer)
+	if (timer == m_spawnZombieTimer)
 		TrySpawnZombie();
+	else if (timer == m_comboTimer)
+		EndCombo();
 }
 
 void Scene::OnZombieDied(Scene& _self, Entity zombie)
 {
-	AwardPoints((m_waveNum + 1) * (100 + Utils::RandInt(-20, 50)));
+	ExtendCombo();
+	
+	long points = (m_waveNum + 1)
+		* (10 + Utils::RandInt(-20, 50))
+		* (long)(m_combo / 10.0f + 1);
+	AwardPoints(points);
 }
