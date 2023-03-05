@@ -16,7 +16,7 @@ class PlayerSystem {
 
 	static constexpr float ACCELERATION = 25.0f;
 	static constexpr float WALK_SPEED = 100.0f;
-	static constexpr float ZOMBIE_KNOCKBACK = 1000.0f;
+	static constexpr float ZOMBIE_KNOCKBACK = 500.0f;
 	static constexpr float KICK_TIME = 0.25f;
 	static constexpr float KICK_SPEED = 400.0f;
 

@@ -10,8 +10,6 @@ struct Transform;
 
 class RenderSystem {
 
-	
-
 public:
 
 	static const Vector2 CENTER;

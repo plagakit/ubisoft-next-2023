@@ -113,7 +113,9 @@ void Scene::Init()
 	CreateWall(Vector2(0, 300), 300, 100);
 
 	m_points = 0;
-	m_waveNum = 19;
+	m_waveNum = 0;
+	m_zombiesSpawnCount = -1;
+	m_zombiesLeftToSpawn = -1;
 
 	m_restartSceneTimer = CreateEntity();
 	AddComponent<Timer>(m_restartSceneTimer, Timer(RESTART_SCENE_TIME));
@@ -123,8 +125,6 @@ void Scene::Init()
 
 	m_comboTimer = CreateEntity();
 	AddComponent<Timer>(m_comboTimer, Timer(COMBO_TIME));
-	//AddComponent<Wireframe>(m_comboTimer, Wireframe(Color(Colors::BLACK)));
-	//AddComponent<Transform>(m_comboTimer, Transform());
 
 	IncrementWave();
 }
@@ -144,7 +144,10 @@ void Scene::Update(float deltaTime)
 	{
 		Timer tm = GetComponent<Timer>(m_restartSceneTimer);
 		if (tm.done)
+		{
 			Init();
+			return;
+		}
 		else if (!tm.isRunning)
 			tm.Start();
 		SetComponent<Timer>(m_restartSceneTimer, tm);
@@ -157,7 +160,7 @@ void Scene::Update(float deltaTime)
 	}
 
 	// Check if all zombies are defeated and theres none left to spawn
-	if (m_zombiesLeftToSpawn <= 0 && zombies.size() <= 0)
+	if (m_zombiesLeftToSpawn == 0 && zombies.size() <= 0)
 	{
 		IncrementWave();
 	}
@@ -302,6 +305,9 @@ void Scene::IncrementWave()
 	Timer tm = GetComponent<Timer>(m_spawnZombieTimer);
 	tm.Start();
 	SetComponent<Timer>(m_spawnZombieTimer, tm);
+
+	// Test spawn 1 zombie
+	m_zombieSystem.CreateZombie(*this, Vector2(-200, 500));
 }
 
 void Scene::TrySpawnZombie()
@@ -309,6 +315,7 @@ void Scene::TrySpawnZombie()
 	if (m_zombiesLeftToSpawn > 0)
 	{
 		Vector2 randomPos = Utils::RandUnitCircleVector() * ZOMBIE_SPAWN_RADIUS;
+
 		m_zombieSystem.CreateZombie(*this, randomPos, m_zombieWalkSpeed);
 		m_zombiesLeftToSpawn--;
 	}
@@ -332,10 +339,11 @@ void Scene::EndCombo()
 
 void Scene::OnTimerDone(Scene& _self, Entity timer)
 {
-	if (timer == m_spawnZombieTimer)
-		TrySpawnZombie();
-	else if (timer == m_comboTimer)
+	
+	if (timer == m_comboTimer)
 		EndCombo();
+	else if (timer == m_spawnZombieTimer)
+		TrySpawnZombie();
 }
 
 void Scene::OnZombieDied(Scene& _self, Entity zombie)

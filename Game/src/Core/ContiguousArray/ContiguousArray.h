@@ -12,7 +12,7 @@ public:
 
 	T Get(Entity id);
 	void Set(Entity id, T item);
-	//int GetSize() const;
+	int GetSize() const;
 
 	void Add(Entity id, T item);
 	void Remove(Entity id);	 
@@ -78,13 +78,13 @@ void ContiguousArray<T>::Remove(Entity id)
 	m_indexMap.erase(m_numItems);
 }
 
-/*
+
 template <typename T>
-int ComponentArray<T>::GetSize() const
+int ContiguousArray<T>::GetSize() const
 {
-	return m_activeComponents;
+	return m_numItems;
 }
-*/
+
 
 template <typename T>
 std::string ContiguousArray<T>::ToString()
