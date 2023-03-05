@@ -36,12 +36,14 @@ void PhysicsSystem::UpdatePosition(Scene& scene)
 // have a Transform & Physics component.
 void PhysicsSystem::UpdateCollision(Scene& scene, Entity one, Entity two)
 {
+	
 	bool collision = false;
 	Transform& tf1 = scene.GetComponent<Transform>(one);
 	Physics& ph1 = scene.GetComponent<Physics>(one);
 	Transform& tf2 = scene.GetComponent<Transform>(two);
 	Physics& ph2 = scene.GetComponent<Physics>(two);
 	Vector2 resolution;
+	
 	
 	// Lots of ugly code and if statements (also bad because branch misprediction),
 	// would get particularly ugly with 3+ types of bounds like capsules or rays. 
@@ -165,10 +167,10 @@ void PhysicsSystem::UpdateCollision(Scene& scene, Entity one, Entity two)
 	if (collision)
 	{
 		if (ph1.isTrigger || ph2.isTrigger) 
-			s_onTrigger.Emit(scene, one, two, resolution);
+			s_Trigger.Emit(scene, one, two, resolution);
 		else
 		{
-			s_onCollision.Emit(scene, one, two, resolution);
+			s_Collision.Emit(scene, one, two, resolution);
 
 			if (ph2.bodyType == Physics::STATIC)
 			{
@@ -182,6 +184,7 @@ void PhysicsSystem::UpdateCollision(Scene& scene, Entity one, Entity two)
 			}
 		}
 	}
+	
 }
 
 // Detects collision between two groups of entities and moves them according to their 

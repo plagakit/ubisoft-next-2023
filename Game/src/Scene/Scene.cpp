@@ -52,11 +52,11 @@ Scene::Scene()
 	m_timerSystem.s_TimerDone.Connect<PlayerSystem, &PlayerSystem::OnTimerDone>(&m_playerSystem);
 	m_timerSystem.s_TimerDone.Connect<BombSystem, &BombSystem::OnTimerDone>(&m_bombSystem);
 
-	m_physicsSystem.s_onCollision.Connect<HealthSystem, &HealthSystem::OnCollision>(&m_healthSystem);
+	m_physicsSystem.s_Collision.Connect<HealthSystem, &HealthSystem::OnCollision>(&m_healthSystem);
 
-	m_physicsSystem.s_onTrigger.Connect<HealthSystem, &HealthSystem::OnTrigger>(&m_healthSystem);
-	m_physicsSystem.s_onTrigger.Connect<PlayerSystem, &PlayerSystem::OnTrigger>(&m_playerSystem);
-	m_physicsSystem.s_onTrigger.Connect<BombSystem, &BombSystem::OnTrigger>(&m_bombSystem);
+	m_physicsSystem.s_Trigger.Connect<HealthSystem, &HealthSystem::OnTrigger>(&m_healthSystem);
+	m_physicsSystem.s_Trigger.Connect<PlayerSystem, &PlayerSystem::OnTrigger>(&m_playerSystem);
+	m_physicsSystem.s_Trigger.Connect<BombSystem, &BombSystem::OnTrigger>(&m_bombSystem);
 
 	m_playerSystem.s_PlacedBomb.Connect<BombSystem, &BombSystem::CreateBomb>(&m_bombSystem);
 
@@ -112,7 +112,7 @@ void Scene::Init()
 
 	restartSceneTimer = Timer(RESTART_SCENE_TIME);
 
-	for (int i = 0; i < 100; i++)
+	for (float i = 0; i < 100; i++)
 		m_zombieSystem.CreateZombie(*this, Vector2(i, 500));
 }
 
@@ -148,12 +148,11 @@ void Scene::Update(float deltaTime)
 	m_bombSystem.UpdateBombs(*this);
 
 	m_physicsSystem.UpdatePosition(*this);
-	m_physicsSystem.UpdateCollision(*this, GetEntities<Physics, DamageField, Particle>(), GetEntities<Physics, Health>());
 	m_physicsSystem.UpdateCollision(*this, players, walls);
 	m_physicsSystem.UpdateCollision(*this, zombies, walls);
 	m_physicsSystem.UpdateCollision(*this, bombs, walls);
 	m_physicsSystem.UpdateCollision(*this, players, bombs);
-	m_physicsSystem.UpdateCollision(*this, players, zombies);
+	m_physicsSystem.UpdateCollision(*this, GetEntities<Physics, DamageField>(), GetEntities<Physics, Health>());
 
 	DeleteQueuedEntities();
 }

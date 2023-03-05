@@ -192,7 +192,7 @@ void Scene::CreateComponentArray()
 template <typename T>
 std::shared_ptr<ContiguousArray<T>> Scene::GetComponentArray()
 {
-	assert("Component array doesn't exist!" && IsComponentArrayCreated<T>());
+	//assert("Component array doesn't exist!" && IsComponentArrayCreated<T>());
 	const auto& type = typeid(T);
 	return std::static_pointer_cast<ContiguousArray<T>>(m_componentArrays[type]);
 }
@@ -202,7 +202,7 @@ ComponentID Scene::GetComponentType()
 {
 	const std::type_info& type = typeid(T);
 	auto find = m_componentTypes.find(type);
-	assert("Component array doesn't exist!" && find != m_componentTypes.end());
+	//assert("Component array doesn't exist!" && find != m_componentTypes.end());
 	return find->second;
 }
 

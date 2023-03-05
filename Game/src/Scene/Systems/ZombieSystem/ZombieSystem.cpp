@@ -117,10 +117,13 @@ Entity ZombieSystem::CreateZombie(Scene& scene, Vector2 pos)
 	};
 	scene.AddComponent<Wireframe>(zomb, wf);
 	
+	DamageField df = DamageField(1, false);
+	df.DontHitComponentID(scene.GetComponentType<Zombie>());
+	scene.AddComponent<DamageField>(zomb, df);
+
 	scene.AddComponent<Physics>(zomb, Physics(Physics::KINEMATIC));
 	scene.AddComponent<BoxBounds>(zomb, BoxBounds(30, 30));
 	scene.AddComponent<Health>(zomb, DEFAULT_HEALTH);
-	scene.AddComponent<DamageField>(zomb, DamageField(1, false));
 	scene.AddComponent<Zombie>(zomb, Zombie());
 
 	return zomb;

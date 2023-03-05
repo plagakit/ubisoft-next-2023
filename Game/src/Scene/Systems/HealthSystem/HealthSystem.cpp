@@ -11,7 +11,7 @@ void HealthSystem::ExecuteDamage(Scene& scene, Entity attacker, Entity target)
 	DamageField& df = scene.GetComponent<DamageField>(attacker);
 	Health& h = scene.GetComponent<Health>(target);
 
-	if (df.TryHit(target))
+	if (df.TryHit(target, scene.GetSignature(target)))
 	{
 		h -= df.damage;
 		s_DamagedBy.Emit(scene, target, attacker);

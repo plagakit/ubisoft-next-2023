@@ -13,12 +13,14 @@ struct CircleBounds;
 class PhysicsSystem {
 
 public:
-	Signal<Entity, Vector2> s_onCollision;
-	Signal<Entity, Vector2> s_onTrigger;
+	Signal<Entity, Vector2> s_Collision;
+	Signal<Entity, Vector2> s_Trigger;
 
 	void UpdatePosition(Scene& scene);
 	void UpdateCollision(Scene& scene, Entity one, Entity two);
 	void UpdateCollision(Scene& scene, const std::vector<Entity>& group1, const std::vector<Entity>& group2);
+
+
 
 private:
 	bool IsColliding(Transform& tf1, Transform& tf2, CircleBounds& cb1, CircleBounds& cb2);

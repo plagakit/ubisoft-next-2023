@@ -7,6 +7,7 @@ struct DamageField {
 	static const int MAX_HIT = 64;
 
 	int damage;
+	Signature hitSignature;
 
 	// alreadyHit keeps track of entities already hit to not spam them with damage.
 	// Uses std::array b/c it has fixed memory size so it ensures contiguous DamageField vector for ECS.
@@ -21,7 +22,9 @@ struct DamageField {
 	std::array<Entity, MAX_HIT> alreadyHit;
 
 	DamageField(int damage, bool keepTrackOfAlreadyHit = true);
-	bool TryHit(Entity id);
+	bool TryHit(Entity id, Signature signature);
 	bool AddHit(Entity id);
+	void DontHitComponentID(ComponentID id);
+	void HitComponentID(ComponentID id);
 
 };
