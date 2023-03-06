@@ -15,7 +15,7 @@
 #include "Scene/Components/Physics/Physics.h"
 
 
-void UI::Render(Scene& scene)
+void UI::Render(Scene& scene) const
 {
 	if (m_player != Scene::NULL_ENTITY)
 	{

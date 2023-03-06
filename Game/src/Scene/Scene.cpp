@@ -196,7 +196,7 @@ void Scene::Render()
 
 // Entity methods
 
-Entity Scene::GetCount()
+Entity Scene::GetCount() const
 {
 	return m_count;
 }
@@ -206,7 +206,7 @@ Signature Scene::GetSignature(Entity id)
 	return m_signatures.Get(id);
 }
 
-bool Scene::DoesEntityExist(Entity id)
+bool Scene::DoesEntityExist(Entity id) const
 {
 	return std::find(m_entities.begin(), m_entities.end(), id) != m_entities.end();
 }

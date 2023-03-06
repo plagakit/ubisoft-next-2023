@@ -78,11 +78,11 @@ public:
 
 	// Entity methods
 
-	Entity GetCount();
+	Entity GetCount() const;
 
 	Signature GetSignature(Entity id);
 
-	bool DoesEntityExist(Entity id);
+	bool DoesEntityExist(Entity id) const;
 
 	template <typename... Components>
 	std::vector<Entity> GetEntities();
@@ -99,7 +99,7 @@ public:
 	// Component methods
 
 	template <typename T>
-	bool IsComponentArrayCreated();
+	bool IsComponentArrayCreated() const;
 
 	template <typename T>
 	void CreateComponentArray();
@@ -131,7 +131,7 @@ public:
 	Camera GetCamera() const;
 
 
-//private:
+private:
 	// Entities
 	Entity m_count;
 	std::vector<Entity> m_entities;
@@ -203,7 +203,7 @@ std::vector<Entity> Scene::GetEntities()
 // Templated component methods
 
 template<typename T>
-bool Scene::IsComponentArrayCreated()
+bool Scene::IsComponentArrayCreated() const
 {
 	return m_componentTypes.find(typeid(T)) != m_componentTypes.end();
 }

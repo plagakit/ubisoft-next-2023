@@ -12,7 +12,7 @@ public:
 
 	Signal<Camera> s_RenderWireframe;
 
-	void Render(Scene& scene);
+	void Render(Scene& scene) const;
 
 	void BindPlayer(Scene& scene, Entity player);
 	void OnEntityDeleted(Scene& scene, Entity player);

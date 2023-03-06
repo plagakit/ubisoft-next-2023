@@ -17,7 +17,7 @@ public:
 	void Add(Entity id, T item);
 	void Remove(Entity id);	 
 
-	std::string ToString();
+	std::string ToString() const;
 	
 private:
 	std::vector<T> m_items;
@@ -87,7 +87,7 @@ int ContiguousArray<T>::GetSize() const
 
 
 template <typename T>
-std::string ContiguousArray<T>::ToString()
+std::string ContiguousArray<T>::ToString() const
 {
 	std::string str = "";
 	for (auto const& pair : m_entityMap)
