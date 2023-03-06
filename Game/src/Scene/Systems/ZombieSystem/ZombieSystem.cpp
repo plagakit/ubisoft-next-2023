@@ -60,6 +60,8 @@ void ZombieSystem::UpdateZombies(Scene& scene)
 			// Simple sol'n to avoid walls without complex pathfinding
 			// I *could've* implemented pathfinding with a grid of sorts -> spatial partioning! :D
 
+			// TODO: make little ascii diagram, will trip up around corners
+
 			// Hugging left/right wall
 			if (abs(ph.collisionNormal.x) == 1)
 			{

@@ -179,6 +179,7 @@ void Scene::Update(float deltaTime)
 	m_physicsSystem.UpdateCollision(*this, bombs, walls);
 	m_physicsSystem.UpdateCollision(*this, players, bombs);
 	m_physicsSystem.UpdateCollision(*this, zombies, players);
+	//m_physicsSystem.UpdateCollision(*this, zombies, zombies); Too slow to check zombie collision (O(n^2)), would put if there was optimization like spatial partition
 	m_physicsSystem.UpdateCollision(*this, GetEntities<Physics, DamageField, Particle>(), GetEntities<Physics, Health>());
 
 	DeleteQueuedEntities();
@@ -350,7 +351,8 @@ void Scene::OnZombieDied(Scene& _self, Entity zombie)
 	ExtendCombo();
 	
 	long points = (m_waveNum + 1)
-		* (10 + Utils::RandInt(-20, 50))
+		* (30 + Utils::RandInt(0, 20))
 		* (long)(m_combo / 10.0f + 1);
+
 	AwardPoints(points);
 }

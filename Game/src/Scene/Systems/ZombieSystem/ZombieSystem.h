@@ -11,7 +11,7 @@ class ZombieSystem {
 public:
 
 	static constexpr int DEFAULT_HEALTH = 1;
-	static constexpr float DEFAULT_WALK_SPEED = 40.0f;
+	static constexpr float DEFAULT_WALK_SPEED = 60.0f;
 
 	static constexpr int GUTS_COUNT = 10;
 	static constexpr std::pair<float, float> GUTS_SPEED = { 0.0f, 100.0f };

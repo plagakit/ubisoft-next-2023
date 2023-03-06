@@ -23,6 +23,10 @@ void UI::Render(Scene& scene)
 		App::Print(20, 725, ("Health: " + std::to_string(playerHealth)).c_str());
 	}
 
+	App::Print(20, 20, "Arrows keys to move.");
+	App::Print(20, 40, "Press X to kick a bomb.");
+	App::Print(20, 60, "Press Z to place a bomb.");
+
 	const auto points = "Points: " + std::to_string(scene.m_points);
 	App::Print(20, 700, points.c_str());
 

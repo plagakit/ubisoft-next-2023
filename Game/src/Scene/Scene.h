@@ -46,7 +46,7 @@ public:
 	
 	static constexpr float ZOMBIE_WALK_SPEED_INCREMENT = 3.0f;
 	static constexpr float ZOMBIE_SPAWN_RADIUS = 1000.0f;
-	static constexpr float ZOMBIE_SPAWN_TIME = 0.25f;
+	static constexpr float ZOMBIE_SPAWN_TIME = 0.1f;
 	int m_zombiesSpawnCount = 0;
 	int m_zombiesLeftToSpawn = 0;
 	float m_zombieWalkSpeed = ZombieSystem::DEFAULT_WALK_SPEED;
