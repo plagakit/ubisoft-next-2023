@@ -35,6 +35,8 @@ void BombSystem::UpdateBombs(Scene& scene)
 	}
 }
 
+// Components of a bomb: 
+// Bomb, Transform, Timer, Wireframe, Physics, CircleBounds
 void BombSystem::CreateBomb(Scene& scene, Entity player)
 {
 	Entity id = scene.CreateEntity();
@@ -82,6 +84,8 @@ void BombSystem::ExplodeBomb(Scene& scene, Entity bomb)
 	scene.QueueDelete(bomb);
 }
 
+// Components of a bomb explosion particle: 
+// Transform, Physics, Wireframe, Timer, Particle
 void BombSystem::CreateExplosionParticle(Scene& scene, Vector2 pos)
 {
 	Entity id = scene.CreateEntity();
@@ -101,6 +105,8 @@ void BombSystem::CreateExplosionParticle(Scene& scene, Vector2 pos)
 	scene.AddComponent<Particle>(id, 0);
 }
 
+// Components of a explosion hitbox: 
+// Transform, Physics, Wireframe, BoxBounds, Timer, Particle, DamageField
 void BombSystem::CreateExplosionHitbox(Scene& scene, float width, float height, Vector2 pos, const DamageField& damage)
 {
 	Entity hitbox = scene.CreateEntity();

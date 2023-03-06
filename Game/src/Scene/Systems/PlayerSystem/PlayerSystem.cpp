@@ -84,6 +84,8 @@ void PlayerSystem::UpdatePlayers(Scene& scene)
 	}
 }
 
+// Components of a player: 
+// Player, Transform, Physics, Wireframe, CircleBounds, Health, Timer
 Entity PlayerSystem::CreatePlayer(Scene& scene, Vector2 pos)
 {
 	Entity id = scene.CreateEntity();
@@ -143,6 +145,8 @@ void PlayerSystem::GetHit(Scene& scene, Entity player, Entity attacker)
 	scene.SetComponent<Player>(player, pl);
 }
 
+// Components of a player death particle: 
+// Transform, Physics, Wireframe, Timer, Particle
 void PlayerSystem::CreatePlayerDeathParticle(Scene& scene, Vector2 pos)
 {
 	Entity id = scene.CreateEntity();

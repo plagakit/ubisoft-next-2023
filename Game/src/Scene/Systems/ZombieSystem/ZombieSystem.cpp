@@ -109,6 +109,8 @@ void ZombieSystem::UpdateZombies(Scene& scene)
 	}
 }
 
+// Components of a zombie: 
+// Zombie, Transform, Physics, Wireframe, BoxBounds, Health, DamageField
 Entity ZombieSystem::CreateZombie(Scene& scene, Vector2 pos, float walkSpeed)
 {
 	Entity zomb = scene.CreateEntity();
@@ -138,6 +140,8 @@ Entity ZombieSystem::CreateZombie(Scene& scene, Vector2 pos, float walkSpeed)
 	return zomb;
 }
 
+// Components of a zombie guts particle: 
+// Transform, Physics, Wireframe, Timer, Particle
 void ZombieSystem::CreateZombieGutsParticle(Scene& scene, Vector2 pos)
 {
 	Entity id = scene.CreateEntity();
