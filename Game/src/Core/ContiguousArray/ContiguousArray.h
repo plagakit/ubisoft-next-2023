@@ -10,13 +10,14 @@ class ContiguousArray : public IContiguousArray {
 public:
 	ContiguousArray();
 
-	T& Get(Entity id);
-	//int GetSize() const;
+	T Get(Entity id);
+	void Set(Entity id, T item);
+	int GetSize() const;
 
-	void Add(Entity id, T component);
-	void Remove(Entity id);	
+	void Add(Entity id, T item);
+	void Remove(Entity id);	 
 
-	std::string ToString();
+	std::string ToString() const;
 	
 private:
 	std::vector<T> m_items;
@@ -33,11 +34,19 @@ ContiguousArray<T>::ContiguousArray()
 {}
 
 template<typename T>
-T& ContiguousArray<T>::Get(Entity id)
+T ContiguousArray<T>::Get(Entity id)
 {
-	auto itemIndex = m_entityMap.find(id);
-	assert("Get: entity not found in map." && itemIndex != m_entityMap.end());
-	return m_items[m_entityMap[id]]; // Entity indexes start at 1
+	//auto itemIndex = m_entityMap.find(id);
+	//assert("Get: entity not found in map." && itemIndex != m_entityMap.end());
+	return m_items[m_entityMap[id]]; 
+}
+
+template <typename T>
+void ContiguousArray<T>::Set(Entity id, T item)
+{
+	//auto itemIndex = m_entityMap.find(id);
+	//assert("Get: entity not found in map." && itemIndex != m_entityMap.end());
+	m_items[m_entityMap[id]] = item;
 }
 
 template<typename T>
@@ -69,16 +78,16 @@ void ContiguousArray<T>::Remove(Entity id)
 	m_indexMap.erase(m_numItems);
 }
 
-/*
-template <typename T>
-int ComponentArray<T>::GetSize() const
-{
-	return m_activeComponents;
-}
-*/
 
 template <typename T>
-std::string ContiguousArray<T>::ToString()
+int ContiguousArray<T>::GetSize() const
+{
+	return m_numItems;
+}
+
+
+template <typename T>
+std::string ContiguousArray<T>::ToString() const
 {
 	std::string str = "";
 	for (auto const& pair : m_entityMap)

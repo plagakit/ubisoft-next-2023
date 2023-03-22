@@ -88,8 +88,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>.\glut;$(IncludePath)</IncludePath>
-    <LibraryPath>.\glut\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>.\glut;$(IncludePath);.\external\glut;.\include</IncludePath>
+    <LibraryPath>.\glut\lib\x64;$(LibraryPath);.\external\glut\lib\x64</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -163,6 +163,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>.\src;C:\Users\thoma\Documents\CPP\UbisoftNEXT\NEXT-API\Game\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -188,17 +189,26 @@
     <ClInclude Include="include\App\TextureLoader.h" />
     <ClInclude Include="include\stdafx.h" />
     <ClInclude Include="include\targetver.h" />
+    <ClInclude Include="src\Core\Color\Color.h" />
     <ClInclude Include="src\Scene\Camera\Camera.h" />
+    <ClInclude Include="src\Scene\Components\Bomb\Bomb.h" />
+    <ClInclude Include="src\Scene\Components\DamageField\DamageField.h" />
+    <ClInclude Include="src\Scene\Components\Player\Player.h" />
     <ClInclude Include="src\Scene\Components\CircleBounds\CircleBounds.h" />
     <ClInclude Include="src\Scene\Components\BoxBounds\BoxBounds.h" />
     <ClInclude Include="src\Scene\Components\Physics\Physics.h" />
+    <ClInclude Include="src\Scene\Components\PrimitiveComponents.h" />
     <ClInclude Include="src\Scene\Components\Sprite\Sprite.h" />
     <ClInclude Include="src\Scene\Components\Timer\Timer.h" />
     <ClInclude Include="src\Scene\Components\Transform\Transform.h" />
     <ClInclude Include="src\Scene\Components\Wireframe\Wireframe.h" />
     <ClInclude Include="src\Core\ContiguousArray\ContiguousArray.h" />
     <ClInclude Include="src\Core\ContiguousArray\IContiguousArray.h" />
+    <ClInclude Include="src\Scene\Components\Zombie\Zombie.h" />
     <ClInclude Include="src\Scene\Scene.h" />
+    <ClInclude Include="src\Scene\Systems\BombSystem\BombSystem.h" />
+    <ClInclude Include="src\Scene\Systems\HealthSystem\HealthSystem.h" />
+    <ClInclude Include="src\Scene\Systems\ParticleSystem\ParticleSystem.h" />
     <ClInclude Include="src\Scene\Systems\PhysicsSystem\PhysicsSystem.h" />
     <ClInclude Include="src\Scene\Systems\PlayerSystem\PlayerSystem.h" />
     <ClInclude Include="src\Scene\Systems\RenderSystem\RenderSystem.h" />
@@ -206,6 +216,8 @@
     <ClInclude Include="src\Scene\Systems\TimerSystem\TimerSystem.h" />
     <ClInclude Include="src\Core\Vector2\Vector2.h" />
     <ClInclude Include="src\Core\Delegate\Delegate.h" />
+    <ClInclude Include="src\Scene\Systems\ZombieSystem\ZombieSystem.h" />
+    <ClInclude Include="src\Scene\UI\UI.h" />
     <ClInclude Include="src\Utils\Utils.h" />
   </ItemGroup>
   <ItemGroup>
@@ -215,7 +227,11 @@
     <ClCompile Include="include\App\SimpleSound.cpp" />
     <ClCompile Include="include\App\SimpleSprite.cpp" />
     <ClCompile Include="include\App\TextureLoader.cpp" />
+    <ClCompile Include="src\Core\Color\Color.cpp" />
     <ClCompile Include="src\Scene\Camera\Camera.cpp" />
+    <ClCompile Include="src\Scene\Components\Bomb\Bomb.cpp" />
+    <ClCompile Include="src\Scene\Components\DamageField\DamageField.cpp" />
+    <ClCompile Include="src\Scene\Components\Player\Player.cpp" />
     <ClCompile Include="src\Scene\Components\BoxBounds\BoxBounds.cpp" />
     <ClCompile Include="src\Scene\Components\CircleBounds\CircleBounds.cpp" />
     <ClCompile Include="src\Scene\Components\Physics\Physics.cpp" />
@@ -230,6 +246,12 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\Scene\Components\Wireframe\Wireframe.cpp" />
+    <ClCompile Include="src\Scene\Components\Zombie\Zombie.cpp" />
+    <ClCompile Include="src\Scene\Systems\BombSystem\BombSystem.cpp" />
+    <ClCompile Include="src\Scene\Systems\HealthSystem\HealthSystem.cpp" />
+    <ClCompile Include="src\Scene\Systems\ParticleSystem\ParticleSystem.cpp" />
+    <ClCompile Include="src\Scene\Systems\ZombieSystem\ZombieSystem.cpp" />
+    <ClCompile Include="src\Scene\UI\UI.cpp" />
     <ClCompile Include="src\UnitTests\ECSTest.cpp" />
     <ClCompile Include="src\Scene\Scene.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>

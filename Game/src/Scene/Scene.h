@@ -5,18 +5,67 @@
 #include "Camera/Camera.h"
 #include "Core/ContiguousArray/ContiguousArray.h"
 #include "Core/Signal/Signal.h"
+#include "UI/UI.h"
+
 #include "Systems/RenderSystem/RenderSystem.h"
 #include "Systems/PhysicsSystem/PhysicsSystem.h"
 #include "Systems/TimerSystem/TimerSystem.h"
 #include "Systems/PlayerSystem/PlayerSystem.h"
+#include "Systems/BombSystem/BombSystem.h"
+#include "Systems/ParticleSystem/ParticleSystem.h"
+#include "Systems/HealthSystem/HealthSystem.h"
+#include "Systems/ZombieSystem/ZombieSystem.h"
 
 class Scene {
 
 public:
-	const Entity MAX_ENTITIES = 1000;
-	float m_deltaTime = 0;
 
-	Signal<Entity> s_EntityDeleted;
+	// Gameplay
+	
+	Signal<> s_EntityDeleted;
+
+	static constexpr Entity MAX_ENTITIES = 10000;
+	static constexpr Entity NULL_ENTITY = 0;
+
+	static constexpr float DT_SMOOTHING = 0.5f;
+	float m_rawDeltaTime = 0;
+	float m_smoothDeltaTime = 0;
+
+	static constexpr float MAP_BOUNDS_X = 1000.0f;
+	static constexpr float MAP_BOUNDS_Y = 1000.0f;
+	static constexpr float MAP_BOUND_WIDTH = 300.0f;
+	static constexpr float MAP_LONG_WIDTH = MAP_BOUND_WIDTH + MAP_BOUNDS_X * 2;
+	static constexpr float MAP_LONG_HEIGHT = MAP_BOUND_WIDTH + MAP_BOUNDS_Y * 2;
+
+	Entity m_player;
+	long m_points;
+	unsigned int m_waveNum;
+
+	static constexpr float RESTART_SCENE_TIME = 3.0f;
+	Entity m_restartSceneTimer;
+	
+	static constexpr float ZOMBIE_WALK_SPEED_INCREMENT = 3.0f;
+	static constexpr float ZOMBIE_SPAWN_RADIUS = 1000.0f;
+	static constexpr float ZOMBIE_SPAWN_TIME = 0.1f;
+	int m_zombiesSpawnCount = 0;
+	int m_zombiesLeftToSpawn = 0;
+	float m_zombieWalkSpeed = ZombieSystem::DEFAULT_WALK_SPEED;
+	Entity m_spawnZombieTimer;
+
+	static constexpr float COMBO_TIME = 3.7f;
+	unsigned int m_combo = 0;
+	Entity m_comboTimer;
+
+	void ExtendCombo();
+	void EndCombo();
+	Entity CreateWall(Vector2 pos, float width, float height);
+	void AwardPoints(long amount);
+	void IncrementWave();
+	void TrySpawnZombie();
+
+	void OnTimerDone(Scene& scene, Entity timer);
+	void OnZombieDied(Scene& scene, Entity zombie);
+
 
 	// Scene methods
 
@@ -29,9 +78,11 @@ public:
 
 	// Entity methods
 
-	Entity GetCount();
+	Entity GetCount() const;
 
-	bool DoesEntityExist(Entity id);
+	Signature GetSignature(Entity id);
+
+	bool DoesEntityExist(Entity id) const;
 
 	template <typename... Components>
 	std::vector<Entity> GetEntities();
@@ -48,6 +99,9 @@ public:
 	// Component methods
 
 	template <typename T>
+	bool IsComponentArrayCreated() const;
+
+	template <typename T>
 	void CreateComponentArray();
 
 	template <typename T>
@@ -60,7 +114,10 @@ public:
 	bool HasComponent(Entity id);
 
 	template <typename T>
-	T& GetComponent(Entity id);
+	T GetComponent(Entity id);
+
+	template <typename T>
+	void SetComponent(Entity id, T component);
 
 	template <typename T>
 	void AddComponent(Entity id, T component);
@@ -71,7 +128,7 @@ public:
 
 	// Misc methods
 
-	Camera& GetCamera();
+	Camera GetCamera() const;
 
 
 private:
@@ -100,10 +157,15 @@ private:
 	RenderSystem m_renderSystem;
 	PhysicsSystem m_physicsSystem;
 	TimerSystem m_timerSystem;
+	ParticleSystem m_particleSystem;
 	PlayerSystem m_playerSystem;
+	BombSystem m_bombSystem;
+	HealthSystem m_healthSystem;
+	ZombieSystem m_zombieSystem;
 
 	// Misc
 	Camera m_camera;
+	UI m_ui;
 
 };
 
@@ -117,7 +179,7 @@ std::vector<Entity> Scene::GetEntities()
 	if (sizeof...(Components) == 0)
 		return m_entities;
 
-	// Unpack variadic template into a list of component types
+	// Unpack variadic template into a list of component types, ignoring first
 	ComponentID types[] = { 0, GetComponentType<Components>()... };
 
 	// Set the signature's bits based on types array
@@ -125,10 +187,14 @@ std::vector<Entity> Scene::GetEntities()
 	for (int i = 1; i < (sizeof...(Components) + 1); i++)
 		mask.set(types[i]);
 
-	// Copy any signature that matches the component mask (has required components) into a vector
+
+	// Copy any signature that has at least the component mask's bits (has required components) into a vector
+	auto matchPred = [this, mask](Entity id) { 
+		return (m_signatures.Get(id) & mask) == mask;
+	};
+
 	std::vector<Entity> matches;
-	std::copy_if(m_entities.begin(), m_entities.end(), std::back_inserter(matches),
-		[this, &mask](Entity id) { return (m_signatures.Get(id) & mask) == mask; });
+	std::copy_if(m_entities.begin(), m_entities.end(), std::back_inserter(matches), matchPred);
 
 	return matches;
 }
@@ -136,18 +202,24 @@ std::vector<Entity> Scene::GetEntities()
 
 // Templated component methods
 
+template<typename T>
+bool Scene::IsComponentArrayCreated() const
+{
+	return m_componentTypes.find(typeid(T)) != m_componentTypes.end();
+}
+
 template <typename T>
 void Scene::CreateComponentArray()
 {
 	const std::type_info& type = typeid(T);
 
-	m_componentArrays.insert({ type, std::make_shared<ContiguousArray<T>>() });
-	m_componentTypes.insert({ type, m_typeCount });
+	m_componentArrays[type] = std::make_shared<ContiguousArray<T>>();
+	m_componentTypes[type] = m_typeCount;
 
 	// Add the remove component function to map so that it can be used @ runtime w/ ComponentID
 	auto rmFunc = Delegate<Entity>();
 	rmFunc.Bind<Scene, &Scene::RemoveComponent<T>>(this);
-	m_removeComponentFunctions.insert({ m_typeCount, rmFunc });
+	m_removeComponentFunctions[m_typeCount] = rmFunc;
 
 	m_typeCount++;
 }
@@ -155,6 +227,7 @@ void Scene::CreateComponentArray()
 template <typename T>
 std::shared_ptr<ContiguousArray<T>> Scene::GetComponentArray()
 {
+	//assert("Component array doesn't exist!" && IsComponentArrayCreated<T>());
 	const auto& type = typeid(T);
 	return std::static_pointer_cast<ContiguousArray<T>>(m_componentArrays[type]);
 }
@@ -163,6 +236,9 @@ template <typename T>
 ComponentID Scene::GetComponentType()
 {
 	const std::type_info& type = typeid(T);
+	//auto find = m_componentTypes.find(type);
+	//assert("Component array doesn't exist!" && find != m_componentTypes.end());
+	//return find->second;
 	return m_componentTypes[type];
 }
 
@@ -175,21 +251,30 @@ bool Scene::HasComponent(Entity id)
 }
 
 template <typename T>
-T& Scene::GetComponent(Entity id)
+T Scene::GetComponent(Entity id)
 {
 	return GetComponentArray<T>()->Get(id);
 }
 
 template <typename T>
+void Scene::SetComponent(Entity id, T component)
+{
+	GetComponentArray<T>()->Set(id, component);
+}
+
+template <typename T>
 void Scene::AddComponent(Entity id, T component)
 {
+	if (!IsComponentArrayCreated<T>())
+		CreateComponentArray<T>();
+	
 	GetComponentArray<T>()->Add(id, component);
-	m_signatures.Get(id).set(GetComponentType<T>());
+	m_signatures.Set(id, m_signatures.Get(id).set(GetComponentType<T>()));
 }
 
 template <typename T>
 void Scene::RemoveComponent(Entity id)
 {
 	GetComponentArray<T>()->Remove(id);
-	m_signatures.Get(id).reset(GetComponentType<T>());
+	m_signatures.Set(id, m_signatures.Get(id).reset(GetComponentType<T>()));
 }

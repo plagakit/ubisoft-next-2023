@@ -13,16 +13,18 @@ struct CircleBounds;
 class PhysicsSystem {
 
 public:
-	Signal<Entity, Entity> s_onCollision;
-	Signal<Entity, Entity> s_onTrigger;
+	Signal<Entity, Vector2> s_Collision;
+	Signal<Entity, Vector2> s_Trigger;
 
 	void UpdatePosition(Scene& scene);
 	void UpdateCollision(Scene& scene, Entity one, Entity two);
-	void UpdateCollision(Scene& scene, std::vector<Entity> group1, std::vector<Entity> group2);
+	void UpdateCollision(Scene& scene, const std::vector<Entity>& group1, const std::vector<Entity>& group2);
+
+
 
 private:
-	bool IsColliding(Transform& tf1, Transform& tf2, CircleBounds& cb1, CircleBounds& cb2);
-	bool IsColliding(Transform& tf1, Transform& tf2, BoxBounds& bb1, BoxBounds& bb2);
-	bool IsColliding(Transform& tf1, Transform& tf2, CircleBounds& cb, BoxBounds& bb);
+	bool IsColliding(Transform tf1, Transform tf2, CircleBounds cb1, CircleBounds cb2);
+	bool IsColliding(Transform tf1, Transform tf2, BoxBounds bb1, BoxBounds bb2);
+	bool IsColliding(Transform tf1, Transform tf2, CircleBounds cb, BoxBounds bb);
 
 };

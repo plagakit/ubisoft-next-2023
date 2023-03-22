@@ -10,12 +10,12 @@ void TimerSystem::UpdateTimers(Scene& scene)
 {
 	for (Entity id : scene.GetEntities<Timer>())
 	{
-		Timer& t = scene.GetComponent<Timer>(id);
+		Timer t = scene.GetComponent<Timer>(id);
 
 		if (!t.isRunning)
-			return;
+			continue;
 
-		t.elapsed += scene.m_deltaTime;
+		t.elapsed += scene.m_smoothDeltaTime;
 
 		if (t.elapsed > t.duration)
 		{
@@ -25,8 +25,11 @@ void TimerSystem::UpdateTimers(Scene& scene)
 				t.done = true;
 				t.isRunning = false;
 			}
-			s_timerDone.Emit(id);
+
+			s_TimerDone.Emit(scene, id);
 		}
+
+		scene.SetComponent<Timer>(id, t);
 	}
 	
 }

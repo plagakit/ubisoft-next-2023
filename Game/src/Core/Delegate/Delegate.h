@@ -16,12 +16,12 @@ class Delegate
 	/*
 	The way these delegates work is by wrapping functions. When calling member functions,
 	you need the instance of the class of the function in addition to its function pointer.
-	In addition, you need to know the type of the class in the definition of the function
+	ALSO, you need to know the type of the class in the definition of the function
 	pointer (ex. void (C::*)() -> C is there!), which means it can't be generic.
 
 	Delegates converts the instance pointer into a void pointer when binding it (see Bind()).
 	It then makes a generic void function by wrapping the function pointer with a static cast
-	back to its original type (note how the Generalize functions are inlined). This is how the whole
+	back to its original type. This is how the whole
 	process would look like with a member function F of class C, to make it easier to understand:
 
 	Upon creation:	m_function is nullptr							

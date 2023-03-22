@@ -11,15 +11,16 @@ struct Transform;
 class RenderSystem {
 
 public:
-	void Render(Scene& scene);
-	void Test(Entity a, Entity b) { test += "a"; }
 
-private:
-	void RenderSprite(Scene& scene, Entity id);
-	void RenderWireframe(Scene& scene, Entity id);
+	static const Vector2 CENTER;
+
+	void Render(Scene& scene);
+
+	void RenderSprite(Scene& scene, Entity id, Camera cam);
+	void RenderWireframe(Scene& scene, Entity id, Camera cam);
 	void RenderPhysicsBounds(Scene& scene);
 
-	void DrawWireframe(Camera& camera, Transform& transform, std::vector<Vector2>& points, float r = 1.0f, float g = 1.0f, float b = 1.0f);
+	void DrawWireframe(const Camera camera, const Transform transform, const std::vector<Vector2>& points,
+		float r = 1.0f, float g = 1.0f, float b = 1.0f);
 
-	std::string test = "";
 };

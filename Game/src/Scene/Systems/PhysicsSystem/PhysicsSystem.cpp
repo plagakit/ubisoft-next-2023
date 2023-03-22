@@ -11,33 +11,42 @@
 
 void PhysicsSystem::UpdatePosition(Scene& scene)
 {
-	std::vector<Entity> bodies = scene.GetEntities<Transform, Physics>();
-	for (Entity id : bodies)
+	for (Entity id : scene.GetEntities<Transform, Physics>())
 	{
-		Transform& tf = scene.GetComponent<Transform>(id);
-		Physics& ph = scene.GetComponent<Physics>(id);
+		Physics ph = scene.GetComponent<Physics>(id);
 
 		// Update movement and rotation
 		if (ph.bodyType == Physics::KINEMATIC)
 		{
-			tf.position += ph.velocity * scene.m_deltaTime;
-			tf.rotation += ph.angularVelocity * scene.m_deltaTime;
+			Transform tf = scene.GetComponent<Transform>(id);
+			
+			ph.velocity += ph.acceleration * scene.m_smoothDeltaTime;
+			tf.position += ph.velocity * scene.m_smoothDeltaTime;
+			tf.rotation += ph.angularVelocity * scene.m_smoothDeltaTime;
+
+			// Reset the collision normal to be updated during UpdateCollision steps
+			ph.collisionNormal = Vector2(0, 0);
+
+			scene.SetComponent<Transform>(id, tf);
+			scene.SetComponent<Physics>(id, ph);
 		}
 	}
 }
 
 // Detects collision between two entities and moves them according to their 
-// Physics parameters. Both objects are modified, and the onCollision and
-// onTrigger signal is emitted twice. Ensure that both entities has a Transform 
-// & Physics component.
+// Physics parameters. Both objects are modified, and the onCollision or
+// onTrigger signal is emitted if there is a collision. Ensure that both entities 
+// have a Transform & Physics component.
 void PhysicsSystem::UpdateCollision(Scene& scene, Entity one, Entity two)
 {
+	
 	bool collision = false;
-	Transform& tf1 = scene.GetComponent<Transform>(one);
-	Physics& ph1 = scene.GetComponent<Physics>(one);
-	Transform& tf2 = scene.GetComponent<Transform>(two);
-	Physics& ph2 = scene.GetComponent<Physics>(two);
+	Transform tf1 = scene.GetComponent<Transform>(one);
+	Transform tf2 = scene.GetComponent<Transform>(two);
+	Physics ph1 = scene.GetComponent<Physics>(one);
+	Physics ph2 = scene.GetComponent<Physics>(two);
 	Vector2 resolution;
+	
 	
 	// Lots of ugly code and if statements (also bad because branch misprediction),
 	// would get particularly ugly with 3+ types of bounds like capsules or rays. 
@@ -160,28 +169,43 @@ void PhysicsSystem::UpdateCollision(Scene& scene, Entity one, Entity two)
 
 	if (collision)
 	{
-		if (ph2.isTrigger) 
-			s_onTrigger.Emit(one, two);
+		if (ph1.isTrigger || ph2.isTrigger) 
+			s_Trigger.Emit(scene, one, two, resolution);
 		else
-		{
-			s_onCollision.Emit(one, two);
+			s_Collision.Emit(scene, one, two, resolution);
 
+		// Update components if they changed during signal emission
+		tf1 = scene.GetComponent<Transform>(one);
+		tf2 = scene.GetComponent<Transform>(two);
+		ph1 = scene.GetComponent<Physics>(one);
+		ph2 = scene.GetComponent<Physics>(two);
+
+
+		if (!ph1.isTrigger && !ph2.isTrigger)
+		{
 			if (ph2.bodyType == Physics::STATIC)
+			{
 				tf1.position += resolution;
+				ph1.collisionNormal += resolution.Normalized();
+			}
 			else
 			{
 				tf1.position += resolution / 2.0f;
 				tf2.position -= resolution / 2.0f;
 			}
 		}
+
+		scene.SetComponent<Transform>(one, tf1);
+		scene.SetComponent<Transform>(two, tf2);
+		scene.SetComponent<Physics>(one, ph1);
+		scene.SetComponent<Physics>(two, ph2);
 	}
+	
 }
 
 // Detects collision between two groups of entities and moves them according to their 
-// Physics parameters. Modifies both entities, and so the onCollision/onTrigger signal 
-// is emitted twice for each pair of entities. Ensure that every entity has a Transform 
-// & Physics component.
-void PhysicsSystem::UpdateCollision(Scene& scene, std::vector<Entity> group1, std::vector<Entity> group2)
+// Physics parameters.Ensure that every entity has a Transform & Physics component.
+void PhysicsSystem::UpdateCollision(Scene& scene, const std::vector<Entity>& group1, const std::vector<Entity>& group2)
 {
 	for (Entity i : group1)
 		for (Entity j : group2)
@@ -191,7 +215,7 @@ void PhysicsSystem::UpdateCollision(Scene& scene, std::vector<Entity> group1, st
 
 
 // Circle & circle
-bool PhysicsSystem::IsColliding(Transform& tf1, Transform& tf2, CircleBounds& cb1, CircleBounds& cb2)
+bool PhysicsSystem::IsColliding(Transform tf1, Transform tf2, CircleBounds cb1, CircleBounds cb2)
 {
 	float distSquared = (tf1.position + cb1.offset).DistanceSquared(tf2.position + cb2.offset);
 	float collisionDistance = cb1.radius + cb2.radius;
@@ -200,7 +224,7 @@ bool PhysicsSystem::IsColliding(Transform& tf1, Transform& tf2, CircleBounds& cb
 }
 
 // Box & box
-bool PhysicsSystem::IsColliding(Transform& tf1, Transform& tf2, BoxBounds& bb1, BoxBounds& bb2)
+bool PhysicsSystem::IsColliding(Transform tf1, Transform tf2, BoxBounds bb1, BoxBounds bb2)
 {
 	Vector2 p1 = tf1.position + bb1.offset;
 	Vector2 p2 = tf2.position + bb2.offset;
@@ -212,7 +236,7 @@ bool PhysicsSystem::IsColliding(Transform& tf1, Transform& tf2, BoxBounds& bb1, 
 }
 
 // Circle & box
-bool PhysicsSystem::IsColliding(Transform& tf1, Transform& tf2, CircleBounds& cb, BoxBounds& bb)
+bool PhysicsSystem::IsColliding(Transform tf1, Transform tf2, CircleBounds cb, BoxBounds bb)
 {
 	Vector2 dist = (tf2.position + bb.offset) - (tf1.position + cb.offset);
 	dist.x = abs(dist.x);

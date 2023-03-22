@@ -17,9 +17,6 @@ public:
 		std::uniform_int_distribution<> randEntity(0, 1000);
 		
 		Scene scene;
-		scene.CreateComponentArray<Transform>();
-		scene.CreateComponentArray<Timer>();
-		scene.CreateComponentArray<Wireframe>();
 
 		// Test adding of entity & component
 		Entity test = scene.CreateEntity();
@@ -30,7 +27,9 @@ public:
 		assert(scene.GetCount() == (Entity)1);
 		assert(scene.GetComponentArray<Transform>() != nullptr);
 		scene.GetComponent<Transform>(test); // can't compare addresses b/c components are copied, just run it to see if it works
-		assert(scene.GetComponentType<Transform>() == (ComponentID)0);
+		
+		auto a = scene.GetComponentType<Transform>();
+		assert(a == (ComponentID)0);
 
 
 		// Test creating entities with random components
