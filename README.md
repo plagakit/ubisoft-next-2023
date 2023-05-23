@@ -8,6 +8,10 @@ The theme for the 2023 competition was to make a game based on Bomberman but wit
 
 ![gameplay footage](gameplay.gif)
 
+## Building
+
+Clone the repository and open Game.sln with Visual Studio.
+
 ## Resources
 I spent January to March learning how to program in C++ and how to design my own ECS. These are some of the resources I learned from.
 
